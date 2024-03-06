@@ -32,6 +32,8 @@ public:
 	Player(const std::string& name = "");
 	~Player() override = default;
 
+	bool IsMove(sf::Vector2i dir);
+
 	void Init() override;
 	void Release() override;
 	void Reset() override;

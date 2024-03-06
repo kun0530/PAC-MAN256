@@ -136,6 +136,37 @@ float InputMgr::GetAxis(Axis axis)
     return findInfo->second.value;
 }
 
+sf::Vector2i InputMgr::GetAxisOne()
+{
+    const AxisInfo& infoH = axisInfoMap.find(Axis::Horizontal)->second;
+    const AxisInfo& infoV = axisInfoMap.find(Axis::Vertical)->second;
+
+    auto it = downList.rbegin();
+    while (it != downList.rend())
+    {
+        sf::Keyboard::Key key = *it;
+
+        if (std::find(infoH.positives.begin(), infoH.positives.end(), key) != infoH.positives.end())
+        {
+            return sf::Vector2i(1, 0);
+        }
+        if (std::find(infoH.negatives.begin(), infoH.negatives.end(), key) != infoH.negatives.end())
+        {
+            return sf::Vector2i(-1, 0);
+        }
+        if (std::find(infoV.positives.begin(), infoV.positives.end(), key) != infoV.positives.end())
+        {
+            return sf::Vector2i(0, 1);
+        }
+        if (std::find(infoV.negatives.begin(), infoV.negatives.end(), key) != infoV.negatives.end())
+        {
+            return sf::Vector2i(0, -1);
+        }
+        ++it;
+    }
+    return sf::Vector2i(0, 0);
+}
+
 bool InputMgr::GetKeyDown(sf::Keyboard::Key key)
 {
     //std::list<sf::Keyboard::Key>::iterator it = downList.begin

@@ -38,6 +38,7 @@ public:
 
 	static float GetAxisRaw(Axis axis);	// -1.0 0 1.0
 	static float GetAxis(Axis axis);	// -1.0 ~ 1.0
+	static sf::Vector2i GetAxisOne();
 	static bool GetKeyDown(sf::Keyboard::Key key);
 	static bool GetKeyUp(sf::Keyboard::Key key);
 	static bool GetKey(sf::Keyboard::Key key);

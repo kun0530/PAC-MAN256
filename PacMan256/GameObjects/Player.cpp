@@ -39,7 +39,33 @@ void Player::Update(float dt)
 {
 	SpriteGo::Update(dt);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Up) &&
+	sf::Vector2i inputDirection = InputMgr::GetAxisOne();
+	IsMove(inputDirection);
+
+	if (timer > moveTime)
+	{
+		timer = 0.f;
+		currentPos = nextPos;
+		SetPosition(currentPos);
+		moveState = MoveState::STOP;
+		IsMove((sf::Vector2i)direction);
+	}
+
+	if (moveState != MoveState::STOP)
+	{
+		timer += dt;
+		Translate(direction * speed * dt);
+	}
+
+	/*if (timer > moveTime)
+	{
+		
+	}
+
+	if (moveState != MoveState::STOP)
+		Translate(direction * speed * dt);*/
+
+	/*if (InputMgr::GetKeyDown(sf::Keyboard::Up) &&
 		!tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y - 1))
 	{
 		moveState = MoveState::UP;
@@ -71,10 +97,10 @@ void Player::Update(float dt)
 		direction = { -1.f, 0.f };
 		timer = 0;
 	}
-	moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
+	moveTime = Utils::Magnitude(nextPos - currentPos) / speed;*/
 
 	
-	if (timer > moveTime)
+	/*if (timer > moveTime)
 	{
 		currentPos = nextPos;
 		SetPosition(currentPos);
@@ -94,14 +120,15 @@ void Player::Update(float dt)
 			playerGridIndex.x--;
 			break;
 		}
-		
-		if (!tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y))
-		{
 
+		
+		if (tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y))
+		{
+			moveState = MoveState::STOP;
 		}
 		else
 		{
-			moveState = MoveState::STOP;
+			nextPos = tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y);
 		}
 		timer = 0;
 	}
@@ -109,21 +136,36 @@ void Player::Update(float dt)
 	{
 		timer += dt;
 		Translate(direction * speed * dt);
-	}
+	}*/
+}
 
-	switch (moveState)
+bool Player::IsMove(sf::Vector2i dir)
+{
+	if (dir.x != 0 || dir.y != 0 || moveState == MoveState::STOP)
 	{
-	case MoveState::STOP:
-		break;
-	case MoveState::UP:
-		break;
-	case MoveState::DOWN:
-		break;
-	case MoveState::RIGHT:
-		break;
-	case MoveState::LEFT:
-		break;
+		if (!tileMap->IsBlocked(playerGridIndex.x + dir.x,
+			playerGridIndex.y + dir.y))
+		{
+			if (dir.x > 0)
+				moveState = MoveState::RIGHT;
+			if (dir.x < 0)
+				moveState = MoveState::LEFT;
+			if (dir.y > 0)
+				moveState = MoveState::DOWN;
+			if (dir.y < 0)
+				moveState = MoveState::UP;
+
+			playerGridIndex.x += dir.x;
+			playerGridIndex.y += dir.y;
+			nextPos = tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y);
+			direction = (sf::Vector2f)dir;
+			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
+			timer = 0.f;
+
+			return true;
+		}
 	}
+	return false;
 }
 
 void Player::FixedUpdate(float dt)
