@@ -19,7 +19,12 @@ sf::FloatRect TileMap::GetGlobalBounds()
 	return transform.transformRect(bounds);
 }
 
-void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const int* tiles)
+const sf::Vector2f& TileMap::GetGridPosition(int x, int y) const
+{
+	return va[(y * cellCount.x + x) * 4].position - origin + sf::Vector2f(25.f, 25.f);
+}
+
+void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<int>& tiles)
 {
 	cellCount = count;
 	cellSize = size;
@@ -160,7 +165,7 @@ void TileMap::Init()
 {
 	GameObject::Init();
 
-	int levels[] = {
+	startPath = {
 		0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0,
 		0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0,
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -190,11 +195,11 @@ void TileMap::Init()
 		0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
 		0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0,
 		0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
 	SetSpriteSheetId("graphics/sheet.png");
-	Set({ 26, sizeof(levels)/sizeof(levels[1])/26}, {50.f, 50.f}, levels);
-
+	Set({ 26, 30 }, { 50.f, 50.f }, startPath);
 }
 
 void TileMap::Release()

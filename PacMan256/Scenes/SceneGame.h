@@ -1,17 +1,19 @@
 #pragma once
 
 class TileMap;
-class SpriteGo;
+class Player;
 
-class SceneDev : public Scene
+class SceneGame : public Scene
 {
 protected:
 	TileMap* tileMap = nullptr;
-	SpriteGo* tile = nullptr;
+	Player* player = nullptr;
+
+	sf::Vector2i playerGridIndex = { 11, 16 };
 
 public:
-	SceneDev(SceneIds id);
-	virtual ~SceneDev();
+	SceneGame(SceneIds id);
+	virtual ~SceneGame();
 
 	void Init() override;
 	void Release() override;

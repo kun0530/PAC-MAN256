@@ -5,7 +5,7 @@ class Scene;
 
 enum class SceneIds
 {
-	None = -1, SceneDev, Count,
+	None = -1, SCENEGAME, Count,
 };
 
 class SceneMgr : public Singleton<SceneMgr>
@@ -15,7 +15,7 @@ class SceneMgr : public Singleton<SceneMgr>
 protected:
 	std::vector<Scene*> scenes;
 
-	SceneIds startScene = SceneIds::SceneDev;
+	SceneIds startScene = SceneIds::SCENEGAME;
 	SceneIds currentScene = startScene;
 
 	bool isDeveloperMode = false;

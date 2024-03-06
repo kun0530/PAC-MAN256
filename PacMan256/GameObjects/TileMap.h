@@ -12,7 +12,10 @@ protected:
 
 	sf::Transform transform;
 
+	std::vector<int> startPath;
+
 public:
+
 	TileMap(const std::string& name = "");
 
 	virtual sf::FloatRect GetLocalBounds() override;
@@ -21,7 +24,10 @@ public:
 	const sf::Vector2i& GetCellCount() const { return cellCount; }
 	const sf::Vector2f& GetCellSize() const { return cellSize; }
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const int* tiles);
+	const sf::Vector2f& GetGridPosition(int x, int y) const;
+	bool IsBlocked(int x, int y) const { return startPath[y * cellCount.x + x] == 0; }
+
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<int>& tiles);
 	void SetSpriteSheetId(const std::string& id);
 	void UpdateTransform();
 
