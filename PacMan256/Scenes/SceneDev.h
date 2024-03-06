@@ -1,9 +1,13 @@
 #pragma once
 
+class TileMap;
+class SpriteGo;
+
 class SceneDev : public Scene
 {
 protected:
-	sf::RectangleShape land;
+	TileMap* tileMap = nullptr;
+	SpriteGo* tile = nullptr;
 
 public:
 	SceneDev(SceneIds id);

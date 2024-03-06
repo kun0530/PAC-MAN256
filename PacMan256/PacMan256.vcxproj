@@ -148,6 +148,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="GameObjects\GameObject.cpp" />
+    <ClCompile Include="GameObjects\TileMap.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -175,6 +176,7 @@
     <ClInclude Include="Framework\Singleton.h" />
     <ClInclude Include="Framework\Utils.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\TileMap.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="Framework\SceneMgr.h" />

@@ -21,7 +21,7 @@ public:
 	const sf::Vector2i& GetCellCount() const { return cellCount; }
 	const sf::Vector2f& GetCellSize() const { return cellSize; }
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size);
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const int* tiles);
 	void SetSpriteSheetId(const std::string& id);
 	void UpdateTransform();
 
