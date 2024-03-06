@@ -9,8 +9,6 @@ protected:
 	TileMap* tileMap = nullptr;
 	Player* player = nullptr;
 
-	sf::Vector2i playerGridIndex = { 11, 16 };
-
 public:
 	SceneGame(SceneIds id);
 	virtual ~SceneGame();

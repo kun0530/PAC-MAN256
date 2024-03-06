@@ -32,12 +32,10 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	Scene::Enter();
-
 	tileMap->SetPosition({ 0.f, 0.f });
 	tileMap->SetOrigin(Origins::MC);
 
-	player->SetPosition(tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y));
+	Scene::Enter();
 }
 
 void SceneGame::Exit()
@@ -50,28 +48,6 @@ void SceneGame::Update(float dt)
 	Scene::Update(dt);
 
 	worldView.setCenter({ 0.f, player->GetPosition().y });
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Up) &&
-		!tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y - 1))
-	{
-		playerGridIndex.y--;
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Down) &&
-		!tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y + 1))
-	{
-		playerGridIndex.y++;
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Right) &&
-		!tileMap->IsBlocked(playerGridIndex.x + 1, playerGridIndex.y))
-	{
-		playerGridIndex.x++;
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Left) &&
-		!tileMap->IsBlocked(playerGridIndex.x - 1, playerGridIndex.y))
-	{
-		playerGridIndex.x--;
-	}
-	player->SetPosition(tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y));
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
