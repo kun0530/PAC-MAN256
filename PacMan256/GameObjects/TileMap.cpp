@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TileMap.h"
 
+#include "CookieItem.h"
+
 TileMap::TileMap(const std::string& name) : GameObject(name)
 {
 }
@@ -281,6 +283,29 @@ void TileMap::Init()
 
 	SetSpriteSheetId("graphics/sheet.png");
 	Set({ 30, 30 }, { 50.f, 50.f }, startPath);
+
+	startMap.clear();
+	for (int i = 0; i < cellCount.y; ++i)
+	{
+		for (int j = 0; j < cellCount.x; j++)
+		{
+			Tile* tile = new Tile;
+			tile->y = i;
+			tile->x = j;
+			tile->type = startPath[i * 30 + j];
+			if (tile->type == 1)
+			{
+				CookieItem* cookie = new CookieItem;
+				cookie->SetGridIndex(j, i);
+				cookie->Init();
+				cookie->Reset();
+				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
+				tile->item = cookie;
+			}
+
+			startMap.push_back(new Tile);
+		}
+	}
 }
 
 void TileMap::Release()

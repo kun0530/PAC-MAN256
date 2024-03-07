@@ -30,10 +30,6 @@ void SceneGame::Init()
 	ghost->sortLayer = 1;
 	AddGo(ghost);
 
-	CookieItem* cookie = new CookieItem("Cookie");
-	cookie->sortLayer = 1;
-	AddGo(cookie);
-
 	uiScore = new TextGo("UI Score");
 	AddGo(uiScore, Ui);
 
@@ -62,8 +58,8 @@ void SceneGame::Enter()
 		{
 			TextGo* text = new TextGo("Position");
 			text->Set(font, "(" + std::to_string(i) + ", " + std::to_string(j) + ")",
-				10, sf::Color::White);
-			text->SetOutline(sf::Color::Black, 3.f);
+				15, sf::Color::Black);
+			//text->SetOutline(sf::Color::Black, 3.f);
 			text->SetPosition(tileMap->GetGridPosition(i, j));
 			text->SetOrigin(Origins::MC);
 			text->sortLayer = 2;
@@ -113,6 +109,6 @@ void SceneGame::Draw(sf::RenderWindow& window)
 void SceneGame::AddScore(const int score)
 {
 	this->score += score * scoreScale;
-	uiScore->SetString(std::to_string(score));
+	uiScore->SetString(std::to_string(this->score));
 	uiScore->SetOrigin(Origins::TC);
 }

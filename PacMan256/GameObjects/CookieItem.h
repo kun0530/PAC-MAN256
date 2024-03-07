@@ -12,8 +12,6 @@ protected:
 	TileMap* tileMap = nullptr;
 	Player* player = nullptr;
 
-	sf::Vector2i gridIndex = { 13, 13 };
-
 public:
 	CookieItem(const std::string& name = "");
 	~CookieItem() override = default;

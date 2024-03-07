@@ -1,7 +1,19 @@
 #pragma once
 #include "GameObject.h"
+
+class Item;
+
 class TileMap : public GameObject
 {
+
+	struct Tile
+	{
+		int x = 0;
+		int y = 0;
+		int type = 0;
+		Item* item = nullptr;
+	};
+
 protected:
 	sf::VertexArray va;
 	std::string spriteSheetId;
@@ -13,7 +25,7 @@ protected:
 	sf::Transform transform;
 
 	std::vector<int> startPath;
-
+	std::vector<Tile*> startMap;
 public:
 
 	TileMap(const std::string& name = "");

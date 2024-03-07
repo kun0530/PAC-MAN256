@@ -3,10 +3,13 @@
 class Item : public SpriteGo
 {
 protected:
+	sf::Vector2i gridIndex = { 0, 0 };
 
 public:
 	Item(const std::string& name = "");
 	~Item() override = default;
+
+	void SetGridIndex(const int x, const int y) { gridIndex = { x, y }; }
 
 	virtual void Init() override;
 	virtual void Release() override;
