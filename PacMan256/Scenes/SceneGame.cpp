@@ -4,6 +4,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Ghost.h"
+#include "CookieItem.h"
 
 #include "TextGo.h"
 
@@ -29,6 +30,13 @@ void SceneGame::Init()
 	ghost->sortLayer = 1;
 	AddGo(ghost);
 
+	CookieItem* cookie = new CookieItem("Cookie");
+	cookie->sortLayer = 1;
+	AddGo(cookie);
+
+	uiScore = new TextGo("UI Score");
+	AddGo(uiScore, Ui);
+
 	Scene::Init();
 }
 
@@ -42,7 +50,10 @@ void SceneGame::Enter()
 	tileMap->SetPosition({ 0.f, 0.f });
 	tileMap->SetOrigin(Origins::MC);
 
-
+	uiScore->Set(font, std::to_string(score), 50, sf::Color::White);
+	uiScore->SetOutline(sf::Color::Black, 3.f);
+	uiScore->SetOrigin(Origins::TC);
+	uiScore->SetPosition({ FRAMEWORK.GetWindowSize().x / 2.f, 30.f });
 
 	// 각 타일의 그리드 인덱스 확인용
 	for (int i = 0; i < tileMap->GetCellCount().x; i++)
@@ -97,4 +108,11 @@ void SceneGame::Update(float dt)
 void SceneGame::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+}
+
+void SceneGame::AddScore(const int score)
+{
+	this->score += score * scoreScale;
+	uiScore->SetString(std::to_string(score));
+	uiScore->SetOrigin(Origins::TC);
 }

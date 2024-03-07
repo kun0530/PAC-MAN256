@@ -2,12 +2,13 @@
 #include "SpriteGo.h"
 
 class TileMap;
+class Player;
 
 class Ghost : public SpriteGo
 {
 protected:
 	sf::Vector2f direction = { 1.f, 0.f };
-	float speed = 300.f;
+	float speed = 350.f;
 	float timer = 0.f;
 	float moveTime = 0.f;
 
@@ -15,17 +16,18 @@ protected:
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
-	TileMap* tileMap;
+	TileMap* tileMap = nullptr;
+	Player* player = nullptr;
 
 public:
 	Ghost(const std::string& name = "");
 	~Ghost() override = default;
 
-	void Init() override;
-	void Release() override;
-	void Reset() override;
-	void Update(float dt) override;
-	void FixedUpdate(float dt) override;
-	void Draw(sf::RenderWindow& window) override;
+	virtual void Init() override;
+	virtual void Release() override;
+	virtual void Reset() override;
+	virtual void Update(float dt) override;
+	virtual void FixedUpdate(float dt) override;
+	virtual void Draw(sf::RenderWindow& window) override;
 };
 

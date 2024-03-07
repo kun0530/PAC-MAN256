@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Ghost.h"
 #include "TileMap.h"
+#include "Player.h"
 
 Ghost::Ghost(const std::string& name) : SpriteGo(name)
 {
@@ -25,6 +26,8 @@ void Ghost::Reset()
 	SpriteGo::Reset();
 
 	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
+	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+	
 	// gridIndex 랜덤 설정하고
 	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));
 	gridIndex.x += (int)direction.x;
@@ -78,6 +81,11 @@ void Ghost::Update(float dt)
 	
 	timer += dt;
 	Translate(direction * speed * dt);
+
+	if (gridIndex == player->GetGridIndex())
+	{
+		player->OnDie();
+	}
 }
 
 void Ghost::FixedUpdate(float dt)

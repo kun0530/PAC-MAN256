@@ -16,6 +16,11 @@ void Player::Init()
 	SetScale({ 0.5f, 0.5f });
 }
 
+void Player::OnDie()
+{
+	// Game Over!!!
+}
+
 void Player::Release()
 {
 	SpriteGo::Release();
@@ -56,87 +61,6 @@ void Player::Update(float dt)
 		timer += dt;
 		Translate(direction * speed * dt);
 	}
-
-	/*if (timer > moveTime)
-	{
-		
-	}
-
-	if (moveState != MoveState::STOP)
-		Translate(direction * speed * dt);*/
-
-	/*if (InputMgr::GetKeyDown(sf::Keyboard::Up) &&
-		!tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y - 1))
-	{
-		moveState = MoveState::UP;
-		nextPos = tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y - 1);
-		direction = { 0.f, -1.f };
-		timer = 0;
-	}
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Down) &&
-		!tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y + 1))
-	{
-		moveState = MoveState::DOWN;
-		nextPos = tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y + 1);
-		direction = { 0.f, 1.f };
-		timer = 0;
-	}
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Right) &&
-		!tileMap->IsBlocked(playerGridIndex.x + 1, playerGridIndex.y))
-	{
-		moveState = MoveState::RIGHT;
-		nextPos = tileMap->GetGridPosition(playerGridIndex.x + 1, playerGridIndex.y);
-		direction = { 1.f, 0.f };
-		timer = 0;
-	}
-	else if (InputMgr::GetKeyDown(sf::Keyboard::Left) &&
-		!tileMap->IsBlocked(playerGridIndex.x - 1, playerGridIndex.y))
-	{
-		moveState = MoveState::LEFT;
-		nextPos = tileMap->GetGridPosition(playerGridIndex.x - 1, playerGridIndex.y);
-		direction = { -1.f, 0.f };
-		timer = 0;
-	}
-	moveTime = Utils::Magnitude(nextPos - currentPos) / speed;*/
-
-	
-	/*if (timer > moveTime)
-	{
-		currentPos = nextPos;
-		SetPosition(currentPos);
-
-		switch (moveState)
-		{
-		case MoveState::UP:
-			playerGridIndex.y--;
-			break;
-		case MoveState::DOWN:
-			playerGridIndex.y++;
-			break;
-		case MoveState::RIGHT:
-			playerGridIndex.x++;
-			break;
-		case MoveState::LEFT:
-			playerGridIndex.x--;
-			break;
-		}
-
-		
-		if (tileMap->IsBlocked(playerGridIndex.x, playerGridIndex.y))
-		{
-			moveState = MoveState::STOP;
-		}
-		else
-		{
-			nextPos = tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y);
-		}
-		timer = 0;
-	}
-	else if (moveState != MoveState::STOP)
-	{
-		timer += dt;
-		Translate(direction * speed * dt);
-	}*/
 }
 
 bool Player::IsMove(sf::Vector2i dir)

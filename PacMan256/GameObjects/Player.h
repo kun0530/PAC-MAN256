@@ -33,6 +33,7 @@ public:
 	~Player() override = default;
 
 	bool IsMove(sf::Vector2i dir);
+	const sf::Vector2i& GetGridIndex() { return playerGridIndex; }
 
 	void Init() override;
 	void Release() override;
@@ -40,5 +41,7 @@ public:
 	void Update(float dt) override;
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void OnDie();
 };
 
