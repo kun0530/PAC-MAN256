@@ -84,7 +84,10 @@ void Ghost::Update(float dt)
 
 	if (gridIndex == player->GetGridIndex())
 	{
-		player->OnDie();
+		if (player->GetItemMode() == ItemMode::POWER_COOKIE)
+			OnDie();
+		else
+			player->OnDie();
 	}
 }
 
@@ -96,4 +99,17 @@ void Ghost::FixedUpdate(float dt)
 void Ghost::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+}
+
+void Ghost::ChangeMode()
+{
+	if (player->GetItemMode() == ItemMode::POWER_COOKIE)
+		SetTexture("graphics/Ghost_Glitch.png");
+	if (player->GetItemMode() == ItemMode::NONE)
+		SetTexture("graphics/Ghost_Red.png");
+}
+
+void Ghost::OnDie()
+{
+	SetActive(false);
 }

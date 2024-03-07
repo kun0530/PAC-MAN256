@@ -24,11 +24,6 @@ void CookieItem::Release()
 void CookieItem::Reset()
 {
 	Item::Reset();
-
-	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
-	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
-	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
-	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));
 }
 
 void CookieItem::Update(float dt)
@@ -37,7 +32,7 @@ void CookieItem::Update(float dt)
 
 	if (gridIndex == player->GetGridIndex())
 	{
-		sceneGame->AddScore(10);
+		sceneGame->AddScore(1);
 		SetActive(false);
 	}
 }

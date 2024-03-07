@@ -2,6 +2,7 @@
 #include "TileMap.h"
 
 #include "CookieItem.h"
+#include "PowerCookieItem.h"
 
 TileMap::TileMap(const std::string& name) : GameObject(name)
 {
@@ -292,15 +293,27 @@ void TileMap::Init()
 			Tile* tile = new Tile;
 			tile->y = i;
 			tile->x = j;
-			tile->type = startPath[i * 30 + j];
+			tile->type = startPath[i * cellCount.x + j];
 			if (tile->type == 1)
 			{
-				CookieItem* cookie = new CookieItem;
-				cookie->SetGridIndex(j, i);
-				cookie->Init();
-				cookie->Reset();
-				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
-				tile->item = cookie;
+				if (Utils::RandomRange(0, 100) < 1)
+				{
+					PowerCookieItem* powerCookie = new PowerCookieItem;
+					powerCookie->SetGridIndex(j, i);
+					powerCookie->Init();
+					powerCookie->Reset();
+					SCENE_MGR.GetCurrentScene()->AddGo(powerCookie);
+					tile->item = powerCookie;
+				}
+				else
+				{
+					CookieItem* cookie = new CookieItem;
+					cookie->SetGridIndex(j, i);
+					cookie->Init();
+					cookie->Reset();
+					SCENE_MGR.GetCurrentScene()->AddGo(cookie);
+					tile->item = cookie;
+				}
 			}
 
 			startMap.push_back(new Tile);

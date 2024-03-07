@@ -2,6 +2,7 @@
 #include "SpriteGo.h"
 
 class TileMap;
+class SceneGame;
 
 enum class MoveState
 {
@@ -10,6 +11,13 @@ enum class MoveState
 	DOWN,
 	RIGHT,
 	LEFT,
+	COUNT,
+};
+
+enum class ItemMode
+{
+	NONE,
+	POWER_COOKIE,
 	COUNT,
 };
 
@@ -26,7 +34,12 @@ protected:
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
-	TileMap* tileMap;
+	ItemMode itemMode = ItemMode::NONE;
+	float itemDuration = 0.f;
+	float itemTimer = 0.f;
+
+	TileMap* tileMap = nullptr;
+	SceneGame* sceneGame = nullptr;
 
 public:
 	Player(const std::string& name = "");
@@ -42,6 +55,8 @@ public:
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
+	const ItemMode GetItemMode() const { return itemMode; }
+	void SetItemMode(ItemMode mode);
 	void OnDie();
 };
 

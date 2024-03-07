@@ -1,8 +1,17 @@
 #pragma once
 #include "SpriteGo.h"
+
+class SceneGame;
+class TileMap;
+class Player;
+
 class Item : public SpriteGo
 {
 protected:
+	SceneGame* sceneGame = nullptr;
+	TileMap* tileMap = nullptr;
+	Player* player = nullptr;
+
 	sf::Vector2i gridIndex = { 0, 0 };
 
 public:

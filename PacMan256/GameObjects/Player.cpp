@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Player.h"
 #include "TileMap.h"
+#include "SceneGame.h"
+#include "Ghost.h"
 
 Player::Player(const std::string& name) : SpriteGo(name)
 {
@@ -16,11 +18,6 @@ void Player::Init()
 	SetScale({ 0.5f, 0.5f });
 }
 
-void Player::OnDie()
-{
-	// Game Over!!!
-}
-
 void Player::Release()
 {
 	SpriteGo::Release();
@@ -31,6 +28,7 @@ void Player::Reset()
 	SpriteGo::Reset();
 
 	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 
 	playerGridIndex = { 13, 16 };
 	MoveState moveState = MoveState::STOP;
@@ -60,6 +58,28 @@ void Player::Update(float dt)
 	{
 		timer += dt;
 		Translate(direction * speed * dt);
+	}
+
+	if (itemMode != ItemMode::NONE)
+	{
+		itemTimer += dt;
+		if (itemTimer > itemDuration)
+		{
+			itemMode = ItemMode::NONE;
+			std::list<GameObject*> goList = sceneGame->GetGhostList();
+			for (auto go : goList)
+			{
+				if (!go->GetActive())
+					continue;
+
+				Ghost* ghost = dynamic_cast<Ghost*>(go);
+				if (ghost != nullptr)
+				{
+					ghost->ChangeMode();
+				}
+			}
+			itemTimer = 0.f;
+		}
 	}
 }
 
@@ -100,4 +120,35 @@ void Player::FixedUpdate(float dt)
 void Player::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+}
+
+void Player::OnDie()
+{
+	// Game Over!!!
+	SetActive(false);
+}
+
+void Player::SetItemMode(ItemMode mode)
+{
+	itemMode = mode;
+
+	// TO-DO: 나중에 데이터 테이블로 정리
+	switch (itemMode)
+	{
+	case ItemMode::POWER_COOKIE:
+		itemDuration = 5.f;
+		std::list<GameObject*> goList = sceneGame->GetGhostList();
+		for (auto go : goList)
+		{
+			if (!go->GetActive())
+				continue;
+			
+			Ghost* ghost = dynamic_cast<Ghost*>(go);
+			if (ghost != nullptr)
+			{
+				ghost->ChangeMode();
+			}
+		}
+	}
+	itemTimer = 0.f;
 }

@@ -83,6 +83,7 @@ void SceneGame::Update(float dt)
 
 	worldView.setCenter({ 0.f, player->GetPosition().y });
 
+	FindGoAll("Ghost", ghostList, Layers::World);
 
 	// 그리드 좌표 확인용
 	if (SCENE_MGR.GetDeveloperMode())

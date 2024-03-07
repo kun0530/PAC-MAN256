@@ -8,7 +8,7 @@ class Ghost : public SpriteGo
 {
 protected:
 	sf::Vector2f direction = { 1.f, 0.f };
-	float speed = 350.f;
+	float speed = 300.f;
 	float timer = 0.f;
 	float moveTime = 0.f;
 
@@ -29,5 +29,8 @@ public:
 	virtual void Update(float dt) override;
 	virtual void FixedUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
+
+	void ChangeMode();
+	void OnDie();
 };
 

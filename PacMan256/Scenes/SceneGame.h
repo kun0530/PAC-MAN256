@@ -16,11 +16,11 @@ protected:
 	Player* player = nullptr;
 	Ghost* ghost = nullptr;
 
+	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
 	TextGo* uiScore = nullptr;
-
 	std::vector<TextGo*> posTexts;
 
-	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
+	std::list<GameObject*> ghostList;
 
 public:
 	SceneGame(SceneIds id);
@@ -37,4 +37,5 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void AddScore(const int score);
+	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 };

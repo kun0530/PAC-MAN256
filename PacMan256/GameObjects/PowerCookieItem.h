@@ -1,13 +1,12 @@
 #pragma once
 #include "Item.h"
-
-class CookieItem : public Item
+class PowerCookieItem : public Item
 {
 protected:
 
 public:
-	CookieItem(const std::string& name = "");
-	~CookieItem() override = default;
+	PowerCookieItem(const std::string& name = "");
+	~PowerCookieItem() override = default;
 
 	void Init() override;
 	void Release() override;
@@ -16,3 +15,4 @@ public:
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 };
+
