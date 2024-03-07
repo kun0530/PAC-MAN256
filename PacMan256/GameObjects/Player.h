@@ -4,16 +4,6 @@
 class TileMap;
 class SceneGame;
 
-enum class MoveState
-{
-	STOP,
-	UP,
-	DOWN,
-	RIGHT,
-	LEFT,
-	COUNT,
-};
-
 enum class ItemMode
 {
 	NONE,
@@ -29,9 +19,9 @@ protected:
 	float moveTime = 0.f;
 	float speed = 300.f;
 
-	sf::Vector2i playerGridIndex = { 13, 16 };
-	MoveState moveState = MoveState::STOP;
-	std::stack<sf::Vector2i> inputDirections;
+	sf::Vector2i gridIndex = { 13, 16 };
+	bool isMoving = false;
+	std::queue<sf::Vector2i> inputDirections;
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
@@ -47,7 +37,7 @@ public:
 	~Player() override = default;
 
 	bool IsMove(sf::Vector2i dir);
-	const sf::Vector2i& GetGridIndex() { return playerGridIndex; }
+	const sf::Vector2i& GetGridIndex() { return gridIndex; }
 
 	void Init() override;
 	void Release() override;
