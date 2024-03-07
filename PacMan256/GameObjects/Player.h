@@ -31,6 +31,7 @@ protected:
 
 	sf::Vector2i playerGridIndex = { 13, 16 };
 	MoveState moveState = MoveState::STOP;
+	std::stack<sf::Vector2i> inputDirections;
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 

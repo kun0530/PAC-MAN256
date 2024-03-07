@@ -60,25 +60,13 @@ void Player::Update(float dt)
 		Translate(direction * speed * dt);
 	}
 
+	// ¾ÆÀÌÅÛ
 	if (itemMode != ItemMode::NONE)
 	{
 		itemTimer += dt;
 		if (itemTimer > itemDuration)
 		{
-			itemMode = ItemMode::NONE;
-			std::list<GameObject*> goList = sceneGame->GetGhostList();
-			for (auto go : goList)
-			{
-				if (!go->GetActive())
-					continue;
-
-				Ghost* ghost = dynamic_cast<Ghost*>(go);
-				if (ghost != nullptr)
-				{
-					ghost->ChangeMode();
-				}
-			}
-			itemTimer = 0.f;
+			SetItemMode(ItemMode::NONE);
 		}
 	}
 }
@@ -137,17 +125,21 @@ void Player::SetItemMode(ItemMode mode)
 	{
 	case ItemMode::POWER_COOKIE:
 		itemDuration = 5.f;
-		std::list<GameObject*> goList = sceneGame->GetGhostList();
-		for (auto go : goList)
+		break;
+	default:
+		break;
+	}
+
+	std::list<GameObject*> goList = sceneGame->GetGhostList();
+	for (auto go : goList)
+	{
+		if (!go->GetActive())
+			continue;
+
+		Ghost* ghost = dynamic_cast<Ghost*>(go);
+		if (ghost != nullptr)
 		{
-			if (!go->GetActive())
-				continue;
-			
-			Ghost* ghost = dynamic_cast<Ghost*>(go);
-			if (ghost != nullptr)
-			{
-				ghost->ChangeMode();
-			}
+			ghost->ChangeMode();
 		}
 	}
 	itemTimer = 0.f;
