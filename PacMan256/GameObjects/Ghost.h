@@ -3,36 +3,23 @@
 
 class TileMap;
 
-enum class MoveState
-{
-	STOP,
-	UP,
-	DOWN,
-	RIGHT,
-	LEFT,
-	COUNT,
-};
-
-class Player : public SpriteGo
+class Ghost : public SpriteGo
 {
 protected:
-	sf::Vector2f direction = { 0.f, 0.f };
+	sf::Vector2f direction = { 1.f, 0.f };
+	float speed = 300.f;
 	float timer = 0.f;
 	float moveTime = 0.f;
-	float speed = 300.f;
 
-	sf::Vector2i playerGridIndex = { 13, 16 };
-	MoveState moveState = MoveState::STOP;
+	sf::Vector2i gridIndex = { 8, 2 };
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
 	TileMap* tileMap;
 
 public:
-	Player(const std::string& name = "");
-	~Player() override = default;
-
-	bool IsMove(sf::Vector2i dir);
+	Ghost(const std::string& name = "");
+	~Ghost() override = default;
 
 	void Init() override;
 	void Release() override;

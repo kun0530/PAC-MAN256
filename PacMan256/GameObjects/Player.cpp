@@ -27,7 +27,7 @@ void Player::Reset()
 
 	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
 
-	playerGridIndex = { 11, 16 };
+	playerGridIndex = { 13, 16 };
 	MoveState moveState = MoveState::STOP;
 	currentPos = tileMap->GetGridPosition(playerGridIndex.x, playerGridIndex.y);
 	SetPosition(currentPos);

@@ -149,6 +149,7 @@
     </ClCompile>
     <ClCompile Include="GameObjects\GameObject.cpp" />
     <ClCompile Include="GameObjects\TileMap.cpp" />
+    <ClCompile Include="GameObjects\Ghost.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -178,6 +179,7 @@
     <ClInclude Include="Framework\Utils.h" />
     <ClInclude Include="GameObjects\GameObject.h" />
     <ClInclude Include="GameObjects\TileMap.h" />
+    <ClInclude Include="GameObjects\Ghost.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="Scenes\Scene.h" />

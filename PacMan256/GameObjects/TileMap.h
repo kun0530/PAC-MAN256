@@ -26,6 +26,8 @@ public:
 
 	const sf::Vector2f& GetGridPosition(int x, int y) const;
 	bool IsBlocked(int x, int y) const { return startPath[y * cellCount.x + x] == 0; }
+	bool IsCorner(int x, int y) const;
+	bool IsFork(int x, int y, std::vector<sf::Vector2f>& dirList) const;
 
 	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<int>& tiles);
 	void SetSpriteSheetId(const std::string& id);

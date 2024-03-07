@@ -3,6 +3,9 @@
 
 #include "TileMap.h"
 #include "Player.h"
+#include "Ghost.h"
+
+#include "TextGo.h"
 
 SceneGame::SceneGame(SceneIds id) : Scene(id)
 {
@@ -22,6 +25,10 @@ void SceneGame::Init()
 	player->sortLayer = 1;
 	AddGo(player);
 
+	ghost = new Ghost("Ghost");
+	ghost->sortLayer = 1;
+	AddGo(ghost);
+
 	Scene::Init();
 }
 
@@ -34,6 +41,26 @@ void SceneGame::Enter()
 {
 	tileMap->SetPosition({ 0.f, 0.f });
 	tileMap->SetOrigin(Origins::MC);
+
+
+
+	// 각 타일의 그리드 인덱스 확인용
+	for (int i = 0; i < tileMap->GetCellCount().x; i++)
+	{
+		for (int j = 0; j < tileMap->GetCellCount().y; j++)
+		{
+			TextGo* text = new TextGo("Position");
+			text->Set(font, "(" + std::to_string(i) + ", " + std::to_string(j) + ")",
+				10, sf::Color::White);
+			text->SetOutline(sf::Color::Black, 3.f);
+			text->SetPosition(tileMap->GetGridPosition(i, j));
+			text->SetOrigin(Origins::MC);
+			text->sortLayer = 2;
+			text->SetActive(false);
+			posTexts.push_back(text);
+			AddGo(text);
+		}
+	}
 
 	Scene::Enter();
 }
@@ -48,6 +75,23 @@ void SceneGame::Update(float dt)
 	Scene::Update(dt);
 
 	worldView.setCenter({ 0.f, player->GetPosition().y });
+
+
+	// 그리드 좌표 확인용
+	if (SCENE_MGR.GetDeveloperMode())
+	{
+		for (auto text : posTexts)
+		{
+			text->SetActive(true);
+		}
+	}
+	else
+	{
+		for (auto text : posTexts)
+		{
+			text->SetActive(false);
+		}
+	}
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
