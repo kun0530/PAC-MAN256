@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\FruitItem.cpp" />
     <ClCompile Include="GameObjects\CookieItem.cpp" />
     <ClCompile Include="Framework\Animator.cpp" />
     <ClCompile Include="DataTables\DataTableMgr.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="GameObjects\TileMap.cpp" />
     <ClCompile Include="GameObjects\Ghost.cpp" />
     <ClCompile Include="GameObjects\Item.cpp" />
+    <ClCompile Include="GameObjects\UiHud.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -169,6 +171,7 @@
     <ClCompile Include="Framework\SoundMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\FruitItem.h" />
     <ClInclude Include="GameObjects\CookieItem.h" />
     <ClInclude Include="Framework\Animator.h" />
     <ClInclude Include="DataTables\DataTableMgr.h" />
@@ -184,6 +187,7 @@
     <ClInclude Include="GameObjects\TileMap.h" />
     <ClInclude Include="GameObjects\Ghost.h" />
     <ClInclude Include="GameObjects\Item.h" />
+    <ClInclude Include="GameObjects\UiHud.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="GameObjects\PowerCookieItem.h" />

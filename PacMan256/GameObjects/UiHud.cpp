@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "UiHud.h"
+// #include "Player.h"
 
 UiHud::UiHud(const std::string& name) : GameObject(name)
 {
@@ -9,37 +10,23 @@ void UiHud::SetResolution(const sf::Vector2f resolution)
 {
 }
 
-void UiHud::SetScore(int s)
+void UiHud::SetScore(int score)
 {
-	textScore.SetString(formatScore + std::to_string(s));
+	textScore.SetString(std::to_string(score));
 }
 
-void UiHud::SetHiScore(int s)
+void UiHud::SetHighScore(int highScore)
 {
-	textHiScore.SetString(formatHighScore + std::to_string(s));
+	textHiScore.SetString(std::to_string(highScore));
 }
 
-void UiHud::SetAmmo(int current,  int total)
-{
-	textAmmo.SetString(std::to_string(current) + "/" + std::to_string(total));
-	// std::string text = formatAmmo.replace(formatAmmo.find("{0}"), 3, std::to_string(current));
-}
-
-void UiHud::SetHp(int hp, int max)
-{
-	float value = (float)hp / max;
-	gaugeHp.setSize({ gaugeHpSize.x * value, gaugeHpSize.y });
-}
-
-void UiHud::SetWave(int w)
-{
-	textWave.SetString(formatWave + std::to_string(w));
-}
-
-void UiHud::SetZombieCount(int count)
-{
-	textZombieCount.SetString(formatZombieCount + std::to_string(count));
-}
+//void UiHud::SetChain(int chain)
+//{
+//	textChain.SetString(std::to_string(chain));
+//	textChain.SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
+//	textChain.SetActive(true);
+//	textChainTimer = 0.f;
+//}
 
 void UiHud::SetMessage(const std::string& msg)
 {
@@ -64,43 +51,35 @@ void UiHud::Init()
 {
 	textScore.Init();
 	textHiScore.Init();
-	imgAmmoIcon.Init();
-	textAmmo.Init();
-	textWave.Init();
-	textZombieCount.Init();
+	/*textChain.Init();*/
 	textMessage.Init();
 	textFps.Init();
 
-	sf::Font& font = RES_MGR_FONT.Get("fonts/zombiecontrol.ttf");
+	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
 
 	float textSize = 60.f;
 	textScore.Set(font, "", textSize, sf::Color::White);
 	textHiScore.Set(font, "", textSize, sf::Color::White);
-	textAmmo.Set(font, "", textSize, sf::Color::White);
-	textWave.Set(font, "", textSize, sf::Color::White);
-	textZombieCount.Set(font, "", textSize, sf::Color::White);
+	/*textChain.Set(font, "", 20.f, sf::Color::White);
+	textChain.SetActive(false);*/
 	textMessage.Set(font, "", textSize, sf::Color::White);
 	textMessage.SetActive(false);
 	textFps.Set(font, "", textSize, sf::Color::White);
 	textFps.SetActive(false);
 
-	imgAmmoIcon.SetTexture("graphics/ammo_icon.png");
-	gaugeHp.setFillColor(sf::Color::Red);
-	gaugeHp.setSize(gaugeHpSize);
+	/*gaugeHp.setFillColor(sf::Color::Red);
+	gaugeHp.setSize(gaugeHpSize);*/
 
 	textScore.SetOrigin(Origins::TL);
 	textHiScore.SetOrigin(Origins::TR);
-	imgAmmoIcon.SetOrigin(Origins::BL);
-	textAmmo.SetOrigin(Origins::BL);
-	Utils::SetOrigin(gaugeHp, Origins::BL);
-	textWave.SetOrigin(Origins::BR);
-	textZombieCount.SetOrigin(Origins::BR);
+	/*textChain.SetOrigin(Origins::BC);*/
+	// Utils::SetOrigin(gaugeHp, Origins::BL);
 	textMessage.SetOrigin(Origins::MC);
 	textFps.SetOrigin(Origins::TR);
 
 	// Top
-	float topY = 100.f;
-	textScore.SetPosition({ 150.f, topY });
+	float topY = 25.f;
+	textScore.SetPosition({ referenceResolution.x / 2.f, topY });
 	textHiScore.SetPosition({ referenceResolution.x - 150.f, topY });
 	textFps.SetPosition({ referenceResolution.x - 150.f, topY + 100.f });
 
@@ -108,12 +87,6 @@ void UiHud::Init()
 
 	// Bottom
 	float BottomY = referenceResolution.y - 100.f;
-	imgAmmoIcon.SetPosition({ 100.f, BottomY });
-	textAmmo.SetPosition({ 300.f, BottomY });
-	gaugeHp.setPosition({ 600.f, BottomY });
-
-	textWave.SetPosition({ referenceResolution.x - 500.f, BottomY });
-	textZombieCount.SetPosition({ referenceResolution.x - 150.f, BottomY });
 }
 
 void UiHud::Release()
@@ -122,10 +95,14 @@ void UiHud::Release()
 
 void UiHud::Reset()
 {
+	/*player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+
+	textChainTimer = 0.f;*/
 }
 
 void UiHud::Update(float dt)
 {
+	//textChain.SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
 }
 
 void UiHud::LateUpdate(float dt)
@@ -140,12 +117,9 @@ void UiHud::Draw(sf::RenderWindow& window)
 {
 	textScore.Draw(window);
 	textHiScore.Draw(window);
-	imgAmmoIcon.Draw(window);
-	textAmmo.Draw(window);
-	textWave.Draw(window);
-	textZombieCount.Draw(window);
+	//textChain.Draw(window);
 	textMessage.Draw(window);
-	window.draw(gaugeHp);
+	// window.draw(gaugeHp);
 
 	if (SCENE_MGR.GetDeveloperMode())
 	{

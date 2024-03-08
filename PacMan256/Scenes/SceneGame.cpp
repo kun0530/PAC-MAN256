@@ -6,6 +6,7 @@
 #include "Ghost.h"
 #include "CookieItem.h"
 
+#include "UiHud.h"
 #include "TextGo.h"
 
 SceneGame::SceneGame(SceneIds id) : Scene(id)
@@ -30,8 +31,11 @@ void SceneGame::Init()
 	ghost->sortLayer = 1;
 	AddGo(ghost);
 
-	uiScore = new TextGo("UI Score");
-	AddGo(uiScore, Ui);
+	uiHud = new UiHud("UI HUD");
+	AddGo(uiHud, Ui);
+
+	textChain = new TextGo("UI Chain");
+	AddGo(textChain);
 
 	Scene::Init();
 }
@@ -46,13 +50,11 @@ void SceneGame::Enter()
 	tileMap->SetPosition({ 0.f, 0.f });
 	tileMap->SetOrigin(Origins::MC);
 
-	uiScore->Set(font, std::to_string(score), 50, sf::Color::White);
-	uiScore->SetOutline(sf::Color::Black, 3.f);
-	uiScore->SetOrigin(Origins::TC);
-	uiScore->SetPosition({ FRAMEWORK.GetWindowSize().x / 2.f, 30.f });
-
 	score = 0;
 	chain = 0;
+
+	textChain->Set(font, "", 20.f, sf::Color::White);
+	textChain->SetOrigin(Origins::BC);
 
 	// 각 타일의 그리드 인덱스 확인용
 	for (int i = 0; i < tileMap->GetCellCount().x; i++)
@@ -88,6 +90,8 @@ void SceneGame::Update(float dt)
 
 	FindGoAll("Ghost", ghostList, Layers::World);
 
+	textChain->SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
+
 	// 그리드 좌표 확인용
 	if (SCENE_MGR.GetDeveloperMode())
 	{
@@ -113,20 +117,24 @@ void SceneGame::Draw(sf::RenderWindow& window)
 void SceneGame::AddScore(const int score)
 {
 	this->score += score * scoreScale;
-	//uiScore->SetString(std::to_string(this->score));
-	//uiScore->SetOrigin(Origins::TC);
+	uiHud->SetScore(this->score);
 }
 
 void SceneGame::AddChain()
 {
 	chain += 1;
-	uiScore->SetString(std::to_string(chain));
-	uiScore->SetOrigin(Origins::TC);
+	SetChain(chain);
 }
 
 void SceneGame::ResetChain()
 {
 	chain = 0;
-	uiScore->SetString(std::to_string(chain));
-	uiScore->SetOrigin(Origins::TC);
+	SetChain(chain);
+}
+
+void SceneGame::SetChain(int chain)
+{
+	textChain->SetString(std::to_string(chain));
+	/*textChain->SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));*/
+	// textChain->SetActive(true);
 }

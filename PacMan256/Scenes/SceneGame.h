@@ -4,6 +4,7 @@ class TileMap;
 class Player;
 class Ghost;
 
+class UiHud;
 class TextGo;
 
 class SceneGame : public Scene
@@ -19,8 +20,9 @@ protected:
 	Ghost* ghost = nullptr;
 
 	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
-	TextGo* uiScore = nullptr;
+	UiHud* uiHud = nullptr;
 	std::vector<TextGo*> posTexts;
+	TextGo* textChain = nullptr;
 
 	std::list<GameObject*> ghostList;
 
@@ -41,5 +43,6 @@ public:
 	void AddScore(const int score);
 	void AddChain();
 	void ResetChain();
+	void SetChain(int chain);
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 };
