@@ -12,6 +12,8 @@ protected:
 	int score = 0;
 	int scoreScale = 1;
 
+	int chain = 0;
+
 	TileMap* tileMap = nullptr;
 	Player* player = nullptr;
 	Ghost* ghost = nullptr;
@@ -37,5 +39,6 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	void AddScore(const int score);
+	void AddChain();
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 };

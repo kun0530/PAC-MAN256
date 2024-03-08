@@ -51,6 +51,9 @@ void SceneGame::Enter()
 	uiScore->SetOrigin(Origins::TC);
 	uiScore->SetPosition({ FRAMEWORK.GetWindowSize().x / 2.f, 30.f });
 
+	score = 0;
+	chain = 0;
+
 	// 각 타일의 그리드 인덱스 확인용
 	for (int i = 0; i < tileMap->GetCellCount().x; i++)
 	{
@@ -112,4 +115,9 @@ void SceneGame::AddScore(const int score)
 	this->score += score * scoreScale;
 	uiScore->SetString(std::to_string(this->score));
 	uiScore->SetOrigin(Origins::TC);
+}
+
+void SceneGame::AddChain()
+{
+	this->chain += 1;
 }

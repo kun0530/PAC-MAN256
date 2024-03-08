@@ -3,6 +3,7 @@
 #include "TileMap.h"
 #include "SceneGame.h"
 #include "Ghost.h"
+#include "Item.h"
 
 Player::Player(const std::string& name) : SpriteGo(name)
 {
@@ -31,7 +32,7 @@ void Player::Reset()
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 
 	gridIndex = { 13, 16 };
-	isMoving = false;
+	isArrive = true;
 	currentPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
 	SetPosition(currentPos);
 
@@ -46,7 +47,7 @@ void Player::Update(float dt)
 	if (inputDirection != sf::Vector2i(0, 0))
 		inputDirections.push(inputDirection);
 
-	if (!isMoving)
+	if (isArrive)
 	{
 		while (!inputDirections.empty())
 		{
@@ -63,7 +64,7 @@ void Player::Update(float dt)
 		{
 			nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
-			isMoving = true;
+			isArrive = false;
 			timer = 0.f;
 		}
 	}
@@ -77,7 +78,9 @@ void Player::Update(float dt)
 			gridIndex.x += (int)direction.x;
 			gridIndex.y += (int)direction.y;
 
-			isMoving = false;
+			EatItem();
+
+			isArrive = true;
 		}
 		else
 		{
@@ -87,12 +90,12 @@ void Player::Update(float dt)
 	}
 
 	// 아이템
-	if (itemMode != ItemMode::NONE)
+	if (itemMode != ItemType::NONE)
 	{
 		itemTimer += dt;
 		if (itemTimer > itemDuration)
 		{
-			SetItemMode(ItemMode::NONE);
+			SetItemMode(ItemType::NONE);
 		}
 	}
 }
@@ -107,21 +110,14 @@ void Player::Draw(sf::RenderWindow& window)
 	SpriteGo::Draw(window);
 }
 
-void Player::OnDie()
-{
-	// Game Over!!!
-	FRAMEWORK.SetTimeScale(0.f);
-	SetActive(false);
-}
-
-void Player::SetItemMode(ItemMode mode)
+void Player::SetItemMode(ItemType mode)
 {
 	itemMode = mode;
 
 	// TO-DO: 나중에 데이터 테이블로 정리
 	switch (itemMode)
 	{
-	case ItemMode::POWER_COOKIE:
+	case ItemType::POWER_COOKIE:
 		itemDuration = 5.f;
 		break;
 	default:
@@ -142,3 +138,34 @@ void Player::SetItemMode(ItemMode mode)
 	}
 	itemTimer = 0.f;
 }
+
+void Player::EatItem()
+{
+	auto itemInfo = tileMap->GetItem(gridIndex);
+
+	if (itemInfo.second == nullptr)
+		return;
+	
+	switch (itemInfo.first)
+	{
+	case ItemType::NONE:
+		break;
+	case ItemType::COOKIE:
+		sceneGame->AddScore(1);
+		itemInfo.second->SetActive(false);
+		break;
+	case ItemType::POWER_COOKIE:
+		sceneGame->AddScore(1);
+		SetItemMode(ItemType::POWER_COOKIE);
+		itemInfo.second->SetActive(false);
+		break;
+	}
+}
+
+void Player::OnDie()
+{
+	// Game Over!!!
+	FRAMEWORK.SetTimeScale(0.f);
+	SetActive(false);
+}
+

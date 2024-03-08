@@ -4,13 +4,6 @@
 class TileMap;
 class SceneGame;
 
-enum class ItemMode
-{
-	NONE,
-	POWER_COOKIE,
-	COUNT,
-};
-
 class Player : public SpriteGo
 {
 protected:
@@ -20,12 +13,12 @@ protected:
 	float speed = 300.f;
 
 	sf::Vector2i gridIndex = { 13, 16 };
-	bool isMoving = false;
+	bool isArrive = true;
 	std::queue<sf::Vector2i> inputDirections;
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
-	ItemMode itemMode = ItemMode::NONE;
+	ItemType itemMode = ItemType::NONE;
 	float itemDuration = 0.f;
 	float itemTimer = 0.f;
 
@@ -46,8 +39,9 @@ public:
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	const ItemMode GetItemMode() const { return itemMode; }
-	void SetItemMode(ItemMode mode);
+	const ItemType GetItemMode() const { return itemMode; }
+	void SetItemMode(ItemType mode);
+	void EatItem();
 	void OnDie();
 };
 

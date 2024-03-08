@@ -27,6 +27,36 @@ const sf::Vector2f& TileMap::GetGridPosition(int x, int y) const
 	return va[(y * cellCount.x + x) * 4].position - origin + sf::Vector2f(25.f, 25.f);
 }
 
+const std::pair<ItemType, Item*>& TileMap::GetItem(sf::Vector2i index) const
+{
+	std::pair<ItemType, Item*> itemInfo = { ItemType::NONE, nullptr };
+
+	// 범위 밖의 grid index
+	if (index.x < 0 || index.x > cellCount.x || index.y < 0 || index.y > cellCount.y)
+	{
+		return itemInfo;
+	}
+
+	for (auto tile : startMap)
+	{
+		if (tile->x == index.x && tile->y == index.y)
+		{
+			itemInfo.first = tile->itemType;
+			if (itemInfo.first == ItemType::COOKIE || itemInfo.first == ItemType::NONE)
+			{
+				itemInfo.second = tile->cookie;
+			}
+			else
+			{
+				itemInfo.second = tile->specialItem;
+			}
+			break;
+		}
+	}
+
+	return itemInfo;
+}
+
 bool TileMap::IsCorner(int x, int y) const
 {
 	// 1. 유효한 좌표인지 확인
@@ -296,6 +326,14 @@ void TileMap::Init()
 			tile->type = startPath[i * cellCount.x + j];
 			if (tile->type == 1)
 			{
+				CookieItem* cookie = new CookieItem;
+				cookie->SetGridIndex(j, i);
+				cookie->Init();
+				cookie->Reset();
+				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
+				tile->cookie = cookie;
+				tile->itemType = ItemType::COOKIE;
+
 				if (Utils::RandomRange(0, 100) < 1)
 				{
 					PowerCookieItem* powerCookie = new PowerCookieItem;
@@ -303,20 +341,13 @@ void TileMap::Init()
 					powerCookie->Init();
 					powerCookie->Reset();
 					SCENE_MGR.GetCurrentScene()->AddGo(powerCookie);
-					tile->item = powerCookie;
-				}
-				else
-				{
-					CookieItem* cookie = new CookieItem;
-					cookie->SetGridIndex(j, i);
-					cookie->Init();
-					cookie->Reset();
-					SCENE_MGR.GetCurrentScene()->AddGo(cookie);
-					tile->item = cookie;
+					tile->cookie->SetActive(false);
+					tile->specialItem = powerCookie;
+					tile->itemType = ItemType::POWER_COOKIE;
 				}
 			}
 
-			startMap.push_back(new Tile);
+			startMap.push_back(tile);
 		}
 	}
 }

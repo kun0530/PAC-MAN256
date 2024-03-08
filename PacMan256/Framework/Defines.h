@@ -16,3 +16,11 @@ enum class Languages
 {
 	Korean, English
 };
+
+enum class ItemType
+{
+	NONE,
+	COOKIE,
+	POWER_COOKIE,
+	COUNT,
+};

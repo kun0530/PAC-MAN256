@@ -46,6 +46,8 @@ void Ghost::Update(float dt)
 	if (timer > moveTime)
 	{
 		timer = 0.f;
+		gridIndex.x += (int)direction.x;
+		gridIndex.y += (int)direction.y;
 		currentPos = nextPos;
 		SetPosition(currentPos);
 
@@ -73,9 +75,7 @@ void Ghost::Update(float dt)
 			direction = nextDirection;
 		}
 
-		gridIndex.x += (int)direction.x;
-		gridIndex.y += (int)direction.y;
-		nextPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
+		nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x , gridIndex.y + (int)direction.y);
 		moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 	}
 	
@@ -84,7 +84,7 @@ void Ghost::Update(float dt)
 
 	if (gridIndex == player->GetGridIndex())
 	{
-		if (player->GetItemMode() == ItemMode::POWER_COOKIE)
+		if (player->GetItemMode() == ItemType::POWER_COOKIE)
 			OnDie();
 		else
 			player->OnDie();
@@ -103,9 +103,9 @@ void Ghost::Draw(sf::RenderWindow& window)
 
 void Ghost::ChangeMode()
 {
-	if (player->GetItemMode() == ItemMode::POWER_COOKIE)
+	if (player->GetItemMode() == ItemType::POWER_COOKIE)
 		SetTexture("graphics/Ghost_Glitch.png");
-	if (player->GetItemMode() == ItemMode::NONE)
+	if (player->GetItemMode() == ItemType::NONE)
 		SetTexture("graphics/Ghost_Red.png");
 }
 

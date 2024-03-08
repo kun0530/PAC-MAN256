@@ -29,12 +29,6 @@ void CookieItem::Reset()
 void CookieItem::Update(float dt)
 {
 	Item::Update(dt);
-
-	if (gridIndex == player->GetGridIndex())
-	{
-		sceneGame->AddScore(1);
-		SetActive(false);
-	}
 }
 
 void CookieItem::FixedUpdate(float dt)

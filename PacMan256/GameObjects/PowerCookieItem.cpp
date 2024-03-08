@@ -28,13 +28,6 @@ void PowerCookieItem::Reset()
 void PowerCookieItem::Update(float dt)
 {
 	Item::Update(dt);
-
-	if (gridIndex == player->GetGridIndex())
-	{
-		sceneGame->AddScore(1);
-		player->SetItemMode(ItemMode::POWER_COOKIE);
-		SetActive(false);
-	}
 }
 
 void PowerCookieItem::FixedUpdate(float dt)
