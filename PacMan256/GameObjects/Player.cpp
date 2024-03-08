@@ -102,6 +102,7 @@ void Player::Update(float dt)
 		itemTimer += dt;
 		if (itemTimer > itemDuration)
 		{
+			EndUsingItem();
 			SetUsingItem(ItemType::NONE);
 		}
 	}
@@ -136,7 +137,8 @@ bool Player::EatItem()
 		SetUsingItem(ItemType::POWER_COOKIE);
 		break;
 	case ItemType::FRUIT:
-		sceneGame->AddScore(1);
+		if (sceneGame->GetScoreMultiplier() < itemInfo.second->GetValue())
+			sceneGame->SetScoreMultiplier(itemInfo.second->GetValue());
 		SetUsingItem(ItemType::FRUIT);
 		break;
 	}
@@ -149,23 +151,8 @@ bool Player::EatItem()
 
 void Player::SetUsingItem(ItemType item)
 {
-	// 아이템 종료
-	switch (usingItem)
-	{
-	case ItemType::NONE:
-		break;
-	case ItemType::COOKIE:
-		break;
-	case ItemType::POWER_COOKIE:
-		break;
-	case ItemType::FRUIT:
-		sceneGame->SetScoreMultiplier(1);
-		break;
-	}
-
 	usingItem = item;
 
-	// 아이템 시작
 	switch (usingItem)
 	{
 	case ItemType::POWER_COOKIE:
@@ -173,7 +160,6 @@ void Player::SetUsingItem(ItemType item)
 		break;
 	case ItemType::FRUIT:
 		itemDuration = 10.f;
-		sceneGame->SetScoreMultiplier(2);
 		break;
 	default:
 		break;
@@ -194,10 +180,25 @@ void Player::SetUsingItem(ItemType item)
 	itemTimer = 0.f;
 }
 
+void Player::EndUsingItem()
+{
+	switch (usingItem)
+	{
+	case ItemType::NONE:
+		break;
+	case ItemType::COOKIE:
+		break;
+	case ItemType::POWER_COOKIE:
+		break;
+	case ItemType::FRUIT:
+		sceneGame->SetScoreMultiplier(1);
+		break;
+	}
+}
+
 void Player::OnDie()
 {
 	// Game Over!!!
 	FRAMEWORK.SetTimeScale(0.f);
 	SetActive(false);
 }
-

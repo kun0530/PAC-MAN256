@@ -1,9 +1,6 @@
 #include "pch.h"
 #include "TileMap.h"
 #include "Item.h"
-//#include "CookieItem.h"
-//#include "PowerCookieItem.h"
-//#include "FruitItem.h"
 
 TileMap::TileMap(const std::string& name) : GameObject(name)
 {
@@ -351,11 +348,30 @@ void TileMap::Init()
 					tile->specialItem = powerCookie;
 					tile->itemType = ItemType::POWER_COOKIE;
 				}
-				else if (randNum < 2)
+				else if (randNum < 5)
 				{
 					Item* fruit = new Item;
 					fruit->SetItemType(ItemType::FRUIT);
-					fruit->SetTexture("graphics/Fruit_Cherry.png");
+					int fruitNum = Utils::RandomRange(2, 7);
+					switch (fruitNum)
+					{
+					case 2:
+						fruit->SetTexture("graphics/Fruit_Cherry.png");
+						break;
+					case 3:
+						fruit->SetTexture("graphics/Fruit_Apple.png");
+						break;
+					case 4:
+						fruit->SetTexture("graphics/Fruit_Strawberry.png");
+						break;
+					case 5:
+						fruit->SetTexture("graphics/Fruit_Orange.png");
+						break;
+					case 6:
+						fruit->SetTexture("graphics/Fruit_Melon.png");
+						break;
+					}
+					fruit->SetValue(fruitNum);
 					fruit->SetGridIndex(j, i);
 					fruit->Init();
 					fruit->Reset();

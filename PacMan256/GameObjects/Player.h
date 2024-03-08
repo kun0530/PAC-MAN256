@@ -42,5 +42,6 @@ public:
 	bool EatItem();
 	const ItemType GetUsingItem() const { return usingItem; }
 	void SetUsingItem(ItemType item);
+	void EndUsingItem();
 	void OnDie();
 };

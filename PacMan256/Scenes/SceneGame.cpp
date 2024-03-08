@@ -4,7 +4,6 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Ghost.h"
-#include "CookieItem.h"
 
 #include "UiHud.h"
 #include "TextGo.h"
@@ -131,9 +130,4 @@ void SceneGame::ResetChain()
 {
 	chain = 0;
 	textChain->SetString(std::to_string(chain));
-}
-
-void SceneGame::SetScoreMultiplier(int multiplier)
-{
-	scoreMultiplier = multiplier;
 }

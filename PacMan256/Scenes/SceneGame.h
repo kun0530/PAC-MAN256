@@ -43,6 +43,9 @@ public:
 	void AddScore(const int score);
 	void AddChain();
 	void ResetChain();
-	void SetScoreMultiplier(int multiplier);
+
+	const int GetScoreMultiplier() const { return scoreMultiplier; }
+	void SetScoreMultiplier(int multiplier) { scoreMultiplier = multiplier; };
+
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 };

@@ -16,12 +16,17 @@ protected:
 
 	ItemType itemType = ItemType::NONE;
 
+	int value = 0;
+
 public:
 	Item(const std::string& name = "");
 	~Item() override = default;
 
 	void SetGridIndex(const int x, const int y) { gridIndex = { x, y }; }
 	void SetItemType(const ItemType type) { itemType = type; }
+
+	void SetValue(const int v) { value = v; }
+	const int GetValue() const { return value; }
 
 	virtual void Init() override;
 	virtual void Release() override;
