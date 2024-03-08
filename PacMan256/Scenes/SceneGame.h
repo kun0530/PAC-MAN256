@@ -48,4 +48,5 @@ public:
 	void SetScoreMultiplier(int multiplier) { scoreMultiplier = multiplier; };
 
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
+	void ChangeGhostMode();
 };

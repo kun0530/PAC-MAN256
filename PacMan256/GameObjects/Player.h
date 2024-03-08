@@ -10,7 +10,7 @@ protected:
 	sf::Vector2f direction = { 0.f, 0.f };
 	float timer = 0.f;
 	float moveTime = 0.f;
-	float speed = 300.f;
+	float speed = 250.f;
 
 	sf::Vector2i gridIndex = { 13, 16 };
 	bool isArrive = true;

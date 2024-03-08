@@ -165,18 +165,7 @@ void Player::SetUsingItem(ItemType item)
 		break;
 	}
 
-	std::list<GameObject*> goList = sceneGame->GetGhostList();
-	for (auto go : goList)
-	{
-		if (!go->GetActive())
-			continue;
-
-		Ghost* ghost = dynamic_cast<Ghost*>(go);
-		if (ghost != nullptr)
-		{
-			ghost->ChangeMode();
-		}
-	}
+	sceneGame->ChangeGhostMode();
 	itemTimer = 0.f;
 }
 
@@ -194,6 +183,8 @@ void Player::EndUsingItem()
 		sceneGame->SetScoreMultiplier(1);
 		break;
 	}
+
+	sceneGame->ChangeGhostMode();
 }
 
 void Player::OnDie()

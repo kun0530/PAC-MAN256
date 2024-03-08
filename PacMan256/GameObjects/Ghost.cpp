@@ -105,7 +105,7 @@ void Ghost::ChangeMode()
 {
 	if (player->GetUsingItem() == ItemType::POWER_COOKIE)
 		SetTexture("graphics/Ghost_Glitch.png");
-	if (player->GetUsingItem() == ItemType::NONE)
+	else
 		SetTexture("graphics/Ghost_Red.png");
 }
 

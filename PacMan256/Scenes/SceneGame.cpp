@@ -131,3 +131,18 @@ void SceneGame::ResetChain()
 	chain = 0;
 	textChain->SetString(std::to_string(chain));
 }
+
+void SceneGame::ChangeGhostMode()
+{
+	for (auto go : ghostList)
+	{
+		if (!go->GetActive())
+			continue;
+
+		Ghost* ghost = dynamic_cast<Ghost*>(go);
+		if (ghost != nullptr)
+		{
+			ghost->ChangeMode();
+		}
+	}
+}
