@@ -29,7 +29,7 @@ public:
 	Player(const std::string& name = "");
 	~Player() override = default;
 
-	bool IsMove(sf::Vector2i dir);
+	// bool IsMove(sf::Vector2i dir);
 	const sf::Vector2i& GetGridIndex() { return gridIndex; }
 
 	void Init() override;
@@ -41,7 +41,7 @@ public:
 
 	const ItemType GetItemMode() const { return itemMode; }
 	void SetItemMode(ItemType mode);
-	void EatItem();
+	bool EatItem();
 	void OnDie();
 };
 

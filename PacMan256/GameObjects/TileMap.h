@@ -39,7 +39,8 @@ public:
 	const sf::Vector2f& GetCellSize() const { return cellSize; }
 
 	const sf::Vector2f& GetGridPosition(int x, int y) const;
-	const std::pair<ItemType, Item*>& GetItem(sf::Vector2i index) const;
+	const std::pair<ItemType, Item*> GetItem(sf::Vector2i index) const;
+	void SetItemType(const sf::Vector2i index, const ItemType type);
 
 	bool IsBlocked(int x, int y) const { return startPath[y * cellCount.x + x] == 0; }
 	bool IsCorner(int x, int y) const;

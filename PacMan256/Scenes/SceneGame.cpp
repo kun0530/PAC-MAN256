@@ -113,11 +113,20 @@ void SceneGame::Draw(sf::RenderWindow& window)
 void SceneGame::AddScore(const int score)
 {
 	this->score += score * scoreScale;
-	uiScore->SetString(std::to_string(this->score));
-	uiScore->SetOrigin(Origins::TC);
+	//uiScore->SetString(std::to_string(this->score));
+	//uiScore->SetOrigin(Origins::TC);
 }
 
 void SceneGame::AddChain()
 {
-	this->chain += 1;
+	chain += 1;
+	uiScore->SetString(std::to_string(chain));
+	uiScore->SetOrigin(Origins::TC);
+}
+
+void SceneGame::ResetChain()
+{
+	chain = 0;
+	uiScore->SetString(std::to_string(chain));
+	uiScore->SetOrigin(Origins::TC);
 }

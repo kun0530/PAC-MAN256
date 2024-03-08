@@ -78,7 +78,14 @@ void Player::Update(float dt)
 			gridIndex.x += (int)direction.x;
 			gridIndex.y += (int)direction.y;
 
-			EatItem();
+			if (EatItem())
+			{
+				sceneGame->AddChain();
+			}
+			else
+			{
+				sceneGame->ResetChain();
+			}
 
 			isArrive = true;
 		}
@@ -139,27 +146,31 @@ void Player::SetItemMode(ItemType mode)
 	itemTimer = 0.f;
 }
 
-void Player::EatItem()
+bool Player::EatItem()
 {
-	auto itemInfo = tileMap->GetItem(gridIndex);
+	auto& itemInfo = tileMap->GetItem(gridIndex);
 
 	if (itemInfo.second == nullptr)
-		return;
+		return false;
 	
 	switch (itemInfo.first)
 	{
 	case ItemType::NONE:
-		break;
+		return false;
 	case ItemType::COOKIE:
 		sceneGame->AddScore(1);
 		itemInfo.second->SetActive(false);
+		tileMap->SetItemType(gridIndex, ItemType::NONE);
 		break;
 	case ItemType::POWER_COOKIE:
 		sceneGame->AddScore(1);
 		SetItemMode(ItemType::POWER_COOKIE);
 		itemInfo.second->SetActive(false);
+		tileMap->SetItemType(gridIndex, ItemType::NONE);
 		break;
 	}
+
+	return true;
 }
 
 void Player::OnDie()

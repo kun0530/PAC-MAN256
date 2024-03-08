@@ -40,5 +40,6 @@ public:
 
 	void AddScore(const int score);
 	void AddChain();
+	void ResetChain();
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 };

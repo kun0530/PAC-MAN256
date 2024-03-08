@@ -27,7 +27,7 @@ const sf::Vector2f& TileMap::GetGridPosition(int x, int y) const
 	return va[(y * cellCount.x + x) * 4].position - origin + sf::Vector2f(25.f, 25.f);
 }
 
-const std::pair<ItemType, Item*>& TileMap::GetItem(sf::Vector2i index) const
+const std::pair<ItemType, Item*> TileMap::GetItem(sf::Vector2i index) const
 {
 	std::pair<ItemType, Item*> itemInfo = { ItemType::NONE, nullptr };
 
@@ -37,24 +37,24 @@ const std::pair<ItemType, Item*>& TileMap::GetItem(sf::Vector2i index) const
 		return itemInfo;
 	}
 
-	for (auto tile : startMap)
+	auto tile = startMap[index.y * cellCount.x + index.x];
+
+	itemInfo.first = tile->itemType;
+	if (itemInfo.first == ItemType::COOKIE || itemInfo.first == ItemType::NONE)
 	{
-		if (tile->x == index.x && tile->y == index.y)
-		{
-			itemInfo.first = tile->itemType;
-			if (itemInfo.first == ItemType::COOKIE || itemInfo.first == ItemType::NONE)
-			{
-				itemInfo.second = tile->cookie;
-			}
-			else
-			{
-				itemInfo.second = tile->specialItem;
-			}
-			break;
-		}
+		itemInfo.second = tile->cookie;
+	}
+	else
+	{
+		itemInfo.second = tile->specialItem;
 	}
 
 	return itemInfo;
+}
+
+void TileMap::SetItemType(const sf::Vector2i index, const ItemType type)
+{
+	startMap[index.y * cellCount.x + index.x]->itemType = type;
 }
 
 bool TileMap::IsCorner(int x, int y) const
