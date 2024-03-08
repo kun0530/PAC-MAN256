@@ -11,6 +11,8 @@ Item::Item(const std::string& name) : SpriteGo(name)
 void Item::Init()
 {
 	SpriteGo::Init();
+
+	SetOrigin(Origins::MC);
 }
 
 void Item::Release()

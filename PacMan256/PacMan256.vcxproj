@@ -137,8 +137,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameObjects\FruitItem.cpp" />
-    <ClCompile Include="GameObjects\CookieItem.cpp" />
     <ClCompile Include="Framework\Animator.cpp" />
     <ClCompile Include="DataTables\DataTableMgr.cpp" />
     <ClCompile Include="DataTables\DataTable.cpp" />
@@ -161,7 +159,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="GameObjects\Player.cpp" />
-    <ClCompile Include="GameObjects\PowerCookieItem.cpp" />
     <ClCompile Include="Scenes\Scene.cpp" />
     <ClCompile Include="Framework\SceneMgr.cpp" />
     <ClCompile Include="Scenes\SceneGame.cpp" />
@@ -171,8 +168,6 @@
     <ClCompile Include="Framework\SoundMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameObjects\FruitItem.h" />
-    <ClInclude Include="GameObjects\CookieItem.h" />
     <ClInclude Include="Framework\Animator.h" />
     <ClInclude Include="DataTables\DataTableMgr.h" />
     <ClInclude Include="DataTables\DataTable.h" />
@@ -190,7 +185,6 @@
     <ClInclude Include="GameObjects\UiHud.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameObjects\Player.h" />
-    <ClInclude Include="GameObjects\PowerCookieItem.h" />
     <ClInclude Include="Scenes\Scene.h" />
     <ClInclude Include="Framework\SceneMgr.h" />
     <ClInclude Include="Scenes\SceneGame.h" />

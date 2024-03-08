@@ -11,7 +11,7 @@ class SceneGame : public Scene
 {
 protected:
 	int score = 0;
-	int scoreScale = 1;
+	int scoreMultiplier = 1;
 
 	int chain = 0;
 
@@ -43,6 +43,6 @@ public:
 	void AddScore(const int score);
 	void AddChain();
 	void ResetChain();
-	void SetChain(int chain);
+	void SetScoreMultiplier(int multiplier);
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 };

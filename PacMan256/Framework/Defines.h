@@ -22,5 +22,6 @@ enum class ItemType
 	NONE,
 	COOKIE,
 	POWER_COOKIE,
+	FRUIT,
 	COUNT,
 };

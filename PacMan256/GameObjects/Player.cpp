@@ -97,12 +97,12 @@ void Player::Update(float dt)
 	}
 
 	// 아이템
-	if (itemMode != ItemType::NONE)
+	if (usingItem != ItemType::NONE)
 	{
 		itemTimer += dt;
 		if (itemTimer > itemDuration)
 		{
-			SetItemMode(ItemType::NONE);
+			SetUsingItem(ItemType::NONE);
 		}
 	}
 }
@@ -117,15 +117,63 @@ void Player::Draw(sf::RenderWindow& window)
 	SpriteGo::Draw(window);
 }
 
-void Player::SetItemMode(ItemType mode)
+bool Player::EatItem()
 {
-	itemMode = mode;
+	auto& itemInfo = tileMap->GetItem(gridIndex);
 
-	// TO-DO: 나중에 데이터 테이블로 정리
-	switch (itemMode)
+	if (itemInfo.second == nullptr)
+		return false;
+	
+	switch (itemInfo.first)
+	{
+	case ItemType::NONE:
+		return false;
+	case ItemType::COOKIE:
+		sceneGame->AddScore(1);
+		break;
+	case ItemType::POWER_COOKIE:
+		sceneGame->AddScore(1);
+		SetUsingItem(ItemType::POWER_COOKIE);
+		break;
+	case ItemType::FRUIT:
+		sceneGame->AddScore(1);
+		SetUsingItem(ItemType::FRUIT);
+		break;
+	}
+
+	itemInfo.second->SetActive(false);
+	tileMap->SetItemType(gridIndex, ItemType::NONE);
+
+	return true;
+}
+
+void Player::SetUsingItem(ItemType item)
+{
+	// 아이템 종료
+	switch (usingItem)
+	{
+	case ItemType::NONE:
+		break;
+	case ItemType::COOKIE:
+		break;
+	case ItemType::POWER_COOKIE:
+		break;
+	case ItemType::FRUIT:
+		sceneGame->SetScoreMultiplier(1);
+		break;
+	}
+
+	usingItem = item;
+
+	// 아이템 시작
+	switch (usingItem)
 	{
 	case ItemType::POWER_COOKIE:
 		itemDuration = 5.f;
+		break;
+	case ItemType::FRUIT:
+		itemDuration = 10.f;
+		sceneGame->SetScoreMultiplier(2);
 		break;
 	default:
 		break;
@@ -144,33 +192,6 @@ void Player::SetItemMode(ItemType mode)
 		}
 	}
 	itemTimer = 0.f;
-}
-
-bool Player::EatItem()
-{
-	auto& itemInfo = tileMap->GetItem(gridIndex);
-
-	if (itemInfo.second == nullptr)
-		return false;
-	
-	switch (itemInfo.first)
-	{
-	case ItemType::NONE:
-		return false;
-	case ItemType::COOKIE:
-		sceneGame->AddScore(1);
-		itemInfo.second->SetActive(false);
-		tileMap->SetItemType(gridIndex, ItemType::NONE);
-		break;
-	case ItemType::POWER_COOKIE:
-		sceneGame->AddScore(1);
-		SetItemMode(ItemType::POWER_COOKIE);
-		itemInfo.second->SetActive(false);
-		tileMap->SetItemType(gridIndex, ItemType::NONE);
-		break;
-	}
-
-	return true;
 }
 
 void Player::OnDie()

@@ -18,7 +18,7 @@ protected:
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
-	ItemType itemMode = ItemType::NONE;
+	ItemType usingItem = ItemType::NONE;
 	float itemDuration = 0.f;
 	float itemTimer = 0.f;
 
@@ -39,9 +39,8 @@ public:
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
 
-	const ItemType GetItemMode() const { return itemMode; }
-	void SetItemMode(ItemType mode);
 	bool EatItem();
+	const ItemType GetUsingItem() const { return usingItem; }
+	void SetUsingItem(ItemType item);
 	void OnDie();
 };
-

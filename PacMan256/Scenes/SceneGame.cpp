@@ -35,6 +35,7 @@ void SceneGame::Init()
 	AddGo(uiHud, Ui);
 
 	textChain = new TextGo("UI Chain");
+	textChain->sortLayer = 2;
 	AddGo(textChain);
 
 	Scene::Init();
@@ -116,25 +117,23 @@ void SceneGame::Draw(sf::RenderWindow& window)
 
 void SceneGame::AddScore(const int score)
 {
-	this->score += score * scoreScale;
+	this->score += score * scoreMultiplier;
 	uiHud->SetScore(this->score);
 }
 
 void SceneGame::AddChain()
 {
 	chain += 1;
-	SetChain(chain);
+	textChain->SetString(std::to_string(chain));
 }
 
 void SceneGame::ResetChain()
 {
 	chain = 0;
-	SetChain(chain);
+	textChain->SetString(std::to_string(chain));
 }
 
-void SceneGame::SetChain(int chain)
+void SceneGame::SetScoreMultiplier(int multiplier)
 {
-	textChain->SetString(std::to_string(chain));
-	/*textChain->SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));*/
-	// textChain->SetActive(true);
+	scoreMultiplier = multiplier;
 }

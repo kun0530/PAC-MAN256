@@ -14,11 +14,14 @@ protected:
 
 	sf::Vector2i gridIndex = { 0, 0 };
 
+	ItemType itemType = ItemType::NONE;
+
 public:
 	Item(const std::string& name = "");
 	~Item() override = default;
 
 	void SetGridIndex(const int x, const int y) { gridIndex = { x, y }; }
+	void SetItemType(const ItemType type) { itemType = type; }
 
 	virtual void Init() override;
 	virtual void Release() override;

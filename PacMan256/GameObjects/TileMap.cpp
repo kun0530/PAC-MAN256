@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "TileMap.h"
-
-#include "CookieItem.h"
-#include "PowerCookieItem.h"
+#include "Item.h"
+//#include "CookieItem.h"
+//#include "PowerCookieItem.h"
+//#include "FruitItem.h"
 
 TileMap::TileMap(const std::string& name) : GameObject(name)
 {
@@ -326,7 +327,9 @@ void TileMap::Init()
 			tile->type = startPath[i * cellCount.x + j];
 			if (tile->type == 1)
 			{
-				CookieItem* cookie = new CookieItem;
+				Item* cookie = new Item;
+				cookie->SetItemType(ItemType::COOKIE);
+				cookie->SetTexture("graphics/cookie.png");
 				cookie->SetGridIndex(j, i);
 				cookie->Init();
 				cookie->Reset();
@@ -334,9 +337,12 @@ void TileMap::Init()
 				tile->cookie = cookie;
 				tile->itemType = ItemType::COOKIE;
 
-				if (Utils::RandomRange(0, 100) < 1)
+				int randNum = Utils::RandomRange(0, 100);
+				if (randNum < 1)
 				{
-					PowerCookieItem* powerCookie = new PowerCookieItem;
+					Item* powerCookie = new Item;
+					powerCookie->SetItemType(ItemType::POWER_COOKIE);
+					powerCookie->SetTexture("graphics/power_cookie.png");
 					powerCookie->SetGridIndex(j, i);
 					powerCookie->Init();
 					powerCookie->Reset();
@@ -344,6 +350,19 @@ void TileMap::Init()
 					tile->cookie->SetActive(false);
 					tile->specialItem = powerCookie;
 					tile->itemType = ItemType::POWER_COOKIE;
+				}
+				else if (randNum < 2)
+				{
+					Item* fruit = new Item;
+					fruit->SetItemType(ItemType::FRUIT);
+					fruit->SetTexture("graphics/Fruit_Cherry.png");
+					fruit->SetGridIndex(j, i);
+					fruit->Init();
+					fruit->Reset();
+					SCENE_MGR.GetCurrentScene()->AddGo(fruit);
+					tile->cookie->SetActive(false);
+					tile->specialItem = fruit;
+					tile->itemType = ItemType::FRUIT;
 				}
 			}
 
