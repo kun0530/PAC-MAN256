@@ -101,6 +101,81 @@ bool TileMap::IsFork(int x, int y, std::vector<sf::Vector2f>& directions) const
 	return true;
 }
 
+const int TileMap::CountOpenedCell(sf::Vector2i gridIndex) const
+{
+	int count = 0;
+	for (int i = - 1; i <= 1; i++)
+	{
+		for (int j = - 1; j <= 1; j++)
+		{
+			if (!IsBlocked(gridIndex.x + j, gridIndex.y + i))
+			{
+				count += 1;
+			}
+		}
+	}
+
+	return count;
+}
+
+const int TileMap::GetTileId(sf::Vector2i gridIndex, int count) const
+{
+	int indexId = 0;
+	for (int i = -1; i <= 1; i++)
+	{
+		for (int j = -1; j <= 1; j++)
+		{
+			switch (count)
+			{
+			case 1:
+				if (i != 0 && j != 0 && !IsBlocked(gridIndex.x + j, gridIndex.y + i))
+				{
+					indexId = (j + 2 * i + 5) / 2;
+					return indexId;
+				}
+				break;
+			case 2:
+			case 3:
+				if (j == 0 && !IsBlocked(gridIndex.x + j, gridIndex.y + i))
+				{
+					if (i == -1)
+					{
+						indexId = 5;
+					}
+					else
+					{
+						indexId = 6;
+					}
+					return indexId;
+				}
+				else if (i == 0 && !IsBlocked(gridIndex.x + j, gridIndex.y + i))
+				{
+					if (j == -1)
+					{
+						indexId = 7;
+					}
+					else
+					{
+						indexId = 8;
+					}
+					return indexId;
+				}
+				break;
+			case 5:
+				if (i != 0 && j != 0 && IsBlocked(gridIndex.x + j, gridIndex.y + i))
+				{
+					indexId = (j + 2 * i + 5) / 2 + 8;
+					return indexId;
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	return indexId;
+}
+
 void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<int>& tiles)
 {
 	cellCount = count;
@@ -119,18 +194,23 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 
 	sf::Vector2f texCoord0[4] = {
 		{ 0, 0 },
-		{ 50.f, 0 },
-		{ 50.f, 50.f },
-		{ 0, 50.f }
+		{ 32.f, 0 },
+		{ 32.f, 32.f },
+		{ 0, 32.f }
 	};
 
 	for (int i = 0; i < count.y; i++)
 	{
 		for (int j = 0; j < count.x; j++)
 		{
-			int texIndex = tiles[i * count.x + j];
-
 			int quadIndex = i * count.x + j; // 2차원 인덱스를 1차원 인덱스로 변환
+			int texIndexX = tiles[quadIndex];
+			int texIndexY = 0;
+			if (texIndexX == 0 && i > 0 && i < count.y - 1 && j > 0 && j < count.x - 1)
+			{
+				texIndexY = GetTileId(sf::Vector2i(j, i), CountOpenedCell(sf::Vector2i(j, i)));
+			}
+
 			sf::Vector2f quadPos(size.x * j, size.y * i);
 
 			for (int k = 0; k < 4; k++)
@@ -138,7 +218,8 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 				int vertexIndex = (quadIndex * 4) + k;
 				va[vertexIndex].position = quadPos + posOffsets[k];
 				va[vertexIndex].texCoords = texCoord0[k];
-				va[vertexIndex].texCoords.x += texIndex * 50.f;
+				va[vertexIndex].texCoords.x += texIndexX * 32.f;
+				va[vertexIndex].texCoords.y += texIndexY * 32.f;
 			}
 		}
 	}
@@ -310,7 +391,7 @@ void TileMap::Init()
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};*/
 
-	SetSpriteSheetId("graphics/sheet.png");
+	SetSpriteSheetId("graphics/Background_Sheet.png");
 	Set({ 30, 30 }, { 50.f, 50.f }, startPath);
 
 	startMap.clear();
