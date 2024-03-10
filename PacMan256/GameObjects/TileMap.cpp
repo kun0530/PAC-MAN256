@@ -194,9 +194,9 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 
 	sf::Vector2f texCoord0[4] = {
 		{ 0, 0 },
-		{ 32.f, 0 },
-		{ 32.f, 32.f },
-		{ 0, 32.f }
+		{ 128.f, 0 },
+		{ 128.f, 128.f },
+		{ 0, 128.f }
 	};
 
 	for (int i = 0; i < count.y; i++)
@@ -218,8 +218,8 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 				int vertexIndex = (quadIndex * 4) + k;
 				va[vertexIndex].position = quadPos + posOffsets[k];
 				va[vertexIndex].texCoords = texCoord0[k];
-				va[vertexIndex].texCoords.x += texIndexX * 32.f;
-				va[vertexIndex].texCoords.y += texIndexY * 32.f;
+				va[vertexIndex].texCoords.x += texIndexX * 128.f;
+				va[vertexIndex].texCoords.y += texIndexY * 128.f;
 			}
 		}
 	}
@@ -345,7 +345,7 @@ void TileMap::Init()
 		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0,  0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
 		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
@@ -354,6 +354,7 @@ void TileMap::Init()
 		0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
 		0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
 		0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};
 
@@ -391,7 +392,7 @@ void TileMap::Init()
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	};*/
 
-	SetSpriteSheetId("graphics/Background_Sheet.png");
+	SetSpriteSheetId("graphics/Background_Sheet5.png");
 	Set({ 30, 30 }, { 50.f, 50.f }, startPath);
 
 	startMap.clear();
