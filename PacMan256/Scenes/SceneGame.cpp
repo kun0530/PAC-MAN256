@@ -18,25 +18,30 @@ SceneGame::~SceneGame()
 
 void SceneGame::Init()
 {
-	tileMap1 = new TileMap("Background");
-	tileMap1->LoadFromFile("Tables/Test_Path.csv");
-	tileMap1->sortLayer = -1;
-	AddGo(tileMap1);
+	startTile = new TileMap("Background");
+	startTile->LoadFromFile("Tables/Start_Path.csv");
+	startTile->sortLayer = -1;
+	currentTile = startTile;
+	AddGo(startTile);
 
-	tileMap2 = new TileMap("Background2");
-	tileMap2->LoadFromFile("Tables/Start_Path.csv");
-	tileMap2->sortLayer = -1;
-	AddGo(tileMap2);
+	TileMap* tileMap = new TileMap("Background2");
+	tileMap->LoadFromFile("Tables/Path01.csv");
+	tileMap->sortLayer = -1;
+	nextTile = tileMap;
+	AddGo(tileMap);
 
 	// Enter
-	tileMap1->SetPosition({ 0.f, 0.f });
-	tileMap1->SetOrigin(Origins::MC);
+	startTile->SetPosition({ 0.f, 0.f });
+	startTile->SetOrigin(Origins::MC);
 
-	sf::Vector2f pos = tileMap1->GetPosition();
-	pos.y -= (tileMap1->GetGlobalBounds().height + tileMap2->GetGlobalBounds().height) / 2.f;
-	tileMap2->SetPosition(pos);
-	tileMap2->SetOrigin(Origins::MC);
-	//
+	tileMap->SetPosition({ 0.f, 0.f });
+	tileMap->SetOrigin(Origins::MC);
+
+	sf::Vector2f pos = startTile->GetPosition();
+	pos.y -= (startTile->GetGlobalBounds().height + tileMap->GetGlobalBounds().height) / 2.f;
+	tileMap->SetPosition(pos);
+	tileMap->SetOrigin(Origins::MC);
+	
 
 
 	player = new Player("Player");
@@ -71,15 +76,15 @@ void SceneGame::Enter()
 	textChain->SetOrigin(Origins::BC);
 
 	// 각 타일의 그리드 인덱스 확인용
-	for (int i = 0; i < tileMap2->GetCellCount().x; i++)
+	for (int i = 0; i < startTile->GetCellCount().x; i++)
 	{
-		for (int j = 0; j < tileMap2->GetCellCount().y; j++)
+		for (int j = 0; j < startTile->GetCellCount().y; j++)
 		{
 			TextGo* text = new TextGo("Position");
 			text->Set(font, "(" + std::to_string(i) + ", " + std::to_string(j) + ")",
 				15, sf::Color::Black);
 			// text->SetOutline(sf::Color::Black, 3.f);
-			text->SetPosition(tileMap2->GetGridPosition(i, j));
+			text->SetPosition(startTile->GetGridPosition(i, j));
 			text->SetOrigin(Origins::MC);
 			text->sortLayer = 2;
 			text->SetActive(false);

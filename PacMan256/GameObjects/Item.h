@@ -28,6 +28,8 @@ public:
 	void SetValue(const int v) { value = v; }
 	const int GetValue() const { return value; }
 
+	void SetTileMap(TileMap* tile) { tileMap = tile; }
+
 	virtual void Init() override;
 	virtual void Release() override;
 	virtual void Reset() override;

@@ -15,8 +15,14 @@ protected:
 
 	int chain = 0;
 
-	TileMap* tileMap1 = nullptr;
+	TileMap* startTile = nullptr;
 	TileMap* tileMap2 = nullptr; // TO-DO: 나중에 tileMap 컨테이너 생성
+
+	std::vector<TileMap*> tiles;
+	TileMap* prevTile = nullptr;
+	TileMap* currentTile = nullptr;
+	TileMap* nextTile = nullptr;
+
 	Player* player = nullptr;
 	Ghost* ghost = nullptr;
 

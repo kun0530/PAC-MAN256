@@ -361,6 +361,7 @@ void TileMap::Init()
 				cookie->SetItemType(ItemType::COOKIE);
 				cookie->SetTexture("graphics/cookie.png");
 				cookie->SetGridIndex(j, i);
+				cookie->SetTileMap(this);
 				cookie->Init();
 				cookie->Reset();
 				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
@@ -374,6 +375,7 @@ void TileMap::Init()
 					powerCookie->SetItemType(ItemType::POWER_COOKIE);
 					powerCookie->SetTexture("graphics/power_cookie.png");
 					powerCookie->SetGridIndex(j, i);
+					powerCookie->SetTileMap(this);
 					powerCookie->Init();
 					powerCookie->Reset();
 					SCENE_MGR.GetCurrentScene()->AddGo(powerCookie);
@@ -406,6 +408,7 @@ void TileMap::Init()
 					}
 					fruit->SetValue(fruitNum);
 					fruit->SetGridIndex(j, i);
+					fruit->SetTileMap(this);
 					fruit->Init();
 					fruit->Reset();
 					SCENE_MGR.GetCurrentScene()->AddGo(fruit);

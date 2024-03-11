@@ -25,7 +25,7 @@ void Item::Reset()
 	SpriteGo::Reset();
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
-	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
+	// tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
 	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));
