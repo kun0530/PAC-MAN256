@@ -15,7 +15,8 @@ protected:
 
 	int chain = 0;
 
-	TileMap* tileMap = nullptr;
+	TileMap* tileMap1 = nullptr;
+	TileMap* tileMap2 = nullptr; // TO-DO: 나중에 tileMap 컨테이너 생성
 	Player* player = nullptr;
 	Ghost* ghost = nullptr;
 

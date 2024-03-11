@@ -17,6 +17,8 @@ class TileMap : public GameObject
 	};
 
 protected:
+	std::string id;
+
 	sf::VertexArray va;
 	std::string spriteSheetId;
 	sf::Texture* texture;
@@ -26,8 +28,8 @@ protected:
 
 	sf::Transform transform;
 
-	std::vector<int> startPath;
-	std::vector<Tile*> startMap;
+	std::vector<int> paths;
+	std::vector<Tile*> tiles;
 public:
 
 	TileMap(const std::string& name = "");
@@ -42,13 +44,14 @@ public:
 	const std::pair<ItemType, Item*> GetItem(sf::Vector2i index) const;
 	void SetItemType(const sf::Vector2i index, const ItemType type);
 
-	bool IsBlocked(int x, int y) const { return startPath[y * cellCount.x + x] == 0; }
+	bool IsBlocked(int x, int y) const { return paths[y * cellCount.x + x] == 0; }
 	bool IsCorner(int x, int y) const;
 	bool IsFork(int x, int y, std::vector<sf::Vector2f>& dirList) const;
 	const int CountOpenedCell(sf::Vector2i gridIndex) const;
 	const int GetTileId(sf::Vector2i gridIndex, int count) const;
 
-	void Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<int>& tiles);
+	void LoadFromFile(const std::string& filePath);
+	void Set(const sf::Vector2i& count, const sf::Vector2f& size);
 	void SetSpriteSheetId(const std::string& id);
 	void UpdateTransform();
 

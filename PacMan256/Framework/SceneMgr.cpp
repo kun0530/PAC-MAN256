@@ -35,10 +35,7 @@ void SceneMgr::Release()
 void SceneMgr::ChangeScene(SceneIds id)
 {
 	// TO-DO: 모든 게임 오브젝트 업데이트 끝난 후에 씬 전환 되도록
-
-	scenes[(int)currentScene]->Exit();
-	currentScene = id;
-	scenes[(int)currentScene]->Enter();
+	nextScene = id;
 }
 
 void SceneMgr::Update(float dt)
@@ -49,11 +46,21 @@ void SceneMgr::Update(float dt)
 	}
 
 	scenes[(int)currentScene]->Update(dt);
+
+
 }
 
 void SceneMgr::LateUpdate(float dt)
 {
 	scenes[(int)currentScene]->LateUpdate(dt);
+
+	if (nextScene != SceneIds::None)
+	{
+		scenes[(int)currentScene]->Exit();
+		currentScene = nextScene;
+		scenes[(int)currentScene]->Enter();
+		nextScene = SceneIds::None;
+	}
 }
 
 void SceneMgr::FixedUpdate(float dt)

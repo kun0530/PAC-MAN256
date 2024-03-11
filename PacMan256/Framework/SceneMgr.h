@@ -18,6 +18,8 @@ protected:
 	SceneIds startScene = SceneIds::SCENEGAME;
 	SceneIds currentScene = startScene;
 
+	SceneIds nextScene = SceneIds::None;
+
 	bool isDeveloperMode = false;
 
 	SceneMgr() = default;

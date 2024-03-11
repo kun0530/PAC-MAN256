@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "TileMap.h"
 #include "Item.h"
+#include "rapidcsv.h"
 
 TileMap::TileMap(const std::string& name) : GameObject(name)
 {
@@ -22,7 +23,7 @@ sf::FloatRect TileMap::GetGlobalBounds()
 
 const sf::Vector2f& TileMap::GetGridPosition(int x, int y) const
 {
-	return va[(y * cellCount.x + x) * 4].position - origin + sf::Vector2f(25.f, 25.f);
+	return transform.transformPoint(va[(y * cellCount.x + x) * 4].position) + cellSize / 2.f;
 }
 
 const std::pair<ItemType, Item*> TileMap::GetItem(sf::Vector2i index) const
@@ -35,7 +36,7 @@ const std::pair<ItemType, Item*> TileMap::GetItem(sf::Vector2i index) const
 		return itemInfo;
 	}
 
-	auto tile = startMap[index.y * cellCount.x + index.x];
+	auto tile = tiles[index.y * cellCount.x + index.x];
 
 	itemInfo.first = tile->itemType;
 	if (itemInfo.first == ItemType::COOKIE || itemInfo.first == ItemType::NONE)
@@ -52,7 +53,7 @@ const std::pair<ItemType, Item*> TileMap::GetItem(sf::Vector2i index) const
 
 void TileMap::SetItemType(const sf::Vector2i index, const ItemType type)
 {
-	startMap[index.y * cellCount.x + index.x]->itemType = type;
+	tiles[index.y * cellCount.x + index.x]->itemType = type;
 }
 
 bool TileMap::IsCorner(int x, int y) const
@@ -120,6 +121,7 @@ const int TileMap::CountOpenedCell(sf::Vector2i gridIndex) const
 
 const int TileMap::GetTileId(sf::Vector2i gridIndex, int count) const
 {
+	// TO-DO: 시간 남으면 최적화
 	int indexId = 0;
 	for (int i = -1; i <= 1; i++)
 	{
@@ -176,7 +178,7 @@ const int TileMap::GetTileId(sf::Vector2i gridIndex, int count) const
 	return indexId;
 }
 
-void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std::vector<int>& tiles)
+void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 {
 	cellCount = count;
 	cellSize = size;
@@ -194,9 +196,9 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 
 	sf::Vector2f texCoord0[4] = {
 		{ 0, 0 },
-		{ 128.f, 0 },
-		{ 128.f, 128.f },
-		{ 0, 128.f }
+		{ 32.f, 0 },
+		{ 32.f, 32.f },
+		{ 0, 32.f }
 	};
 
 	for (int i = 0; i < count.y; i++)
@@ -204,7 +206,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 		for (int j = 0; j < count.x; j++)
 		{
 			int quadIndex = i * count.x + j; // 2차원 인덱스를 1차원 인덱스로 변환
-			int texIndexX = tiles[quadIndex];
+			int texIndexX = paths[quadIndex];
 			int texIndexY = 0;
 			if (texIndexX == 0 && i > 0 && i < count.y - 1 && j > 0 && j < count.x - 1)
 			{
@@ -218,11 +220,32 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size, const std
 				int vertexIndex = (quadIndex * 4) + k;
 				va[vertexIndex].position = quadPos + posOffsets[k];
 				va[vertexIndex].texCoords = texCoord0[k];
-				va[vertexIndex].texCoords.x += texIndexX * 128.f;
-				va[vertexIndex].texCoords.y += texIndexY * 128.f;
+				va[vertexIndex].texCoords.x += texIndexX * 32.f;
+				// va[vertexIndex].texCoords.y += texIndexY * 32.f;
 			}
 		}
 	}
+}
+
+void TileMap::LoadFromFile(const std::string& filePath)
+{
+	rapidcsv::Document doc(filePath);
+	id = filePath;
+
+	int row = doc.GetRowCount();
+	int col = doc.GetColumnCount();
+
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < col; j++)
+		{
+			auto cell = doc.GetCell<int>(j, i);
+			paths.push_back(cell);
+		}
+	}
+
+	SetSpriteSheetId("graphics/Background_Sheet.png");
+	Set({ col, row }, { 50.f, 50.f });
 }
 
 void TileMap::SetSpriteSheetId(const std::string& id)
@@ -323,79 +346,7 @@ void TileMap::Init()
 {
 	GameObject::Init();
 
-	// 테스트 시작 맵
-	startPath = {
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	};
-
-	// 실제 적용할 시작 맵
-	/*startPath = {
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0,
-		0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 
-		0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	};*/
-
-	SetSpriteSheetId("graphics/Background_Sheet5.png");
-	Set({ 30, 30 }, { 50.f, 50.f }, startPath);
-
-	startMap.clear();
+	tiles.clear();
 	for (int i = 0; i < cellCount.y; ++i)
 	{
 		for (int j = 0; j < cellCount.x; j++)
@@ -403,7 +354,7 @@ void TileMap::Init()
 			Tile* tile = new Tile;
 			tile->y = i;
 			tile->x = j;
-			tile->type = startPath[i * cellCount.x + j];
+			tile->type = paths[i * cellCount.x + j];
 			if (tile->type == 1)
 			{
 				Item* cookie = new Item;
@@ -464,7 +415,7 @@ void TileMap::Init()
 				}
 			}
 
-			startMap.push_back(tile);
+			tiles.push_back(tile);
 		}
 	}
 }
@@ -477,6 +428,14 @@ void TileMap::Release()
 void TileMap::Reset()
 {
 	GameObject::Reset();
+
+	for (auto tile : tiles)
+	{
+		if (tile->cookie != nullptr)
+			tile->cookie->SetPosition(GetGridPosition(tile->x, tile->y));
+		if (tile->specialItem != nullptr)
+			tile->specialItem->SetPosition(GetGridPosition(tile->x, tile->y));
+	}
 }
 
 void TileMap::Update(float dt)

@@ -18,9 +18,26 @@ SceneGame::~SceneGame()
 
 void SceneGame::Init()
 {
-	tileMap = new TileMap("Background");
-	tileMap->sortLayer = -1;
-	AddGo(tileMap);
+	tileMap1 = new TileMap("Background");
+	tileMap1->LoadFromFile("Tables/Test_Path.csv");
+	tileMap1->sortLayer = -1;
+	AddGo(tileMap1);
+
+	tileMap2 = new TileMap("Background2");
+	tileMap2->LoadFromFile("Tables/Start_Path.csv");
+	tileMap2->sortLayer = -1;
+	AddGo(tileMap2);
+
+	// Enter
+	tileMap1->SetPosition({ 0.f, 0.f });
+	tileMap1->SetOrigin(Origins::MC);
+
+	sf::Vector2f pos = tileMap1->GetPosition();
+	pos.y -= (tileMap1->GetGlobalBounds().height + tileMap2->GetGlobalBounds().height) / 2.f;
+	tileMap2->SetPosition(pos);
+	tileMap2->SetOrigin(Origins::MC);
+	//
+
 
 	player = new Player("Player");
 	player->sortLayer = 1;
@@ -47,9 +64,6 @@ void SceneGame::Release()
 
 void SceneGame::Enter()
 {
-	tileMap->SetPosition({ 0.f, 0.f });
-	tileMap->SetOrigin(Origins::MC);
-
 	score = 0;
 	chain = 0;
 
@@ -57,15 +71,15 @@ void SceneGame::Enter()
 	textChain->SetOrigin(Origins::BC);
 
 	// 각 타일의 그리드 인덱스 확인용
-	for (int i = 0; i < tileMap->GetCellCount().x; i++)
+	for (int i = 0; i < tileMap2->GetCellCount().x; i++)
 	{
-		for (int j = 0; j < tileMap->GetCellCount().y; j++)
+		for (int j = 0; j < tileMap2->GetCellCount().y; j++)
 		{
 			TextGo* text = new TextGo("Position");
 			text->Set(font, "(" + std::to_string(i) + ", " + std::to_string(j) + ")",
 				15, sf::Color::Black);
-			//text->SetOutline(sf::Color::Black, 3.f);
-			text->SetPosition(tileMap->GetGridPosition(i, j));
+			// text->SetOutline(sf::Color::Black, 3.f);
+			text->SetPosition(tileMap2->GetGridPosition(i, j));
 			text->SetOrigin(Origins::MC);
 			text->sortLayer = 2;
 			text->SetActive(false);
