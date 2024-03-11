@@ -229,7 +229,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 				va[vertexIndex].position = quadPos + posOffsets[k];
 				va[vertexIndex].texCoords = texCoord0[k];
 				va[vertexIndex].texCoords.x += texIndexX * 32.f;
-				// va[vertexIndex].texCoords.y += texIndexY * 32.f;
+				va[vertexIndex].texCoords.y += texIndexY * 32.f;
 			}
 		}
 	}
@@ -252,7 +252,7 @@ void TileMap::LoadFromFile(const std::string& filePath)
 		}
 	}
 
-	SetSpriteSheetId("graphics/Background_Sheet.png");
+	SetSpriteSheetId("graphics/Background_Sheet4.png");
 	Set({ col, row }, { 50.f, 50.f });
 }
 
@@ -375,6 +375,7 @@ void TileMap::Init()
 				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
 				tile->cookie = cookie;
 				tile->itemType = ItemType::COOKIE;
+				cookie->SetActive(false);
 
 				int randNum = Utils::RandomRange(0, 100);
 				if (randNum < 1)
@@ -390,6 +391,7 @@ void TileMap::Init()
 					tile->cookie->SetActive(false);
 					tile->specialItem = powerCookie;
 					tile->itemType = ItemType::POWER_COOKIE;
+					powerCookie->SetActive(false);
 				}
 				else if (randNum < 3)
 				{
@@ -423,6 +425,7 @@ void TileMap::Init()
 					tile->cookie->SetActive(false);
 					tile->specialItem = fruit;
 					tile->itemType = ItemType::FRUIT;
+					fruit->SetActive(false);
 				}
 			}
 
@@ -439,13 +442,21 @@ void TileMap::Release()
 void TileMap::Reset()
 {
 	GameObject::Reset();
-
-	for (auto tile : tiles)
+	if (active)
 	{
-		if (tile->cookie != nullptr)
-			tile->cookie->SetPosition(GetGridPosition(tile->x, tile->y));
-		if (tile->specialItem != nullptr)
-			tile->specialItem->SetPosition(GetGridPosition(tile->x, tile->y));
+		for (auto tile : tiles)
+		{
+			if (tile->cookie != nullptr)
+			{
+				tile->cookie->SetActive(true);
+				tile->cookie->SetPosition(GetGridPosition(tile->x, tile->y));
+			}
+			if (tile->specialItem != nullptr)
+			{
+				tile->specialItem->SetActive(true);
+				tile->specialItem->SetPosition(GetGridPosition(tile->x, tile->y));
+			}
+		}
 	}
 }
 

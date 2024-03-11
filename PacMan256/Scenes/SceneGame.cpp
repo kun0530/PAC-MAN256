@@ -24,25 +24,27 @@ void SceneGame::Init()
 	currentTile = startTile;
 	AddGo(startTile);
 
-	TileMap* tileMap = new TileMap("Background2");
-	tileMap->LoadFromFile("Tables/Path01.csv");
-	tileMap->sortLayer = -1;
-	nextTile = tileMap;
-	AddGo(tileMap);
+	for (int i = 1; i <= 3; i++)
+	{
+		TileMap* tileMap = new TileMap();
+		tileMap->LoadFromFile("Tables/Path" + std::to_string(i) + ".csv");
+		tileMap->sortLayer = -1;
+		tileMap->SetActive(false);
+		AddGo(tileMap);
+		tileMaps.push_back(tileMap);
+	}
+	nextTile = tileMaps[0];
+	nextTile->SetActive(true);
 
 	// Enter
 	startTile->SetPosition({ 0.f, 0.f });
 	startTile->SetOrigin(Origins::MC);
 
-	tileMap->SetPosition({ 0.f, 0.f });
-	tileMap->SetOrigin(Origins::MC);
-
 	sf::Vector2f pos = startTile->GetPosition();
-	pos.y -= (startTile->GetGlobalBounds().height + tileMap->GetGlobalBounds().height) / 2.f;
-	tileMap->SetPosition(pos);
-	tileMap->SetOrigin(Origins::MC);
+	pos.y -= (startTile->GetGlobalBounds().height + nextTile->GetGlobalBounds().height) / 2.f;
+	nextTile->SetPosition(pos);
+	nextTile->SetOrigin(Origins::MC);
 	
-
 
 	player = new Player("Player");
 	player->sortLayer = 1;
