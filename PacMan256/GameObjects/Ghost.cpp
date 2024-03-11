@@ -25,6 +25,9 @@ void Ghost::Reset()
 {
 	SpriteGo::Reset();
 
+	// Test
+	SetActive(false);
+
 	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
 	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 	

@@ -47,6 +47,9 @@ public:
 
 	void Draw(sf::RenderWindow& window) override;
 
+	TileMap* ChangeTileMap(bool isGoUp);
+	const TileMap* GetPrevTileMap() const { return prevTile; }
+
 	void AddScore(const int score);
 	void AddChain();
 	void ResetChain();

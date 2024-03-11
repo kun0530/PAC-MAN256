@@ -44,7 +44,7 @@ public:
 	const std::pair<ItemType, Item*> GetItem(sf::Vector2i index) const;
 	void SetItemType(const sf::Vector2i index, const ItemType type);
 
-	bool IsBlocked(int x, int y) const { return paths[y * cellCount.x + x] == 0; }
+	bool IsBlocked(int x, int y) const;
 	bool IsCorner(int x, int y) const;
 	bool IsFork(int x, int y, std::vector<sf::Vector2f>& dirList) const;
 	const int CountOpenedCell(sf::Vector2i gridIndex) const;

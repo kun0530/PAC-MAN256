@@ -56,6 +56,14 @@ void TileMap::SetItemType(const sf::Vector2i index, const ItemType type)
 	tiles[index.y * cellCount.x + index.x]->itemType = type;
 }
 
+bool TileMap::IsBlocked(int x, int y) const
+{
+	if (x < 0 || y < 0 || x >= cellCount.x || y >= cellCount.y)
+		return true;
+
+	return paths[y * cellCount.x + x] == 0;
+}
+
 bool TileMap::IsCorner(int x, int y) const
 {
 	// 1. 유효한 좌표인지 확인

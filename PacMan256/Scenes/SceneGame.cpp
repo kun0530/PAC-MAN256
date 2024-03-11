@@ -139,6 +139,23 @@ void SceneGame::AddScore(const int score)
 	uiHud->SetScore(this->score);
 }
 
+TileMap* SceneGame::ChangeTileMap(bool isGoUp)
+{
+	if (isGoUp)
+	{
+		// 이전 prev타일은 제거(킬 스크린 위치 조정)
+		prevTile = currentTile;
+		currentTile = nextTile;
+		// nextTile = 랜덤
+	}
+	else
+	{
+		nextTile = currentTile;
+		currentTile = prevTile;
+	}
+	return currentTile;
+}
+
 void SceneGame::AddChain()
 {
 	chain += 1;
