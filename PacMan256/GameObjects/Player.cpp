@@ -50,64 +50,59 @@ void Player::Update(float dt)
 
 	if (isArrive)
 	{
+		bool isMove = false;
+
 		while (!inputDirections.empty())
 		{
 			sf::Vector2i dir = inputDirections.front();
 			inputDirections.pop();
 
-			int newIndexX = gridIndex.x + dir.x;
-			int newIndexY = gridIndex.y + dir.y;
+			/*int newIndexX = gridIndex.x + dir.x;
+			int newIndexY = gridIndex.y + dir.y;*/
 
 			if ((!currentTileMap->IsBlocked(gridIndex.x + dir.x, gridIndex.y + dir.y)) ||
 				((gridIndex.y + dir.y >= currentTileMap->GetCellCount().y)
 					&& (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))))
-			{
+			{ 
 				direction = (sf::Vector2f)dir;
+				isMove = true;
 			}
 		}
 
-		if (gridIndex.y + (int)direction.y < 0)
+		inputDirections.push((sf::Vector2i)direction);
+
+		if (isMove)
 		{
-			currentTileMap = sceneGame->ChangeTileMap(true);
-			nextPos = currentTileMap->GetGridPosition(gridIndex.x, currentTileMap->GetCellCount().y - 1);
-			gridIndex.y = currentTileMap->GetCellCount().y;
-			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
-			isArrive = false;
-			timer = 0.f;
-		}
-		else if (gridIndex.y + (int)direction.y >= currentTileMap->GetCellCount().y)
-		{
-			if (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))
+			sf::Vector2i nextGridIndex = { gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y };
+			if (nextGridIndex.y < 0)
+			{
+				currentTileMap = sceneGame->ChangeTileMap(true);
+				nextPos = currentTileMap->GetGridPosition(gridIndex.x, currentTileMap->GetCellCount().y - 1);
+				gridIndex.y = currentTileMap->GetCellCount().y;
+			}
+			else if (nextGridIndex.y >= currentTileMap->GetCellCount().y)
 			{
 				currentTileMap = sceneGame->ChangeTileMap(false);
 				nextPos = currentTileMap->GetGridPosition(gridIndex.x, 0);
 				gridIndex.y = -1;
-				moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
-				isArrive = false;
-				timer = 0.f;
 			}
-		}
-		else if (gridIndex.x + (int)direction.x < 0)
-		{
-			nextPos = currentPos - sf::Vector2f(currentTileMap->GetCellSize().x, 0.f);
-			gridIndex.x = currentTileMap->GetCellCount().x;
-			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
-			isArrive = false;
-			isWarp = true;
-			timer = 0.f;
-		}
-		else if (gridIndex.x + (int)direction.x >= currentTileMap->GetCellCount().x)
-		{
-			nextPos = currentPos + sf::Vector2f(currentTileMap->GetCellSize().x, 0.f);
-			gridIndex.x = -1;
-			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
-			isArrive = false;
-			isWarp = true;
-			timer = 0.f;
-		}
-		else if (!currentTileMap->IsBlocked(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y))
-		{
-			nextPos = currentTileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+			else if (nextGridIndex.x < 0)
+			{
+				nextPos = currentPos - sf::Vector2f(currentTileMap->GetCellSize().x, 0.f);
+				gridIndex.x = currentTileMap->GetCellCount().x;
+				isWarp = true;
+			}
+			else if (nextGridIndex.x >= currentTileMap->GetCellCount().x)
+			{
+				nextPos = currentPos + sf::Vector2f(currentTileMap->GetCellSize().x, 0.f);
+				gridIndex.x = -1;
+				isWarp = true;
+			}
+			else
+			{
+				nextPos = currentTileMap->GetGridPosition(nextGridIndex.x, nextGridIndex.y);
+			}
+
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 			isArrive = false;
 			timer = 0.f;

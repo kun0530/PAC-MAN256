@@ -52,7 +52,8 @@ public:
 
 	TileMap* ChangeTileMap(bool isGoUp);
 	TileMap* GetCurrentTileMap() const { return currentTileMap; }
-	const TileMap* GetPrevTileMap() const { return prevTileMap; }
+	TileMap* GetPrevTileMap() const { return prevTileMap; }
+	TileMap* GetNextTileMap() const { return nextTileMap; }
 	const int GetCurrentTileMapId() const { return currentTileMapId; }
 
 	void AddScore(const int score);
