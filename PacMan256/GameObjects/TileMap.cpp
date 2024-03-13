@@ -44,7 +44,10 @@ Item* TileMap::GetItem(sf::Vector2i index) const
 
 bool TileMap::IsBlocked(int x, int y) const
 {
-	if (x < 0 || y < 0 || x >= cellCount.x || y >= cellCount.y)
+	if (x < 0 || y < 0 || x >= cellCount.x)
+		return false;
+
+	if (y >= cellCount.y)
 		return true;
 
 	return paths[y * cellCount.x + x] == 0;

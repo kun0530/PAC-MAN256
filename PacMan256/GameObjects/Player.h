@@ -17,6 +17,7 @@ protected:
 	int currentTileMapId = 0;
 
 	bool isArrive = true;
+	bool isWarp = false;
 	std::queue<sf::Vector2i> inputDirections;
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;

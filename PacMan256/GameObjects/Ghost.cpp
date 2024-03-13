@@ -32,6 +32,7 @@ void Ghost::Reset()
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	tileMap = sceneGame->GetCurrentTileMap();
 	player = dynamic_cast<Player*>(sceneGame->FindGo("Player"));
+	currentTileMapId = sceneGame->GetCurrentTileMapId();
 	
 	// gridIndex 랜덤 설정하고
 	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));

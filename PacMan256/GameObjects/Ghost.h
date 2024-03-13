@@ -14,6 +14,7 @@ protected:
 	float moveTime = 0.f;
 
 	sf::Vector2i gridIndex = { 8, 2 };
+	int currentTileMapId = 0;
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 

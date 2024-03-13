@@ -33,6 +33,7 @@ void Player::Reset()
 
 	gridIndex = { 13, 16 };
 	isArrive = true;
+	isWarp = false;
 	currentPos = currentTileMap->GetGridPosition(gridIndex.x, gridIndex.y);
 	SetPosition(currentPos);
 
@@ -54,12 +55,12 @@ void Player::Update(float dt)
 			sf::Vector2i dir = inputDirections.front();
 			inputDirections.pop();
 
-			if (gridIndex.y + dir.y < 0 || ((gridIndex.y + dir.y >= currentTileMap->GetCellCount().y) && (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))))
-			{
-				direction = (sf::Vector2f)dir;
-				continue;
-			}
-			if (!currentTileMap->IsBlocked(gridIndex.x + dir.x, gridIndex.y + dir.y))
+			int newIndexX = gridIndex.x + dir.x;
+			int newIndexY = gridIndex.y + dir.y;
+
+			if ((!currentTileMap->IsBlocked(gridIndex.x + dir.x, gridIndex.y + dir.y)) ||
+				((gridIndex.y + dir.y >= currentTileMap->GetCellCount().y)
+					&& (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))))
 			{
 				direction = (sf::Vector2f)dir;
 			}
@@ -86,6 +87,24 @@ void Player::Update(float dt)
 				timer = 0.f;
 			}
 		}
+		else if (gridIndex.x + (int)direction.x < 0)
+		{
+			nextPos = currentPos - sf::Vector2f(currentTileMap->GetCellSize().x, 0.f);
+			gridIndex.x = currentTileMap->GetCellCount().x;
+			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
+			isArrive = false;
+			isWarp = true;
+			timer = 0.f;
+		}
+		else if (gridIndex.x + (int)direction.x >= currentTileMap->GetCellCount().x)
+		{
+			nextPos = currentPos + sf::Vector2f(currentTileMap->GetCellSize().x, 0.f);
+			gridIndex.x = -1;
+			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
+			isArrive = false;
+			isWarp = true;
+			timer = 0.f;
+		}
 		else if (!currentTileMap->IsBlocked(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y))
 		{
 			nextPos = currentTileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
@@ -98,22 +117,34 @@ void Player::Update(float dt)
 	{
 		if (timer > moveTime)
 		{
-			currentPos = nextPos;
-			SetPosition(currentPos);
-
-			gridIndex.x += (int)direction.x;
-			gridIndex.y += (int)direction.y;
-
-			if (EatItem())
+			if (isWarp)
 			{
-				sceneGame->AddChain();
+				nextPos = currentTileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+				currentPos = nextPos - (currentTileMap->GetCellSize().x * direction);
+				SetPosition(currentPos);
+				moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
+				timer = 0.f;
+				isWarp = false;
 			}
 			else
 			{
-				sceneGame->ResetChain();
-			}
+				currentPos = nextPos;
+				SetPosition(currentPos);
 
-			isArrive = true;
+				gridIndex.x += (int)direction.x;
+				gridIndex.y += (int)direction.y;
+
+				if (EatItem())
+				{
+					sceneGame->AddChain();
+				}
+				else
+				{
+					sceneGame->ResetChain();
+				}
+
+				isArrive = true;
+			}
 		}
 		else
 		{
