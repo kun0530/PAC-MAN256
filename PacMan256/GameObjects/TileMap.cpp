@@ -374,61 +374,9 @@ void TileMap::Init()
 				cookie->Reset();
 				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
 				tile->cookie = cookie;
-				tile->itemType = ItemType::COOKIE;
 				cookie->SetActive(false);
-
-				int randNum = Utils::RandomRange(0, 100);
-				if (randNum < 1)
-				{
-					Item* powerCookie = new Item;
-					powerCookie->SetItemType(ItemType::POWER_COOKIE);
-					powerCookie->SetTexture("graphics/power_cookie.png");
-					powerCookie->SetGridIndex(j, i);
-					powerCookie->SetTileMap(this);
-					powerCookie->Init();
-					powerCookie->Reset();
-					SCENE_MGR.GetCurrentScene()->AddGo(powerCookie);
-					tile->cookie->SetActive(false);
-					tile->specialItem = powerCookie;
-					tile->itemType = ItemType::POWER_COOKIE;
-					powerCookie->SetActive(false);
-				}
-				else if (randNum < 3)
-				{
-					Item* fruit = new Item;
-					fruit->SetItemType(ItemType::FRUIT);
-					int fruitNum = Utils::RandomRange(2, 7);
-					switch (fruitNum)
-					{
-					case 2:
-						fruit->SetTexture("graphics/Fruit_Cherry.png");
-						break;
-					case 3:
-						fruit->SetTexture("graphics/Fruit_Apple.png");
-						break;
-					case 4:
-						fruit->SetTexture("graphics/Fruit_Strawberry.png");
-						break;
-					case 5:
-						fruit->SetTexture("graphics/Fruit_Orange.png");
-						break;
-					case 6:
-						fruit->SetTexture("graphics/Fruit_Melon.png");
-						break;
-					}
-					fruit->SetValue(fruitNum);
-					fruit->SetGridIndex(j, i);
-					fruit->SetTileMap(this);
-					fruit->Init();
-					fruit->Reset();
-					SCENE_MGR.GetCurrentScene()->AddGo(fruit);
-					tile->cookie->SetActive(false);
-					tile->specialItem = fruit;
-					tile->itemType = ItemType::FRUIT;
-					fruit->SetActive(false);
-				}
+				tile->itemType = ItemType::NONE;
 			}
-
 			tiles.push_back(tile);
 		}
 	}
@@ -442,21 +390,84 @@ void TileMap::Release()
 void TileMap::Reset()
 {
 	GameObject::Reset();
-	if (active)
+
+	if (!active)
+		return;
+
+	for (auto tile : tiles)
 	{
-		for (auto tile : tiles)
+		if (IsBlocked(tile->x, tile->y))
+			continue;
+
+		if (tile->specialItem != nullptr)
 		{
-			if (tile->cookie != nullptr)
-			{
-				tile->cookie->SetActive(true);
-				tile->cookie->SetPosition(GetGridPosition(tile->x, tile->y));
-			}
-			if (tile->specialItem != nullptr)
-			{
-				tile->specialItem->SetActive(true);
-				tile->specialItem->SetPosition(GetGridPosition(tile->x, tile->y));
-			}
+			SCENE_MGR.GetCurrentScene()->RemoveGo(tile->specialItem);
+			tile->specialItem = nullptr;
 		}
+
+		int randNum = Utils::RandomRange(0, 100);
+
+		if (randNum < 1)
+		{
+			Item* powerCookie = new Item;
+			powerCookie->SetItemType(ItemType::POWER_COOKIE); // 여기서 텍스처만 바꿔도 될 것 같은데?
+			powerCookie->SetTexture("graphics/power_cookie.png");
+			powerCookie->SetGridIndex(tile->x, tile->y);
+			powerCookie->SetTileMap(this); // 이것도 왜 필요한건지 모르겠는데
+			powerCookie->Init();
+			powerCookie->Reset();
+			SCENE_MGR.GetCurrentScene()->AddGo(powerCookie);
+			tile->cookie->SetActive(false);
+			tile->specialItem = powerCookie;
+			tile->itemType = ItemType::POWER_COOKIE;
+			continue;
+		}
+		else if (randNum < 3)
+		{
+			Item* fruit = new Item;
+			fruit->SetItemType(ItemType::FRUIT);
+			int fruitNum = Utils::RandomRange(2, 7);
+			switch (fruitNum)
+			{
+			case 2:
+				fruit->SetTexture("graphics/Fruit_Cherry.png");
+				break;
+			case 3:
+				fruit->SetTexture("graphics/Fruit_Apple.png");
+				break;
+			case 4:
+				fruit->SetTexture("graphics/Fruit_Strawberry.png");
+				break;
+			case 5:
+				fruit->SetTexture("graphics/Fruit_Orange.png");
+				break;
+			case 6:
+				fruit->SetTexture("graphics/Fruit_Melon.png");
+				break;
+			}
+			fruit->SetValue(fruitNum);
+			fruit->SetGridIndex(tile->x, tile->y);
+			fruit->SetTileMap(this);
+			fruit->Init();
+			fruit->Reset();
+			SCENE_MGR.GetCurrentScene()->AddGo(fruit);
+			tile->cookie->SetActive(false);
+			tile->specialItem = fruit;
+			tile->itemType = ItemType::FRUIT;
+			continue;
+		}
+
+		if (tile->cookie != nullptr)
+		{
+			tile->cookie->SetActive(true);
+			tile->cookie->SetPosition(GetGridPosition(tile->x, tile->y));
+			tile->itemType = ItemType::COOKIE;
+		}
+		/*if (tile->specialItem != nullptr)
+		{
+			tile->specialItem->SetActive(true);
+			tile->specialItem->SetPosition(GetGridPosition(tile->x, tile->y));
+		}*/
 	}
 }
 
