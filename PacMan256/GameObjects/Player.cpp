@@ -28,12 +28,12 @@ void Player::Reset()
 {
 	SpriteGo::Reset();
 
-	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
+	currentTileMap = sceneGame->GetCurrentTileMap();
 
 	gridIndex = { 13, 16 };
 	isArrive = true;
-	currentPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
+	currentPos = currentTileMap->GetGridPosition(gridIndex.x, gridIndex.y);
 	SetPosition(currentPos);
 
 	timer = 0.f;
@@ -54,12 +54,12 @@ void Player::Update(float dt)
 			sf::Vector2i dir = inputDirections.front();
 			inputDirections.pop();
 
-			if (gridIndex.y + dir.y < 0 || ((gridIndex.y + dir.y >= tileMap->GetCellCount().y) && (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))))
+			if (gridIndex.y + dir.y < 0 || ((gridIndex.y + dir.y >= currentTileMap->GetCellCount().y) && (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))))
 			{
 				direction = (sf::Vector2f)dir;
 				continue;
 			}
-			if (!tileMap->IsBlocked(gridIndex.x + dir.x, gridIndex.y + dir.y))
+			if (!currentTileMap->IsBlocked(gridIndex.x + dir.x, gridIndex.y + dir.y))
 			{
 				direction = (sf::Vector2f)dir;
 			}
@@ -67,28 +67,28 @@ void Player::Update(float dt)
 
 		if (gridIndex.y + (int)direction.y < 0)
 		{
-			tileMap = sceneGame->ChangeTileMap(true);
-			nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
-			gridIndex.y = tileMap->GetCellCount().y;
+			currentTileMap = sceneGame->ChangeTileMap(true);
+			nextPos = currentTileMap->GetGridPosition(gridIndex.x, currentTileMap->GetCellCount().y - 1);
+			gridIndex.y = currentTileMap->GetCellCount().y;
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 			isArrive = false;
 			timer = 0.f;
 		}
-		else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
+		else if (gridIndex.y + (int)direction.y >= currentTileMap->GetCellCount().y)
 		{
 			if (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))
 			{
-				tileMap = sceneGame->ChangeTileMap(false);
-				nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
+				currentTileMap = sceneGame->ChangeTileMap(false);
+				nextPos = currentTileMap->GetGridPosition(gridIndex.x, 0);
 				gridIndex.y = -1;
 				moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 				isArrive = false;
 				timer = 0.f;
 			}
 		}
-		else if (!tileMap->IsBlocked(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y))
+		else if (!currentTileMap->IsBlocked(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y))
 		{
-			nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+			nextPos = currentTileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 			isArrive = false;
 			timer = 0.f;
@@ -146,7 +146,7 @@ void Player::Draw(sf::RenderWindow& window)
 
 bool Player::EatItem()
 {
-	auto itemInfo = tileMap->GetItem(gridIndex);
+	auto itemInfo = currentTileMap->GetItem(gridIndex);
 
 	if (itemInfo == nullptr)
 		return false;

@@ -379,7 +379,7 @@ void TileMap::Reset()
 			tile->item->Reset();
 			// tile->itemType = ItemType::POWER_COOKIE;
 		}
-		else if (randNum < 3)
+		else if (randNum < 2)
 		{
 			tile->item->SetItemType(ItemType::FRUIT);
 			int fruitNum = Utils::RandomRange(2, 7);
@@ -407,6 +407,7 @@ void TileMap::Reset()
 		}
 		else
 		{
+			tile->item->SetTexture("graphics/cookie.png", true);
 			tile->item->SetItemType(ItemType::COOKIE);
 			// tile->itemType = ItemType::COOKIE;
 		}

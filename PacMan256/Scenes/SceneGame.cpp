@@ -21,10 +21,10 @@ void SceneGame::Init()
 	startTile = new TileMap("Background");
 	startTile->LoadFromFile("Tables/Start_Path.csv");
 	startTile->sortLayer = -1;
-	currentTile = startTile;
+	currentTileMap = startTile;
 	AddGo(startTile);
 
-	for (int i = 1; i <= 3; i++)
+	for (int i = 1; i <= tileMapNum; i++)
 	{
 		TileMap* tileMap = new TileMap();
 		tileMap->LoadFromFile("Tables/Path" + std::to_string(i) + ".csv");
@@ -33,17 +33,27 @@ void SceneGame::Init()
 		AddGo(tileMap);
 		tileMaps.push_back(tileMap);
 	}
-	nextTile = tileMaps[0];
-	nextTile->SetActive(true);
+
+	nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
+	nextTileMap->SetActive(true);
+	/*if (tempTileMaps.empty() == true)
+	{
+		for (int i = 0; i < 3; i++)
+		{
+			tempTileMaps.push_back(tileMaps[i]);
+		}
+	}
+	nextTileMap = tempTileMaps.front();
+	tempTileMaps.pop_front();*/
 
 	// Enter
 	startTile->SetPosition({ 0.f, 0.f });
 	startTile->SetOrigin(Origins::MC);
 
 	sf::Vector2f pos = startTile->GetPosition();
-	pos.y -= (startTile->GetGlobalBounds().height + nextTile->GetGlobalBounds().height) / 2.f;
-	nextTile->SetPosition(pos);
-	nextTile->SetOrigin(Origins::MC);
+	pos.y -= (startTile->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;
+	nextTileMap->SetPosition(pos);
+	nextTileMap->SetOrigin(Origins::MC);
 	
 
 	player = new Player("Player");
@@ -73,6 +83,7 @@ void SceneGame::Enter()
 {
 	score = 0;
 	chain = 0;
+	currentTileMapId = 0;
 
 	textChain->Set(font, "", 20.f, sf::Color::White);
 	textChain->SetOrigin(Origins::BC);
@@ -143,19 +154,68 @@ void SceneGame::AddScore(const int score)
 
 TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 {
-	if (isGoUp)
+	if (player->GetCurrentTileMapId() == currentTileMapId)
 	{
-		// 이전 prev타일은 제거(킬 스크린 위치 조정)
-		prevTile = currentTile;
-		currentTile = nextTile;
-		// nextTile = 랜덤
+		if (isGoUp)
+		{
+			// 이전 맵 초기화
+			if (currentTileMapId >= 1)
+			{
+				// tileMaps.push_back(prevTileMap);
+			}
+			if (currentTileMapId != 0) // 시작맵 제외
+			{
+				prevTileMap->SetActive(false);
+			}
+
+
+
+			prevTileMap = currentTileMap;
+			currentTileMap = nextTileMap;
+			++currentTileMapId;
+			player->SetCurrentTileMapId(currentTileMapId);
+
+
+
+			// TO-DO: 다음 타일맵 세팅
+			/*if (tempTileMaps.empty() == true)
+			{
+				std::random_shuffle(tileMaps.begin(), tileMaps.end());
+				for (int i = 0; i < 3; i++)
+				{
+					tempTileMaps.push_back(tileMaps[i]);
+				}
+			}
+			nextTileMap = tempTileMaps.front();
+			tempTileMaps.pop_front();*/
+
+			do
+			{
+				nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
+			} while (nextTileMap == prevTileMap || nextTileMap == currentTileMap);
+
+			sf::Vector2f pos = currentTileMap->GetPosition();
+			pos.y -= (currentTileMap->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;
+			nextTileMap->SetPosition(pos);
+			nextTileMap->SetOrigin(Origins::MC);
+			nextTileMap->SetActive(true);
+			nextTileMap->Reset();
+
+			return currentTileMap;
+		}
+		else
+		{
+			player->SetCurrentTileMapId(currentTileMapId - 1);
+
+			return prevTileMap;
+		}
 	}
-	else
+	else if (isGoUp)
 	{
-		nextTile = currentTile;
-		currentTile = prevTile;
+		player->SetCurrentTileMapId(currentTileMapId);
+
+		return currentTileMap;
 	}
-	return currentTile;
 }
 
 void SceneGame::AddChain()

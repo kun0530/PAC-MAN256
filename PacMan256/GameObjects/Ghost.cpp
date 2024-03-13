@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Ghost.h"
+#include "SceneGame.h"
 #include "TileMap.h"
 #include "Player.h"
 
@@ -28,8 +29,9 @@ void Ghost::Reset()
 	// Test
 	SetActive(false);
 
-	tileMap = dynamic_cast<TileMap*>(SCENE_MGR.GetCurrentScene()->FindGo("Background"));
-	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
+	tileMap = sceneGame->GetCurrentTileMap();
+	player = dynamic_cast<Player*>(sceneGame->FindGo("Player"));
 	
 	// gridIndex 랜덤 설정하고
 	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));

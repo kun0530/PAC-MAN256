@@ -12,7 +12,10 @@ protected:
 	float moveTime = 0.f;
 	float speed = 250.f;
 
+	TileMap* currentTileMap = nullptr;
 	sf::Vector2i gridIndex = { 13, 16 };
+	int currentTileMapId = 0;
+
 	bool isArrive = true;
 	std::queue<sf::Vector2i> inputDirections;
 	sf::Vector2f currentPos;
@@ -22,7 +25,7 @@ protected:
 	float itemDuration = 0.f;
 	float itemTimer = 0.f;
 
-	TileMap* tileMap = nullptr;
+	
 	SceneGame* sceneGame = nullptr;
 
 public:
@@ -38,6 +41,9 @@ public:
 	void Update(float dt) override;
 	void FixedUpdate(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
+
+	void SetCurrentTileMapId(int id) { currentTileMapId = id; }
+	const int GetCurrentTileMapId() const { return currentTileMapId; }
 
 	bool EatItem();
 	const ItemType GetUsingItem() const { return usingItem; }

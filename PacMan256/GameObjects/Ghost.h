@@ -1,6 +1,7 @@
 #pragma once
 #include "SpriteGo.h"
 
+class SceneGame;
 class TileMap;
 class Player;
 
@@ -16,6 +17,7 @@ protected:
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
 
+	SceneGame* sceneGame = nullptr;
 	TileMap* tileMap = nullptr;
 	Player* player = nullptr;
 

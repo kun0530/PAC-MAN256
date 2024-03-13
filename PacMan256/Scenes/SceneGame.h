@@ -18,9 +18,13 @@ protected:
 	TileMap* startTile = nullptr;
 
 	std::vector<TileMap*> tileMaps;
-	TileMap* prevTile = nullptr;
-	TileMap* currentTile = nullptr;
-	TileMap* nextTile = nullptr;
+	// std::list<TileMap*> tempTileMaps;
+	int tileMapNum = 4;
+
+	TileMap* prevTileMap = nullptr;
+	TileMap* currentTileMap = nullptr;
+	TileMap* nextTileMap = nullptr;
+	int currentTileMapId = 0;
 
 	Player* player = nullptr;
 	Ghost* ghost = nullptr;
@@ -47,7 +51,8 @@ public:
 	void Draw(sf::RenderWindow& window) override;
 
 	TileMap* ChangeTileMap(bool isGoUp);
-	const TileMap* GetPrevTileMap() const { return prevTile; }
+	TileMap* GetCurrentTileMap() const { return currentTileMap; }
+	const TileMap* GetPrevTileMap() const { return prevTileMap; }
 
 	void AddScore(const int score);
 	void AddChain();
