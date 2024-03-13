@@ -26,35 +26,21 @@ const sf::Vector2f& TileMap::GetGridPosition(int x, int y) const
 	return transform.transformPoint(va[(y * cellCount.x + x) * 4].position) + cellSize / 2.f;
 }
 
-const std::pair<ItemType, Item*> TileMap::GetItem(sf::Vector2i index) const
+Item* TileMap::GetItem(sf::Vector2i index) const
 {
-	std::pair<ItemType, Item*> itemInfo = { ItemType::NONE, nullptr };
-
 	// 범위 밖의 grid index
 	if (index.x < 0 || index.x > cellCount.x || index.y < 0 || index.y > cellCount.y)
 	{
-		return itemInfo;
+		return nullptr;
 	}
 
-	auto tile = tiles[index.y * cellCount.x + index.x];
-
-	itemInfo.first = tile->itemType;
-	if (itemInfo.first == ItemType::COOKIE || itemInfo.first == ItemType::NONE)
-	{
-		itemInfo.second = tile->cookie;
-	}
-	else
-	{
-		itemInfo.second = tile->specialItem;
-	}
-
-	return itemInfo;
+	return tiles[index.y * cellCount.x + index.x]->item;
 }
 
-void TileMap::SetItemType(const sf::Vector2i index, const ItemType type)
-{
-	tiles[index.y * cellCount.x + index.x]->itemType = type;
-}
+//void TileMap::SetItemType(const sf::Vector2i index, const ItemType type)
+//{
+//	tiles[index.y * cellCount.x + index.x]->itemType = type;
+//}
 
 bool TileMap::IsBlocked(int x, int y) const
 {
@@ -213,7 +199,7 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 	{
 		for (int j = 0; j < count.x; j++)
 		{
-			int quadIndex = i * count.x + j; // 2차원 인덱스를 1차원 인덱스로 변환
+			int quadIndex = i * count.x + j;
 			int texIndexX = paths[quadIndex];
 			int texIndexY = 0;
 			if (texIndexX == 0 && i > 0 && i < count.y - 1 && j > 0 && j < count.x - 1)
@@ -264,7 +250,7 @@ void TileMap::SetSpriteSheetId(const std::string& id)
 
 void TileMap::UpdateTransform()
 {
-	transform = sf::Transform::Identity; // 기본 변환
+	transform = sf::Transform::Identity;
 
 	float scaleX = isFlipX ? -scale.x : scale.x;
 	float scaleY = isFlipY ? -scale.y : scale.y;
@@ -286,11 +272,6 @@ void TileMap::SetOrigin(Origins preset)
 	origin = newOrigin;
 
 	UpdateTransform();
-	
-	/*for (int i = 0; i < va.getVertexCount(); i++)
-	{
-		va[i].position -= origin;
-	}*/
 }
 
 void TileMap::SetOrigin(const sf::Vector2f& newOrigin)
@@ -300,24 +281,12 @@ void TileMap::SetOrigin(const sf::Vector2f& newOrigin)
 	origin = newOrigin;
 
 	UpdateTransform();
-
-	/*for (int i = 0; i < va.getVertexCount(); i++)
-	{
-		va[i].position -= origin;
-	}*/
 }
 
 void TileMap::SetPosition(const sf::Vector2f& pos)
 {
 	GameObject::SetPosition(pos);
 	UpdateTransform();
-
-	/*sf::Vector2f delta = pos - position;
-	for (int i = 0; i < va.getVertexCount(); i++)
-	{
-		va[i].position += delta;
-	}
-	position = pos;*/
 }
 
 void TileMap::Translate(const sf::Vector2f& delta)
@@ -366,16 +335,16 @@ void TileMap::Init()
 			if (tile->type == 1)
 			{
 				Item* cookie = new Item;
-				cookie->SetItemType(ItemType::COOKIE);
+				cookie->SetItemType(ItemType::NONE);
 				cookie->SetTexture("graphics/cookie.png");
 				cookie->SetGridIndex(j, i);
 				cookie->SetTileMap(this);
 				cookie->Init();
 				cookie->Reset();
 				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
-				tile->cookie = cookie;
+				tile->item = cookie;
 				cookie->SetActive(false);
-				tile->itemType = ItemType::NONE;
+				// tile->itemType = ItemType::NONE;
 			}
 			tiles.push_back(tile);
 		}
@@ -399,75 +368,52 @@ void TileMap::Reset()
 		if (IsBlocked(tile->x, tile->y))
 			continue;
 
-		if (tile->specialItem != nullptr)
-		{
-			SCENE_MGR.GetCurrentScene()->RemoveGo(tile->specialItem);
-			tile->specialItem = nullptr;
-		}
+		if (tile->item == nullptr)
+			continue;
 
 		int randNum = Utils::RandomRange(0, 100);
-
 		if (randNum < 1)
 		{
-			Item* powerCookie = new Item;
-			powerCookie->SetItemType(ItemType::POWER_COOKIE); // 여기서 텍스처만 바꿔도 될 것 같은데?
-			powerCookie->SetTexture("graphics/power_cookie.png");
-			powerCookie->SetGridIndex(tile->x, tile->y);
-			powerCookie->SetTileMap(this); // 이것도 왜 필요한건지 모르겠는데
-			powerCookie->Init();
-			powerCookie->Reset();
-			SCENE_MGR.GetCurrentScene()->AddGo(powerCookie);
-			tile->cookie->SetActive(false);
-			tile->specialItem = powerCookie;
-			tile->itemType = ItemType::POWER_COOKIE;
-			continue;
+			tile->item->SetTexture("graphics/power_cookie.png", true);
+			tile->item->SetItemType(ItemType::POWER_COOKIE);
+			tile->item->Reset();
+			// tile->itemType = ItemType::POWER_COOKIE;
 		}
 		else if (randNum < 3)
 		{
-			Item* fruit = new Item;
-			fruit->SetItemType(ItemType::FRUIT);
+			tile->item->SetItemType(ItemType::FRUIT);
 			int fruitNum = Utils::RandomRange(2, 7);
 			switch (fruitNum)
 			{
 			case 2:
-				fruit->SetTexture("graphics/Fruit_Cherry.png");
+				tile->item->SetTexture("graphics/Fruit_Cherry.png", true);
 				break;
 			case 3:
-				fruit->SetTexture("graphics/Fruit_Apple.png");
+				tile->item->SetTexture("graphics/Fruit_Apple.png", true);
 				break;
 			case 4:
-				fruit->SetTexture("graphics/Fruit_Strawberry.png");
+				tile->item->SetTexture("graphics/Fruit_Strawberry.png", true);
 				break;
 			case 5:
-				fruit->SetTexture("graphics/Fruit_Orange.png");
+				tile->item->SetTexture("graphics/Fruit_Orange.png", true);
 				break;
 			case 6:
-				fruit->SetTexture("graphics/Fruit_Melon.png");
+				tile->item->SetTexture("graphics/Fruit_Melon.png", true);
 				break;
 			}
-			fruit->SetValue(fruitNum);
-			fruit->SetGridIndex(tile->x, tile->y);
-			fruit->SetTileMap(this);
-			fruit->Init();
-			fruit->Reset();
-			SCENE_MGR.GetCurrentScene()->AddGo(fruit);
-			tile->cookie->SetActive(false);
-			tile->specialItem = fruit;
-			tile->itemType = ItemType::FRUIT;
-			continue;
+			tile->item->SetValue(fruitNum);
+			tile->item->Reset();
+			// tile->itemType = ItemType::FRUIT;
+		}
+		else
+		{
+			tile->item->SetItemType(ItemType::COOKIE);
+			// tile->itemType = ItemType::COOKIE;
 		}
 
-		if (tile->cookie != nullptr)
-		{
-			tile->cookie->SetActive(true);
-			tile->cookie->SetPosition(GetGridPosition(tile->x, tile->y));
-			tile->itemType = ItemType::COOKIE;
-		}
-		/*if (tile->specialItem != nullptr)
-		{
-			tile->specialItem->SetActive(true);
-			tile->specialItem->SetPosition(GetGridPosition(tile->x, tile->y));
-		}*/
+		tile->item->SetOrigin(Origins::MC);
+		tile->item->SetActive(true);
+		tile->item->SetPosition(GetGridPosition(tile->x, tile->y));
 	}
 }
 

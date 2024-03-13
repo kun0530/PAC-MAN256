@@ -146,12 +146,12 @@ void Player::Draw(sf::RenderWindow& window)
 
 bool Player::EatItem()
 {
-	auto& itemInfo = tileMap->GetItem(gridIndex);
+	auto itemInfo = tileMap->GetItem(gridIndex);
 
-	if (itemInfo.second == nullptr)
+	if (itemInfo == nullptr)
 		return false;
 	
-	switch (itemInfo.first)
+	switch (itemInfo->GetItemType())
 	{
 	case ItemType::NONE:
 		return false;
@@ -163,14 +163,14 @@ bool Player::EatItem()
 		SetUsingItem(ItemType::POWER_COOKIE);
 		break;
 	case ItemType::FRUIT:
-		if (sceneGame->GetScoreMultiplier() < itemInfo.second->GetValue())
-			sceneGame->SetScoreMultiplier(itemInfo.second->GetValue());
+		if (sceneGame->GetScoreMultiplier() < itemInfo->GetValue())
+			sceneGame->SetScoreMultiplier(itemInfo->GetValue());
 		SetUsingItem(ItemType::FRUIT);
 		break;
 	}
 
-	itemInfo.second->SetActive(false);
-	tileMap->SetItemType(gridIndex, ItemType::NONE);
+	itemInfo->SetActive(false);
+	itemInfo->SetItemType(ItemType::NONE);
 
 	return true;
 }

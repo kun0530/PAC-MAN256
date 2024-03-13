@@ -24,6 +24,7 @@ public:
 
 	void SetGridIndex(const int x, const int y) { gridIndex = { x, y }; }
 	void SetItemType(const ItemType type) { itemType = type; }
+	const ItemType GetItemType() { return itemType; }
 
 	void SetValue(const int v) { value = v; }
 	const int GetValue() const { return value; }

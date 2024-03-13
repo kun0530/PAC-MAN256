@@ -11,9 +11,8 @@ class TileMap : public GameObject
 		int x = 0;
 		int y = 0;
 		int type = 0;
-		Item* cookie = nullptr;
-		Item* specialItem = nullptr;
-		ItemType itemType = ItemType::NONE;
+		Item* item = nullptr;
+		// ItemType itemType = ItemType::NONE;
 	};
 
 protected:
@@ -41,8 +40,8 @@ public:
 	const sf::Vector2f& GetCellSize() const { return cellSize; }
 
 	const sf::Vector2f& GetGridPosition(int x, int y) const;
-	const std::pair<ItemType, Item*> GetItem(sf::Vector2i index) const;
-	void SetItemType(const sf::Vector2i index, const ItemType type);
+	Item* GetItem(sf::Vector2i index) const;
+	// void SetItemType(const sf::Vector2i index, const ItemType type);
 
 	bool IsBlocked(int x, int y) const;
 	bool IsCorner(int x, int y) const;
