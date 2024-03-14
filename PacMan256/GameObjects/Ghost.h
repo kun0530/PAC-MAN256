@@ -23,6 +23,8 @@ protected:
 	TileMap* tileMap = nullptr;
 	Player* player = nullptr;
 
+	std::string originTextureId;
+
 public:
 	Ghost(const std::string& name = "");
 	~Ghost() override = default;
@@ -33,6 +35,11 @@ public:
 	virtual void Update(float dt) override;
 	virtual void FixedUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
+
+	virtual void DecideDirection();
+	void CheckTileMapBoundary();
+	virtual void CornerMove(std::vector<sf::Vector2f>& directions);
+	virtual void ForkMove(std::vector<sf::Vector2f>& directions);
 
 	void ChangeMode();
 	void OnDie();

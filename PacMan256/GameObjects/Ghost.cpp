@@ -74,90 +74,9 @@ void Ghost::Update(float dt)
 			currentPos = nextPos;
 			SetPosition(currentPos);
 
-			std::vector<sf::Vector2f> directions;
-			int pathCount = sceneGame->CountPathNum(gridIndex.x, gridIndex.y, tileMap, directions);
+			DecideDirection();
 
-			if (pathCount == 1)
-			{
-				direction = directions[0];
-			}
-			else if (pathCount == 2)
-			{
-				if (direction == -directions[0])
-					direction = directions[1];
-				else
-					direction = directions[0];
-			}
-			else if (pathCount >= 3)
-			{
-				sf::Vector2f nextDirection;
-				do
-				{
-					nextDirection = directions[Utils::RandomRange(0, directions.size())];
-				} while (nextDirection == -direction);
-				direction = nextDirection;
-			}
-
-			if (gridIndex.y + (int)direction.y < 0)
-			{
-				switch (tileMap->GetMapStatus())
-				{
-				case MapStatus::NEXT:
-					direction *= -1.f;
-					nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
-					break;
-				case MapStatus::PREV:
-					tileMap = sceneGame->GetCurrentTileMap();
-					++currentTileMapId;
-					gridIndex.y = tileMap->GetCellCount().y;
-					nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
-					break;
-				case MapStatus::CURRENT:
-					tileMap = sceneGame->GetNextTileMap();
-					++currentTileMapId;
-					gridIndex.y = tileMap->GetCellCount().y;
-					nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
-					break;
-				}
-			}
-			else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
-			{
-				switch (tileMap->GetMapStatus())
-				{
-				case MapStatus::PREV:
-					direction *= -1.f;
-					nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
-					break;
-				case MapStatus::NEXT:
-					tileMap = sceneGame->GetCurrentTileMap();
-					--currentTileMapId;
-					gridIndex.y = -1;
-					nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
-					break;
-				case MapStatus::CURRENT:
-					tileMap = sceneGame->GetPrevTileMap();
-					--currentTileMapId;
-					gridIndex.y = -1;
-					nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
-					break;
-				}
-			}
-			else if (gridIndex.x + (int)direction.x < 0)
-			{
-				nextPos = currentPos - sf::Vector2f(tileMap->GetCellSize().x, 0.f);
-				gridIndex.x = tileMap->GetCellCount().x;
-				isWarp = true;
-			}
-			else if (gridIndex.x + (int)direction.x >= tileMap->GetCellCount().x)
-			{
-				nextPos = currentPos + sf::Vector2f(tileMap->GetCellSize().x, 0.f);
-				gridIndex.x = -1;
-				isWarp = true;
-			}
-			else
-			{
-				nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
-			}
+			CheckTileMapBoundary();
 
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 		}
@@ -185,12 +104,113 @@ void Ghost::Draw(sf::RenderWindow& window)
 	SpriteGo::Draw(window);
 }
 
+void Ghost::DecideDirection()
+{
+	std::vector<sf::Vector2f> directions;
+	int pathCount = sceneGame->CountPathNum(gridIndex.x, gridIndex.y, tileMap, directions);
+
+	if (pathCount == 1)
+	{
+		direction = directions[0];
+	}
+	else if (pathCount == 2)
+	{
+		CornerMove(directions);
+	}
+	else if (pathCount >= 3)
+	{
+		ForkMove(directions);
+	}
+}
+
+void Ghost::CheckTileMapBoundary()
+{
+	if (gridIndex.y + (int)direction.y < 0)
+	{
+		switch (tileMap->GetMapStatus())
+		{
+		case MapStatus::NEXT:
+			direction *= -1.f;
+			nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+			break;
+		case MapStatus::PREV:
+			tileMap = sceneGame->GetCurrentTileMap();
+			++currentTileMapId;
+			gridIndex.y = tileMap->GetCellCount().y;
+			nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
+			break;
+		case MapStatus::CURRENT:
+			tileMap = sceneGame->GetNextTileMap();
+			++currentTileMapId;
+			gridIndex.y = tileMap->GetCellCount().y;
+			nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
+			break;
+		}
+	}
+	else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
+	{
+		switch (tileMap->GetMapStatus())
+		{
+		case MapStatus::PREV:
+			direction *= -1.f;
+			nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+			break;
+		case MapStatus::NEXT:
+			tileMap = sceneGame->GetCurrentTileMap();
+			--currentTileMapId;
+			gridIndex.y = -1;
+			nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
+			break;
+		case MapStatus::CURRENT:
+			tileMap = sceneGame->GetPrevTileMap();
+			--currentTileMapId;
+			gridIndex.y = -1;
+			nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
+			break;
+		}
+	}
+	else if (gridIndex.x + (int)direction.x < 0)
+	{
+		nextPos = currentPos - sf::Vector2f(tileMap->GetCellSize().x, 0.f);
+		gridIndex.x = tileMap->GetCellCount().x;
+		isWarp = true;
+	}
+	else if (gridIndex.x + (int)direction.x >= tileMap->GetCellCount().x)
+	{
+		nextPos = currentPos + sf::Vector2f(tileMap->GetCellSize().x, 0.f);
+		gridIndex.x = -1;
+		isWarp = true;
+	}
+	else
+	{
+		nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+	}
+}
+
+void Ghost::CornerMove(std::vector<sf::Vector2f>& directions)
+{
+	if (direction == -directions[0])
+		direction = directions[1];
+	else
+		direction = directions[0];
+}
+
+void Ghost::ForkMove(std::vector<sf::Vector2f>& directions)
+{
+	sf::Vector2f nextDirection;
+	do
+	{
+		nextDirection = directions[Utils::RandomRange(0, directions.size())];
+	} while (nextDirection == -direction);
+	direction = nextDirection;
+}
+
 void Ghost::ChangeMode()
 {
 	if (player->GetUsingItem() == ItemType::POWER_COOKIE)
 		SetTexture("graphics/Ghost_Glitch.png");
 	else
-		SetTexture("graphics/Ghost_Red.png");
+		SetTexture(originTextureId);
 }
 
 void Ghost::OnDie()

@@ -170,6 +170,8 @@
     <ClCompile Include="GameObjects\Ghost.cpp" />
     <ClCompile Include="GameObjects\Item.cpp" />
     <ClCompile Include="GameObjects\UiHud.cpp" />
+    <ClCompile Include="GameObjects\GhostBlinky.cpp" />
+    <ClCompile Include="GameObjects\GhostPinky.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -204,6 +206,8 @@
     <ClInclude Include="GameObjects\Ghost.h" />
     <ClInclude Include="GameObjects\Item.h" />
     <ClInclude Include="GameObjects\UiHud.h" />
+    <ClInclude Include="GameObjects\GhostBlinky.h" />
+    <ClInclude Include="GameObjects\GhostPinky.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="Scenes\Scene.h" />

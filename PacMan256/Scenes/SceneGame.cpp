@@ -3,7 +3,10 @@
 
 #include "TileMap.h"
 #include "Player.h"
+
 #include "Ghost.h"
+#include "GhostBlinky.h"
+#include "GhostPinky.h"
 
 #include "UiHud.h"
 #include "TextGo.h"
@@ -62,7 +65,7 @@ void SceneGame::Init()
 	player->sortLayer = 1;
 	AddGo(player);
 	
-	ghost = new Ghost("Ghost");
+	ghost = new GhostPinky("Ghost");
 	ghost->sortLayer = 1;
 	AddGo(ghost);
 
