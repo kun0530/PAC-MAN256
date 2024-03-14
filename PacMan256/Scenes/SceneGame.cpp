@@ -61,12 +61,7 @@ void SceneGame::Init()
 	player = new Player("Player");
 	player->sortLayer = 1;
 	AddGo(player);
-	for (int i = 0; i < 1000; ++i)
-	{
-		Ghost* ghostTest = new Ghost("Ghost");
-		ghostTest->sortLayer = 1;
-		AddGo(ghostTest);
-	}
+	
 	ghost = new Ghost("Ghost");
 	ghost->sortLayer = 1;
 	AddGo(ghost);
@@ -243,6 +238,7 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			currentTileMap->SetMapStatus(MapStatus::PREV);
 			nextTileMap->SetMapStatus(MapStatus::CURRENT);
 
+			TileMap* tempTileMap = prevTileMap;
 			prevTileMap = currentTileMap;
 			currentTileMap = nextTileMap;
 			++currentTileMapId;
@@ -265,7 +261,7 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			do
 			{
 				nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
-			} while (nextTileMap == prevTileMap || nextTileMap == currentTileMap);
+			} while (nextTileMap == prevTileMap || nextTileMap == currentTileMap || nextTileMap == tempTileMap);
 
 			sf::Vector2f pos = currentTileMap->GetPosition();
 			pos.y -= (currentTileMap->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;

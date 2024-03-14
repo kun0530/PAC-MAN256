@@ -317,6 +317,22 @@ void TileMap::SetFlipY(bool flip)
 	UpdateTransform();
 }
 
+void TileMap::SetActive(bool active)
+{
+	GameObject::SetActive(active);
+
+	if (!active)
+	{
+		for (auto tile : tiles)
+		{
+			if (tile->item != nullptr)
+			{
+				tile->item->SetActive(false);
+			}
+		}
+	}
+}
+
 void TileMap::Init()
 {
 	GameObject::Init();

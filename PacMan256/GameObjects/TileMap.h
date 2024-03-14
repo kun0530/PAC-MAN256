@@ -77,6 +77,8 @@ public:
 	void SetFlipX(bool flip) override;
 	void SetFlipY(bool flip) override;
 
+	void SetActive(bool active) override;
+
 	void Init() override;
 	void Release() override;
 
