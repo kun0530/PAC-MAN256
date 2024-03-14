@@ -215,20 +215,15 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 	int countY = tileMap->GetCellCount().y;
 	
 	sf::Vector2i shortestDirection;
-	int shortestDistance = 0;
+	int shortestDistance = 5000;
 	int tempDistance = 0;
 
 	for (auto dir : directions)
 	{
-		if (shortestDistance == 0)
-		{
-			shortestDistance = tempDistance;
-			shortestDirection = (sf::Vector2i)dir;
-		}
-		else if (shortestDistance > tempDistance)
-		{
-			shortestDirection = (sf::Vector2i)dir;
-		}
+		if (dir == -direction)
+			continue;
+
+		sf::Vector2i nextIndex = { startIndex.x + (int)dir.x, startIndex.y + (int)dir.y };
 
 		bool* visited = new bool[countX * countY];
 		for (int i = 0; i < countX * countY; ++i)
@@ -236,9 +231,10 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 			visited[i] = false;
 		}
 		std::queue<std::pair<sf::Vector2i, int>> nodes;
-		nodes.push(std::pair<sf::Vector2i, int>(startIndex, 0));
+		nodes.push(std::pair<sf::Vector2i, int>(nextIndex, 1));
 		visited[startIndex.y * countX + startIndex.x] = true;
-		
+		visited[nextIndex.y * countX + nextIndex.x] = true;
+
 		while (!nodes.empty())
 		{
 			sf::Vector2i index = nodes.front().first;
@@ -264,6 +260,11 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 					visited[newIndex.y * countX + newIndex.x] = true;
 				}
 			}
+		}
+		if (shortestDistance > tempDistance)
+		{
+			shortestDistance = tempDistance;
+			shortestDirection = (sf::Vector2i)dir;
 		}
 
 		if (visited != nullptr)

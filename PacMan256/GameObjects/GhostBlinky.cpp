@@ -49,7 +49,6 @@ void GhostBlinky::ForkMove(std::vector<sf::Vector2f>& directions)
 {
 	// Ghost::ForkMove(directions);
 	direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions);
-
 	/*sf::Vector2f targetDir = { 0.f, 0.f };
 	
 	int mapIdDiff = currentTileMapId - player->GetCurrentTileMapId();

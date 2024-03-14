@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Projects\PAC-MAN256\PacMan256 Bin\PacMan256.exe</FullPath>
+      <FullPath>C:\MakeGame\PAC-MAN 256\PacMan256 Bin\PacMan256.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
