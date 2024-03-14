@@ -61,7 +61,12 @@ void SceneGame::Init()
 	player = new Player("Player");
 	player->sortLayer = 1;
 	AddGo(player);
-
+	for (int i = 0; i < 1000; ++i)
+	{
+		Ghost* ghostTest = new Ghost("Ghost");
+		ghostTest->sortLayer = 1;
+		AddGo(ghostTest);
+	}
 	ghost = new Ghost("Ghost");
 	ghost->sortLayer = 1;
 	AddGo(ghost);

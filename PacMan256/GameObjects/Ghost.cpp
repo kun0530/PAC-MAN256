@@ -102,45 +102,45 @@ void Ghost::Update(float dt)
 			{
 				switch (tileMap->GetMapStatus())
 				{
-				case MapStatus::NONE:
-					break;
 				case MapStatus::NEXT:
 					direction *= -1.f;
+					nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
 					break;
 				case MapStatus::PREV:
 					tileMap = sceneGame->GetCurrentTileMap();
 					++currentTileMapId;
 					gridIndex.y = tileMap->GetCellCount().y;
+					nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
 					break;
 				case MapStatus::CURRENT:
 					tileMap = sceneGame->GetNextTileMap();
 					++currentTileMapId;
 					gridIndex.y = tileMap->GetCellCount().y;
+					nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
 					break;
 				}
-				nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
 			}
 			else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
 			{
 				switch (tileMap->GetMapStatus())
 				{
-				case MapStatus::NONE:
-					break;
 				case MapStatus::PREV:
 					direction *= -1.f;
+					nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
 					break;
 				case MapStatus::NEXT:
 					tileMap = sceneGame->GetCurrentTileMap();
 					--currentTileMapId;
 					gridIndex.y = -1;
+					nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
 					break;
 				case MapStatus::CURRENT:
 					tileMap = sceneGame->GetPrevTileMap();
 					--currentTileMapId;
 					gridIndex.y = -1;
+					nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
 					break;
 				}
-				nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
 			}
 			else if (gridIndex.x + (int)direction.x < 0)
 			{
@@ -170,8 +170,8 @@ void Ghost::Update(float dt)
 	{
 		if (player->GetUsingItem() == ItemType::POWER_COOKIE)
 			OnDie();
-		else
-			player->OnDie();
+		/*else
+			player->OnDie();*/
 	}
 }
 
