@@ -17,6 +17,7 @@ protected:
 	int currentTileMapId = 0;
 	sf::Vector2f currentPos;
 	sf::Vector2f nextPos;
+	bool isWarp = false;
 
 	SceneGame* sceneGame = nullptr;
 	TileMap* tileMap = nullptr;

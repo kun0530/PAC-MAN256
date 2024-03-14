@@ -48,52 +48,119 @@ void Ghost::Update(float dt)
 {
 	SpriteGo::Update(dt);
 
+	if (tileMap->GetMapStatus() == MapStatus::NONE)
+	{
+		sceneGame->RemoveGo(this);
+		return;
+	}
+
 	// ´ÙÀ½ ¼¿¿¡ µµÂøÇßÀ» ¶§
 	if (timer > moveTime)
 	{
-		timer = 0.f;
-		gridIndex.x += (int)direction.x;
-		gridIndex.y += (int)direction.y;
-		currentPos = nextPos;
-		SetPosition(currentPos);
-
-		std::vector<sf::Vector2f> directions;
-		int pathCount = sceneGame->CountPathNum(gridIndex.x, gridIndex.y, tileMap, directions);
-
-		if (pathCount == 1)
+		if (isWarp)
 		{
-			direction = directions[0];
+			nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+			currentPos = nextPos - (tileMap->GetCellSize().x * direction);
+			SetPosition(currentPos);
+			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
+			timer = 0.f;
+			isWarp = false;
 		}
-		else if (pathCount == 2)
+		else
 		{
-			if (direction == -directions[0])
-				direction = directions[1];
-			else
-				direction = directions[0];
-		}
-		else if (pathCount >= 3)
-		{
-			sf::Vector2f nextDirection;
-			do
+			timer = 0.f;
+			gridIndex.x += (int)direction.x;
+			gridIndex.y += (int)direction.y;
+			currentPos = nextPos;
+			SetPosition(currentPos);
+
+			std::vector<sf::Vector2f> directions;
+			int pathCount = sceneGame->CountPathNum(gridIndex.x, gridIndex.y, tileMap, directions);
+
+			if (pathCount == 1)
 			{
-				nextDirection = directions[Utils::RandomRange(0, directions.size())];
-			} while (nextDirection == -direction);
-			direction = nextDirection;
+				direction = directions[0];
+			}
+			else if (pathCount == 2)
+			{
+				if (direction == -directions[0])
+					direction = directions[1];
+				else
+					direction = directions[0];
+			}
+			else if (pathCount >= 3)
+			{
+				sf::Vector2f nextDirection;
+				do
+				{
+					nextDirection = directions[Utils::RandomRange(0, directions.size())];
+				} while (nextDirection == -direction);
+				direction = nextDirection;
+			}
+
+			if (gridIndex.y + (int)direction.y < 0)
+			{
+				switch (tileMap->GetMapStatus())
+				{
+				case MapStatus::NONE:
+					break;
+				case MapStatus::NEXT:
+					direction *= -1.f;
+					break;
+				case MapStatus::PREV:
+					tileMap = sceneGame->GetCurrentTileMap();
+					++currentTileMapId;
+					gridIndex.y = tileMap->GetCellCount().y;
+					break;
+				case MapStatus::CURRENT:
+					tileMap = sceneGame->GetNextTileMap();
+					++currentTileMapId;
+					gridIndex.y = tileMap->GetCellCount().y;
+					break;
+				}
+				nextPos = tileMap->GetGridPosition(gridIndex.x, tileMap->GetCellCount().y - 1);
+			}
+			else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
+			{
+				switch (tileMap->GetMapStatus())
+				{
+				case MapStatus::NONE:
+					break;
+				case MapStatus::PREV:
+					direction *= -1.f;
+					break;
+				case MapStatus::NEXT:
+					tileMap = sceneGame->GetCurrentTileMap();
+					--currentTileMapId;
+					gridIndex.y = -1;
+					break;
+				case MapStatus::CURRENT:
+					tileMap = sceneGame->GetPrevTileMap();
+					--currentTileMapId;
+					gridIndex.y = -1;
+					break;
+				}
+				nextPos = tileMap->GetGridPosition(gridIndex.x, 0);
+			}
+			else if (gridIndex.x + (int)direction.x < 0)
+			{
+				nextPos = currentPos - sf::Vector2f(tileMap->GetCellSize().x, 0.f);
+				gridIndex.x = tileMap->GetCellCount().x;
+				isWarp = true;
+			}
+			else if (gridIndex.x + (int)direction.x >= tileMap->GetCellCount().x)
+			{
+				nextPos = currentPos + sf::Vector2f(tileMap->GetCellSize().x, 0.f);
+				gridIndex.x = -1;
+				isWarp = true;
+			}
+			else
+			{
+				nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
+			}
+
+			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 		}
-
-		if (gridIndex.y + (int)direction.y < 0)
-		{
-			tileMap = sceneGame->GetNextTileMap();
-			++currentTileMapId;
-			gridIndex.y = tileMap->GetCellCount().y;
-		}
-		/*else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
-		{
-
-		}*/
-
-		nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x , gridIndex.y + (int)direction.y);
-		moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 	}
 	
 	timer += dt;
