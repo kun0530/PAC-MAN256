@@ -7,6 +7,7 @@
 #include "Ghost.h"
 #include "GhostBlinky.h"
 #include "GhostPinky.h"
+#include "GhostInky.h"
 
 #include "UiHud.h"
 #include "TextGo.h"
@@ -65,7 +66,7 @@ void SceneGame::Init()
 	player->sortLayer = 1;
 	AddGo(player);
 	
-	ghost = new GhostPinky("Ghost");
+	ghost = new GhostBlinky("Ghost");
 	ghost->sortLayer = 1;
 	AddGo(ghost);
 

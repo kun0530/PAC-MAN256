@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GhostBlinky.h"
 #include "Player.h"
+#include "TileMap.h"
 
 GhostBlinky::GhostBlinky(const std::string& name) : Ghost(name)
 {
@@ -46,7 +47,10 @@ void GhostBlinky::CornerMove(std::vector<sf::Vector2f>& directions)
 
 void GhostBlinky::ForkMove(std::vector<sf::Vector2f>& directions)
 {
-	sf::Vector2f targetDir = { 0.f, 0.f };
+	// Ghost::ForkMove(directions);
+	direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions);
+
+	/*sf::Vector2f targetDir = { 0.f, 0.f };
 	
 	int mapIdDiff = currentTileMapId - player->GetCurrentTileMapId();
 	int indexDiffY = player->GetGridIndex().y - gridIndex.y;
@@ -67,6 +71,6 @@ void GhostBlinky::ForkMove(std::vector<sf::Vector2f>& directions)
 
 	for (auto dir : directions)
 	{
-		// 나중에 구현
-	}
+		
+	}*/
 }

@@ -205,6 +205,77 @@ void Ghost::ForkMove(std::vector<sf::Vector2f>& directions)
 	direction = nextDirection;
 }
 
+sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targetIndex, std::vector<sf::Vector2f>& directions)
+{
+	sf::Vector2i dirs[4] = {
+		{ 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }
+	};
+
+	int countX = tileMap->GetCellCount().x;
+	int countY = tileMap->GetCellCount().y;
+	
+	sf::Vector2i shortestDirection;
+	int shortestDistance = 0;
+	int tempDistance = 0;
+
+	for (auto dir : directions)
+	{
+		if (shortestDistance == 0)
+		{
+			shortestDistance = tempDistance;
+			shortestDirection = (sf::Vector2i)dir;
+		}
+		else if (shortestDistance > tempDistance)
+		{
+			shortestDirection = (sf::Vector2i)dir;
+		}
+
+		bool* visited = new bool[countX * countY];
+		for (int i = 0; i < countX * countY; ++i)
+		{
+			visited[i] = false;
+		}
+		std::queue<std::pair<sf::Vector2i, int>> nodes;
+		nodes.push(std::pair<sf::Vector2i, int>(startIndex, 0));
+		visited[startIndex.y * countX + startIndex.x] = true;
+		
+		while (!nodes.empty())
+		{
+			sf::Vector2i index = nodes.front().first;
+			int distance = nodes.front().second;
+			nodes.pop();
+
+			if (index == targetIndex)
+			{
+				tempDistance = distance;
+				break;
+			}
+
+			for (auto dir : dirs)
+			{
+				sf::Vector2i newIndex = index + dir;
+
+				if (newIndex.x < 0 || newIndex.y < 0 || newIndex.x >= countX || newIndex.y >= countY)
+					continue;
+
+				if (!tileMap->IsBlocked(newIndex.x, newIndex.y) && !visited[newIndex.y * countX + newIndex.x])
+				{
+					nodes.push(std::pair<sf::Vector2i, int>(newIndex, ++distance));
+					visited[newIndex.y * countX + newIndex.x] = true;
+				}
+			}
+		}
+
+		if (visited != nullptr)
+		{
+			delete[] visited;
+			visited = nullptr;
+		}
+	}
+
+	return shortestDirection;
+}
+
 void Ghost::ChangeMode()
 {
 	if (player->GetUsingItem() == ItemType::POWER_COOKIE)
