@@ -53,24 +53,21 @@ bool TileMap::IsBlocked(int x, int y) const
 	return paths[y * cellCount.x + x] == 0;
 }
 
-bool TileMap::IsCorner(int x, int y) const
+//bool TileMap::IsCorner(int x, int y) const
+//{
+//	// 1. 유효한 좌표인지 확인
+//	// 2. 통로 셀인지 확인
+//
+//	if (!IsBlocked(x + 1, y) && !IsBlocked(x - 1, y))
+//		return false;
+//	if (!IsBlocked(x, y + 1) && !IsBlocked(x, y - 1))
+//		return false;
+//
+//	return true;
+//}
+
+int TileMap::IsFork(int x, int y, std::vector<sf::Vector2f>& directions) const
 {
-	// 1. 유효한 좌표인지 확인
-	// 2. 통로 셀인지 확인
-
-	if (!IsBlocked(x + 1, y) && !IsBlocked(x - 1, y))
-		return false;
-	if (!IsBlocked(x, y + 1) && !IsBlocked(x, y - 1))
-		return false;
-
-	return true;
-}
-
-bool TileMap::IsFork(int x, int y, std::vector<sf::Vector2f>& directions) const
-{
-	// 1. 유효한 좌표인지 확인
-	// 2. 통로 셀인지 확인
-	
 	int pathCount = 0;
 
 	if (!IsBlocked(x + 1, y))
@@ -94,9 +91,7 @@ bool TileMap::IsFork(int x, int y, std::vector<sf::Vector2f>& directions) const
 		directions.push_back({ 0.f, -1.f });
 	}
 
-	if (pathCount < 3)
-		return false;
-	return true;
+	return pathCount;
 }
 
 const int TileMap::CountOpenedCell(sf::Vector2i gridIndex) const

@@ -3,6 +3,14 @@
 
 class Item;
 
+enum class MapStatus
+{
+	NONE,
+	PREV,
+	CURRENT,
+	NEXT
+};
+
 class TileMap : public GameObject
 {
 
@@ -17,6 +25,7 @@ class TileMap : public GameObject
 
 protected:
 	std::string id;
+	MapStatus mapStatus = MapStatus::NONE;
 
 	sf::VertexArray va;
 	std::string spriteSheetId;
@@ -39,13 +48,15 @@ public:
 	const sf::Vector2i& GetCellCount() const { return cellCount; }
 	const sf::Vector2f& GetCellSize() const { return cellSize; }
 
+	const MapStatus GetMapStatus() const { return mapStatus; }
+	void SetMapStatus(const MapStatus status) { mapStatus = status; }
+
 	const sf::Vector2f& GetGridPosition(int x, int y) const;
 	Item* GetItem(sf::Vector2i index) const;
 	// void SetItemType(const sf::Vector2i index, const ItemType type);
 
 	bool IsBlocked(int x, int y) const;
-	bool IsCorner(int x, int y) const;
-	bool IsFork(int x, int y, std::vector<sf::Vector2f>& dirList) const;
+	int IsFork(int x, int y, std::vector<sf::Vector2f>& dirList) const;
 	const int CountOpenedCell(sf::Vector2i gridIndex) const;
 	const int GetTileId(sf::Vector2i gridIndex, int count) const;
 

@@ -56,6 +56,8 @@ public:
 	TileMap* GetNextTileMap() const { return nextTileMap; }
 	const int GetCurrentTileMapId() const { return currentTileMapId; }
 
+	int CountPathNum(int x, int y, TileMap* map, std::vector<sf::Vector2f>& directions) const;
+
 	void AddScore(const int score);
 	void AddChain();
 	void ResetChain();

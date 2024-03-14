@@ -22,6 +22,7 @@ void SceneGame::Init()
 	startTile->LoadFromFile("Tables/Start_Path.csv");
 	startTile->sortLayer = -1;
 	currentTileMap = startTile;
+	currentTileMap->SetMapStatus(MapStatus::CURRENT);
 	AddGo(startTile);
 
 	for (int i = 1; i <= tileMapNum; i++)
@@ -35,6 +36,7 @@ void SceneGame::Init()
 	}
 
 	nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
+	nextTileMap->SetMapStatus(MapStatus::NEXT);
 	nextTileMap->SetActive(true);
 	/*if (tempTileMaps.empty() == true)
 	{
@@ -146,6 +148,69 @@ void SceneGame::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
+int SceneGame::CountPathNum(int x, int y, TileMap* map, std::vector<sf::Vector2f>& directions) const
+{
+	directions.clear();
+
+	if (x == 0 || x == map->GetCellCount().x - 1)
+	{
+		directions.push_back(sf::Vector2f(1.f, 0.f));
+		directions.push_back(sf::Vector2f(-1.f, 0.f));
+		return 2;
+	}
+	if (y == 0)
+	{
+		directions.push_back(sf::Vector2f(0.f, 1.f));
+		directions.push_back(sf::Vector2f(0.f, -1.f));
+		return 2;
+	}
+
+	int count = 0;
+	if (y == map->GetCellCount().y - 1)
+	{
+		if (!map->IsBlocked(x - 1, y))
+		{
+			directions.push_back(sf::Vector2f(-1.f, 0.f));
+			++count;
+		}
+		if (!map->IsBlocked(x + 1, y))
+		{
+			directions.push_back(sf::Vector2f(1.f, 0.f));
+			++count;
+		}
+		if (!map->IsBlocked(x, y - 1))
+		{
+			directions.push_back(sf::Vector2f(0.f, -1.f));
+			++count;
+		}
+
+		switch (map->GetMapStatus())
+		{
+		case MapStatus::NONE:
+		case MapStatus::PREV:
+			return false;
+		case MapStatus::CURRENT:
+			if (!prevTileMap->IsBlocked(x, 0))
+			{
+				directions.push_back(sf::Vector2f(0.f, 1.f));
+				++count;
+			}
+			break;
+		case MapStatus::NEXT:
+			if (!currentTileMap->IsBlocked(x, 0))
+			{
+				directions.push_back(sf::Vector2f(0.f, 1.f));
+				++count;
+			}
+			break;
+		}
+
+		return count;
+	}
+
+	return map->IsFork(x, y, directions);
+}
+
 void SceneGame::AddScore(const int score)
 {
 	this->score += score * scoreMultiplier;
@@ -166,9 +231,12 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			if (currentTileMapId != 0) // ½ÃÀÛ¸Ê Á¦¿Ü
 			{
 				prevTileMap->SetActive(false);
+				prevTileMap->SetMapStatus(MapStatus::NONE);
 			}
 
 
+			currentTileMap->SetMapStatus(MapStatus::PREV);
+			nextTileMap->SetMapStatus(MapStatus::CURRENT);
 
 			prevTileMap = currentTileMap;
 			currentTileMap = nextTileMap;
@@ -198,6 +266,7 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			pos.y -= (currentTileMap->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;
 			nextTileMap->SetPosition(pos);
 			nextTileMap->SetOrigin(Origins::MC);
+			nextTileMap->SetMapStatus(MapStatus::NEXT);
 			nextTileMap->SetActive(true);
 			nextTileMap->Reset();
 

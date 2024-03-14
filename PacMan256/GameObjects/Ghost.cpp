@@ -27,7 +27,7 @@ void Ghost::Reset()
 	SpriteGo::Reset();
 
 	// Test
-	SetActive(false);
+	// SetActive(false);
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	tileMap = sceneGame->GetCurrentTileMap();
@@ -58,20 +58,20 @@ void Ghost::Update(float dt)
 		SetPosition(currentPos);
 
 		std::vector<sf::Vector2f> directions;
+		int pathCount = sceneGame->CountPathNum(gridIndex.x, gridIndex.y, tileMap, directions);
 
-		if (tileMap->IsCorner(gridIndex.x, gridIndex.y))
+		if (pathCount == 1)
 		{
-			if (direction.x != 0.f)
-				direction = { 0.f, 1.f };
-			else
-				direction = { 1.f, 0.f };
-
-			if (tileMap->IsBlocked(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y))
-			{
-				direction *= -1.f;
-			}
+			direction = directions[0];
 		}
-		else if (tileMap->IsFork(gridIndex.x, gridIndex.y, directions))
+		else if (pathCount == 2)
+		{
+			if (direction == -directions[0])
+				direction = directions[1];
+			else
+				direction = directions[0];
+		}
+		else if (pathCount >= 3)
 		{
 			sf::Vector2f nextDirection;
 			do
@@ -80,6 +80,17 @@ void Ghost::Update(float dt)
 			} while (nextDirection == -direction);
 			direction = nextDirection;
 		}
+
+		if (gridIndex.y + (int)direction.y < 0)
+		{
+			tileMap = sceneGame->GetNextTileMap();
+			++currentTileMapId;
+			gridIndex.y = tileMap->GetCellCount().y;
+		}
+		/*else if (gridIndex.y + (int)direction.y >= tileMap->GetCellCount().y)
+		{
+
+		}*/
 
 		nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x , gridIndex.y + (int)direction.y);
 		moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
