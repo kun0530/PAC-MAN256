@@ -11,6 +11,10 @@ class SceneGame : public Scene
 protected:
 	int score = 0;
 	int scoreMultiplier = 1;
+	float fruitTimer = 0.f;
+	float fruitRealDuration = 5.f;
+	const float fruitDuration = 5.f;
+	const float fruitAddDuration = 1.f;
 
 	int chain = 0;
 
@@ -62,7 +66,7 @@ public:
 	void ResetChain();
 
 	const int GetScoreMultiplier() const { return scoreMultiplier; }
-	void SetScoreMultiplier(int multiplier) { scoreMultiplier = multiplier; };
+	void SetScoreMultiplier(int multiplier);
 
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 	void ChangeGhostMode();

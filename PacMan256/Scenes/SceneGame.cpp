@@ -157,6 +157,24 @@ void SceneGame::Update(float dt)
 			text->SetActive(false);
 		}
 	}
+
+	// ÇÁ·çÆ®
+	if (scoreMultiplier != 1)
+	{
+		uiHud->SetMultiplierActive(true);
+		uiHud->SetMultiplier(scoreMultiplier);
+		if (fruitTimer > fruitRealDuration)
+		{
+			uiHud->SetMultiplierActive(false);
+			fruitTimer = 0.f;
+			fruitRealDuration = fruitDuration;
+			scoreMultiplier = 1;
+		}
+		else
+			fruitTimer += dt;
+	}
+	/*uiHud->SetMessage(std::to_string(scoreMultiplier) + ", " + std::to_string(fruitTimer) + ", " + std::to_string(fruitRealDuration));
+	uiHud->SetMessageActive(true);*/
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -314,6 +332,17 @@ void SceneGame::ResetChain()
 {
 	chain = 0;
 	textChain->SetString(std::to_string(chain));
+}
+
+void SceneGame::SetScoreMultiplier(int multiplier)
+{
+	if (scoreMultiplier == 1)
+		fruitRealDuration = fruitDuration;
+	else
+		fruitRealDuration += fruitAddDuration;
+
+	if (scoreMultiplier < multiplier)
+		scoreMultiplier = multiplier;
 }
 
 void SceneGame::ChangeGhostMode()

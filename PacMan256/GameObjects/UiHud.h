@@ -14,8 +14,10 @@ protected:
 	sf::Vector2f resolution = referenceResolution;
 
 	std::string formatFps = "FPS: ";
+	std::string formatMultiplier = "X ";
 
 	TextGo textScore;
+	TextGo textMultiplier;
 	TextGo textHiScore;
 
 	/*TextGo textChain;
@@ -34,6 +36,8 @@ public:
 	void SetResolution(const sf::Vector2f resolution);
 
 	void SetScore(int score);
+	void SetMultiplier(int multiplier);
+	void SetMultiplierActive(bool active);
 	void SetHighScore(int hiScore);
 	// void SetChain(int chain);
 	void SetMessage(const std::string& msg);

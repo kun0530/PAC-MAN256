@@ -46,8 +46,9 @@ public:
 	void SetCurrentTileMapId(int id) { currentTileMapId = id; }
 	const int GetCurrentTileMapId() const { return currentTileMapId; }
 
-	bool EatItem();
+	void EatItem();
 	const ItemType GetUsingItem() const { return usingItem; }
+	void SetFruitItem(int value);
 	void SetUsingItem(ItemType item);
 	void EndUsingItem();
 	void OnDie();

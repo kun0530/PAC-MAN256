@@ -15,6 +15,19 @@ void UiHud::SetScore(int score)
 	textScore.SetString(std::to_string(score));
 }
 
+void UiHud::SetMultiplier(int multiplier)
+{
+	textMultiplier.SetString(formatMultiplier + std::to_string(multiplier));
+}
+
+void UiHud::SetMultiplierActive(bool active)
+{
+	if (active)
+		textMultiplier.SetActive(true);
+	else
+		textMultiplier.SetActive(false);
+}
+
 void UiHud::SetHighScore(int highScore)
 {
 	textHiScore.SetString(std::to_string(highScore));
@@ -50,6 +63,7 @@ void UiHud::SetFps(int fps)
 void UiHud::Init()
 {
 	textScore.Init();
+	textMultiplier.Init();
 	textHiScore.Init();
 	/*textChain.Init();*/
 	textMessage.Init();
@@ -60,6 +74,8 @@ void UiHud::Init()
 	float textSize = 60.f;
 	textScore.Set(font, "", textSize, sf::Color::White);
 	textHiScore.Set(font, "", textSize, sf::Color::White);
+	textMultiplier.Set(font, "", textSize, sf::Color::White);
+	textMultiplier.SetActive(false);
 	/*textChain.Set(font, "", 20.f, sf::Color::White);
 	textChain.SetActive(false);*/
 	textMessage.Set(font, "", textSize, sf::Color::White);
@@ -70,7 +86,8 @@ void UiHud::Init()
 	/*gaugeHp.setFillColor(sf::Color::Red);
 	gaugeHp.setSize(gaugeHpSize);*/
 
-	textScore.SetOrigin(Origins::TL);
+	textScore.SetOrigin(Origins::TC);
+	textMultiplier.SetOrigin(Origins::TC);
 	textHiScore.SetOrigin(Origins::TR);
 	/*textChain.SetOrigin(Origins::BC);*/
 	// Utils::SetOrigin(gaugeHp, Origins::BL);
@@ -80,6 +97,7 @@ void UiHud::Init()
 	// Top
 	float topY = 25.f;
 	textScore.SetPosition({ referenceResolution.x / 2.f, topY });
+	textMultiplier.SetPosition({ referenceResolution.x / 2.f, topY + 100.f });
 	textHiScore.SetPosition({ referenceResolution.x - 150.f, topY });
 	textFps.SetPosition({ referenceResolution.x - 150.f, topY + 100.f });
 
@@ -116,6 +134,8 @@ void UiHud::FixedUpdate(float dt)
 void UiHud::Draw(sf::RenderWindow& window)
 {
 	textScore.Draw(window);
+	if (textMultiplier.GetActive())
+		textMultiplier.Draw(window);
 	textHiScore.Draw(window);
 	//textChain.Draw(window);
 	textMessage.Draw(window);

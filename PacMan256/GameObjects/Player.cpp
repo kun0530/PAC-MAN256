@@ -129,14 +129,7 @@ void Player::Update(float dt)
 				gridIndex.x += (int)direction.x;
 				gridIndex.y += (int)direction.y;
 
-				if (EatItem())
-				{
-					sceneGame->AddChain();
-				}
-				else
-				{
-					sceneGame->ResetChain();
-				}
+				EatItem();
 
 				isArrive = true;
 			}
@@ -170,54 +163,52 @@ void Player::Draw(sf::RenderWindow& window)
 	SpriteGo::Draw(window);
 }
 
-bool Player::EatItem()
+void Player::EatItem()
 {
 	auto itemInfo = currentTileMap->GetItem(gridIndex);
+	ItemType itemType = itemInfo->GetItemType();
 
 	if (itemInfo == nullptr)
-		return false;
-	
-	if (usingItem != ItemType::NONE)
-	{
-		itemDuration += 1.f;
-		return true;
-	}
+		return;
 
-	switch (itemInfo->GetItemType())
+	switch (itemType)
 	{
 	case ItemType::NONE:
-		return false;
+		sceneGame->ResetChain();
+		return;
 	case ItemType::COOKIE:
 		sceneGame->AddScore(1);
-		break;
-	case ItemType::POWER_COOKIE:
-		sceneGame->AddScore(1);
-		SetUsingItem(ItemType::POWER_COOKIE);
+		sceneGame->AddChain();
 		break;
 	case ItemType::FRUIT:
-		if (sceneGame->GetScoreMultiplier() < itemInfo->GetValue())
-			sceneGame->SetScoreMultiplier(itemInfo->GetValue());
-		SetUsingItem(ItemType::FRUIT);
+		sceneGame->SetScoreMultiplier(itemInfo->GetValue());
+		break;
+	case ItemType::POWER_COOKIE:
+		SetUsingItem(itemType);
 		break;
 	}
-
 	itemInfo->SetActive(false);
 	itemInfo->SetItemType(ItemType::NONE);
+}
 
-	return true;
+void Player::SetFruitItem(int value)
+{
 }
 
 void Player::SetUsingItem(ItemType item)
 {
+	if (usingItem != ItemType::NONE && item != ItemType::COOKIE)
+	{
+		itemDuration += 1.f;
+		return;
+	}
+
 	usingItem = item;
 
 	switch (usingItem)
 	{
 	case ItemType::POWER_COOKIE:
 		itemDuration = 5.f;
-		break;
-	case ItemType::FRUIT:
-		itemDuration = 10.f;
 		break;
 	default:
 		break;
@@ -238,7 +229,6 @@ void Player::EndUsingItem()
 	case ItemType::POWER_COOKIE:
 		break;
 	case ItemType::FRUIT:
-		sceneGame->SetScoreMultiplier(1);
 		break;
 	}
 
