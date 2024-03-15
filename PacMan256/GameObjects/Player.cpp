@@ -238,6 +238,7 @@ void Player::EndUsingItem()
 void Player::OnDie()
 {
 	// Game Over!!!
-	FRAMEWORK.SetTimeScale(0.f);
-	SetActive(false);
+	/*FRAMEWORK.SetTimeScale(0.f);
+	SetActive(false);*/
+	SetTexture("graphics/Pacman_0.png", true);
 }

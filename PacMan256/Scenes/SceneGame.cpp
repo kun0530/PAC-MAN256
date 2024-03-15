@@ -2,6 +2,7 @@
 #include "SceneGame.h"
 
 #include "TileMap.h"
+#include "KillScreen.h"
 #include "Player.h"
 
 #include "Ghost.h"
@@ -60,8 +61,16 @@ void SceneGame::Init()
 	pos.y -= (startTile->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;
 	nextTileMap->SetPosition(pos);
 	nextTileMap->SetOrigin(Origins::MC);
-	
 
+
+
+	// 킬 스크린
+	killScreen = new KillScreen("Kill Screen");
+	killScreen->sortLayer = 3;
+	AddGo(killScreen);
+
+	
+	// 플레이어
 	player = new Player("Player");
 	player->sortLayer = 1;
 	AddGo(player);
@@ -175,6 +184,26 @@ void SceneGame::Update(float dt)
 	}
 	/*uiHud->SetMessage(std::to_string(scoreMultiplier) + ", " + std::to_string(fruitTimer) + ", " + std::to_string(fruitRealDuration));
 	uiHud->SetMessageActive(true);*/
+
+	// 킬 스크린
+	int killScreenMapId = killScreen->GetTileMapId();
+	int killScreenIndexY = killScreen->GetGridIndexY();
+	for (auto obj : ghostList)
+	{
+		Ghost* ghost = dynamic_cast<Ghost*>(obj);
+		if (ghost->GetTileMapId() > killScreenMapId || ghost->GetGridIndex().y < killScreenIndexY)
+			continue;
+
+		RemoveGo(ghost);
+
+		/*if (ghost->GetTileMapId() < killScreen->GetTileMapId())
+			RemoveGo(ghost);
+
+		if (ghost->GetTileMapId() == killScreen->GetTileMapId() && ghost->GetGridIndex().y >= killScreen->GetGridIndexY())
+			RemoveGo(ghost);*/
+	}
+	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y < killScreenIndexY))
+		player->OnDie();
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)

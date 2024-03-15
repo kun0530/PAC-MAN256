@@ -89,8 +89,8 @@ void Ghost::Update(float dt)
 	{
 		if (player->GetUsingItem() == ItemType::POWER_COOKIE)
 			OnDie();
-		/*else
-			player->OnDie();*/
+		else
+			player->OnDie();
 	}
 }
 

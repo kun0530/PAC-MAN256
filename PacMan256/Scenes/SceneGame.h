@@ -1,6 +1,7 @@
 #pragma once
 
 class TileMap;
+class KillScreen;
 class Player;
 
 class UiHud;
@@ -19,6 +20,7 @@ protected:
 	int chain = 0;
 
 	TileMap* startTile = nullptr;
+	KillScreen* killScreen = nullptr;
 
 	std::vector<TileMap*> tileMaps;
 	// std::list<TileMap*> tempTileMaps;

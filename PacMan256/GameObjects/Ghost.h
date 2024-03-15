@@ -36,6 +36,9 @@ public:
 	virtual void FixedUpdate(float dt) override;
 	virtual void Draw(sf::RenderWindow& window) override;
 
+	const sf::Vector2i& GetGridIndex() const { return gridIndex; }
+	const int GetTileMapId() const { return currentTileMapId; }
+
 	virtual void DecideDirection();
 	void CheckTileMapBoundary();
 	virtual void CornerMove(std::vector<sf::Vector2f>& directions);
