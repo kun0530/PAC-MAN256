@@ -177,6 +177,12 @@ bool Player::EatItem()
 	if (itemInfo == nullptr)
 		return false;
 	
+	if (usingItem != ItemType::NONE)
+	{
+		itemDuration += 1.f;
+		return true;
+	}
+
 	switch (itemInfo->GetItemType())
 	{
 	case ItemType::NONE:

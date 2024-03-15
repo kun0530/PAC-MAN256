@@ -219,8 +219,8 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 	int shortestDistance = 5000;
 	int tempDistance = 0;
 
-	// bool* visited = new bool[countX * countY];
-	bool visited[3000];
+	bool* visited = new bool[countX * countY];
+	//bool visited[3000];
 
 	for (auto dir : directions)
 	{
@@ -228,6 +228,9 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 			continue;
 
 		sf::Vector2i nextIndex = { startIndex.x + (int)dir.x, startIndex.y + (int)dir.y };
+
+		if (nextIndex.x < 0 || nextIndex.y < 0 || nextIndex.x >= countX || nextIndex.y >= countY)
+			continue;
 
 		for (int i = 0; i < countX * countY; ++i)
 		{
@@ -278,11 +281,11 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 		}
 	}
 
-	/*if (visited != nullptr)
+	if (visited != nullptr)
 	{
 		delete[] visited;
 		visited = nullptr;
-	}*/
+	}
 
 	return shortestDirection;
 }
