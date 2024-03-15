@@ -55,71 +55,53 @@ void GhostPinky::Draw(sf::RenderWindow& window)
 
 void GhostPinky::DecideDirection()
 {
-	if (isMove)
+	if (isMove || currentTileMapId != player->GetCurrentTileMapId())
 		return;
 
-	if (gridIndex.x == player->GetGridIndex().x &&
-		currentTileMapId == player->GetCurrentTileMapId())
+	if (gridIndex.x == player->GetGridIndex().x)
 	{
-		int minY = 0;
-		int maxY = 0;
-
 		if (gridIndex.y < player->GetGridIndex().y)
 		{
-			minY = gridIndex.y;
-			maxY = player->GetGridIndex().y;
-		}
-		else
-		{
-			minY = player->GetGridIndex().y;
-			maxY = gridIndex.y;
-		}
-
-		isMove = true;
-		for (int i = minY; i <= maxY; i++)
-		{
-			if (tileMap->IsBlocked(gridIndex.x, i))
+			for (int i = gridIndex.y; i <= player->GetGridIndex().y; ++i)
 			{
-				isMove = false;
-				break;
+				if (tileMap->IsBlocked(gridIndex.x, i))
+					return;
 			}
+			direction = { 0.f, 1.f };
+			isMove = true;
 		}
-
-		if (isMove)
+		else if (gridIndex.y > player->GetGridIndex().y)
 		{
-			direction = { 0.f, (float)(player->GetGridIndex().y - gridIndex.y) / abs(player->GetGridIndex().y - gridIndex.y) };
+			for (int i = player->GetGridIndex().y; i <= gridIndex.y; ++i)
+			{
+				if (tileMap->IsBlocked(gridIndex.x, i))
+					return;
+			} 
+			direction = { 0.f, -1.f };
+			isMove = true;
 		}
 	}
-	else if (gridIndex.y == player->GetGridIndex().y &&
-		currentTileMapId == player->GetCurrentTileMapId())
+	else if (gridIndex.y == player->GetGridIndex().y)
 	{
-		int minX = 0;
-		int maxX = 0;
-
 		if (gridIndex.x < player->GetGridIndex().x)
 		{
-			minX = gridIndex.x;
-			maxX = player->GetGridIndex().x;
-		}
-		else
-		{
-			minX = player->GetGridIndex().x;
-			maxX = gridIndex.x;
-		}
-
-		isMove = true;
-		for (int i = minX; i <= maxX; i++)
-		{
-			if (tileMap->IsBlocked(i, gridIndex.y))
+			for (int i = gridIndex.x; i <= player->GetGridIndex().x; ++i)
 			{
-				isMove = false;
-				break;
+				if (tileMap->IsBlocked(i, gridIndex.y))
+					return;
 			}
+			direction = { 1.f, 0.f };
+			isMove = true;
 		}
-
-		if (isMove)
+		else if (gridIndex.x > player->GetGridIndex().x)
 		{
-			direction = { (float)(player->GetGridIndex().x - gridIndex.x) / abs(player->GetGridIndex().x - gridIndex.x), 0.f };
+			for (int i = player->GetGridIndex().x; i <= gridIndex.x; ++i)
+			{
+				if (tileMap->IsBlocked(i, gridIndex.y))
+					return;
+			}
+			direction = { -1.f, 0.f };
+			isMove = true;
 		}
 	}
 }

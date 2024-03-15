@@ -63,7 +63,8 @@ void KillScreen::Update(float dt)
 		{
 			tileMap = sceneGame->GetCurrentTileMap();
 			tileMapId = sceneGame->GetCurrentTileMapId();
-			nextGridindexY = tileMap->GetCellCount().y - 1;
+			gridIndexY = tileMap->GetCellCount().y;
+			nextGridindexY = gridIndexY - 1;
 		}
 		nextPosition = tileMap->GetGridPosition(0, nextGridindexY);
 

@@ -30,11 +30,20 @@ void Ghost::Reset()
 	// SetActive(false);
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
-	tileMap = sceneGame->GetCurrentTileMap();
+	tileMap = sceneGame->GetNextTileMap();
 	player = dynamic_cast<Player*>(sceneGame->FindGo("Player"));
-	currentTileMapId = sceneGame->GetCurrentTileMapId();
+	currentTileMapId = sceneGame->GetCurrentTileMapId() + 1;
 	
-	// gridIndex ·£´ý ¼³Á¤ÇÏ°í
+	// gridIndex ·£´ý ¼³Á¤
+	int CountX = tileMap->GetCellCount().x;
+	int CountY = tileMap->GetCellCount().y;
+	do
+	{
+		gridIndex.x = Utils::RandomRange(0, CountX - 1);
+		gridIndex.y = Utils::RandomRange(0, CountY - 1);
+	} while (tileMap->IsBlocked(gridIndex.x, gridIndex.y));
+
+
 	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));
 	gridIndex.x += (int)direction.x;
 	gridIndex.y += (int)direction.y;
@@ -254,10 +263,14 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 				break;
 			}
 
-			if (tileMapDiff < 0 && gridIndex.y == tileMap->GetCellCount().y - 1 && !sceneGame->GetPrevTileMap()->IsBlocked(index.x, 0))
+			if (tileMapDiff < 0 && gridIndex.y == tileMap->GetCellCount().y - 1)
 			{
-				tempDistance = distance;
-				break;
+				if ((tileMap->GetMapStatus() == MapStatus::NEXT && !sceneGame->GetCurrentTileMap()->IsBlocked(index.x, 0)) ||
+					(tileMap->GetMapStatus() == MapStatus::CURRENT && !sceneGame->GetPrevTileMap()->IsBlocked(index.x, 0)))
+				{
+					tempDistance = distance;
+					break;
+				}
 			}
 
 			for (auto dir : dirs)

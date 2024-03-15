@@ -17,7 +17,7 @@ private:
 	sf::Vector2f currentPosition = { 0.f, 0.f };
 	sf::Vector2f nextPosition = { 0.f, 0.f };
 
-	float speed = 50.f;
+	float speed = 100.f;
 	const sf::Vector2f direction = { 0.f, -1.f };
 
 	float timer = 0.f;

@@ -8,7 +8,7 @@ class Player;
 class Ghost : public SpriteGo
 {
 protected:
-	sf::Vector2f direction = { 1.f, 0.f };
+	sf::Vector2f direction = { 0.f, 0.f };
 	float speed = 200.f;
 	float timer = 0.f;
 	float moveTime = 0.f;

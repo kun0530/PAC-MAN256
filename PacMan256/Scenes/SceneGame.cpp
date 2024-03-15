@@ -191,7 +191,7 @@ void SceneGame::Update(float dt)
 	for (auto obj : ghostList)
 	{
 		Ghost* ghost = dynamic_cast<Ghost*>(obj);
-		if (ghost->GetTileMapId() > killScreenMapId || ghost->GetGridIndex().y < killScreenIndexY)
+		if (ghost->GetTileMapId() > killScreenMapId || ghost->GetGridIndex().y <= killScreenIndexY)
 			continue;
 
 		RemoveGo(ghost);
@@ -202,7 +202,7 @@ void SceneGame::Update(float dt)
 		if (ghost->GetTileMapId() == killScreen->GetTileMapId() && ghost->GetGridIndex().y >= killScreen->GetGridIndexY())
 			RemoveGo(ghost);*/
 	}
-	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y < killScreenIndexY))
+	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y <= killScreenIndexY))
 		player->OnDie();
 }
 
