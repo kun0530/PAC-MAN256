@@ -3,18 +3,18 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 
-// class Player;
+class Player;
 
 class UiHud : public GameObject
 {
 protected:
-	// Player* player = nullptr;
+	Player* player = nullptr;
 
 	sf::Vector2f referenceResolution = { 1920, 1080 };
 	sf::Vector2f resolution = referenceResolution;
 
 	std::string formatFps = "FPS: ";
-	std::string formatMultiplier = "X ";
+	std::string formatMultiplier = "X";
 
 	TextGo textScore;
 	TextGo textMultiplier;
@@ -27,7 +27,9 @@ protected:
 
 	TextGo textFps;
 
-	// sf::Vector2f gaugeHpSize = { 500.f, 50.f };
+	sf::RectangleShape itemTimer;
+	sf::Vector2f itemTimerSize = { 200.f, 10.f };
+	bool isUsingItem = false;
 
 public:
 	UiHud(const std::string& name = "");
@@ -35,6 +37,7 @@ public:
 
 	void SetResolution(const sf::Vector2f resolution);
 
+	void SetItemTimer(float timer, float duration);
 	void SetScore(int score);
 	void SetMultiplier(int multiplier);
 	void SetMultiplierActive(bool active);

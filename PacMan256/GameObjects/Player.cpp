@@ -148,7 +148,7 @@ void Player::Update(float dt)
 		if (itemTimer > itemDuration)
 		{
 			EndUsingItem();
-			SetUsingItem(ItemType::NONE);
+			// SetUsingItem(ItemType::NONE);
 		}
 	}
 }
@@ -197,13 +197,14 @@ void Player::SetFruitItem(int value)
 
 void Player::SetUsingItem(ItemType item)
 {
-	if (usingItem != ItemType::NONE && item != ItemType::COOKIE)
+	ItemType prevUsingItem = usingItem;
+	usingItem = item;
+
+	if (prevUsingItem != ItemType::NONE && prevUsingItem != ItemType::COOKIE)
 	{
 		itemDuration += 1.f;
 		return;
 	}
-
-	usingItem = item;
 
 	switch (usingItem)
 	{
@@ -222,16 +223,15 @@ void Player::EndUsingItem()
 {
 	switch (usingItem)
 	{
-	case ItemType::NONE:
-		break;
-	case ItemType::COOKIE:
-		break;
 	case ItemType::POWER_COOKIE:
 		break;
-	case ItemType::FRUIT:
+	default:
 		break;
 	}
 
+	itemTimer = 0.f;
+	itemDuration = 0.f;
+	usingItem = ItemType::NONE;
 	sceneGame->ChangeGhostMode();
 }
 

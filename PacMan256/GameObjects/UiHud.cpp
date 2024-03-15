@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "UiHud.h"
-// #include "Player.h"
+#include "Player.h"
 
 UiHud::UiHud(const std::string& name) : GameObject(name)
 {
@@ -8,6 +8,16 @@ UiHud::UiHud(const std::string& name) : GameObject(name)
 
 void UiHud::SetResolution(const sf::Vector2f resolution)
 {
+}
+
+void UiHud::SetItemTimer(float timer, float duration)
+{
+	float value;
+	if (duration == 0.f)
+		value = 0.f;
+	else
+		value = timer / duration;
+	itemTimer.setSize({ itemTimerSize.x * value, itemTimerSize.y });
 }
 
 void UiHud::SetScore(int score)
@@ -69,9 +79,9 @@ void UiHud::Init()
 	textMessage.Init();
 	textFps.Init();
 
-	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
+	sf::Font& font = RES_MGR_FONT.Get("fonts/editundo.ttf");
 
-	float textSize = 60.f;
+	float textSize = 50.f;
 	textScore.Set(font, "", textSize, sf::Color::White);
 	textHiScore.Set(font, "", textSize, sf::Color::White);
 	textMultiplier.Set(font, "", textSize, sf::Color::White);
@@ -83,9 +93,10 @@ void UiHud::Init()
 	textFps.Set(font, "", textSize, sf::Color::White);
 	textFps.SetActive(false);
 
-	/*gaugeHp.setFillColor(sf::Color::Red);
-	gaugeHp.setSize(gaugeHpSize);*/
+	itemTimer.setFillColor(sf::Color::White);
+	itemTimer.setSize(itemTimerSize);
 
+	Utils::SetOrigin(itemTimer, Origins::TC);
 	textScore.SetOrigin(Origins::TC);
 	textMultiplier.SetOrigin(Origins::TC);
 	textHiScore.SetOrigin(Origins::TR);
@@ -96,8 +107,9 @@ void UiHud::Init()
 
 	// Top
 	float topY = 25.f;
-	textScore.SetPosition({ referenceResolution.x / 2.f, topY });
-	textMultiplier.SetPosition({ referenceResolution.x / 2.f, topY + 100.f });
+	itemTimer.setPosition({ referenceResolution.x / 2.f, topY });
+	textScore.SetPosition({ referenceResolution.x / 2.f, topY + 10.f });
+	textMultiplier.SetPosition({ referenceResolution.x / 2.f, topY + 60.f });
 	textHiScore.SetPosition({ referenceResolution.x - 150.f, topY });
 	textFps.SetPosition({ referenceResolution.x - 150.f, topY + 100.f });
 
@@ -113,14 +125,24 @@ void UiHud::Release()
 
 void UiHud::Reset()
 {
-	/*player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
+	player = dynamic_cast<Player*>(SCENE_MGR.GetCurrentScene()->FindGo("Player"));
 
-	textChainTimer = 0.f;*/
+	// textChainTimer = 0.f;
 }
 
 void UiHud::Update(float dt)
 {
 	//textChain.SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
+	if (player->GetUsingItem() != ItemType::NONE)
+	{
+		isUsingItem = true;
+		SetItemTimer(player->GetItemDuration() - player->GetItemTimer(), player->GetItemDuration());
+	}
+	else
+	{
+		isUsingItem = false;
+	}
+	// SetMessage(std::to_string(player->GetItemDuration()) + ", " + std::to_string(player->GetItemTimer()));
 }
 
 void UiHud::LateUpdate(float dt)
@@ -133,6 +155,8 @@ void UiHud::FixedUpdate(float dt)
 
 void UiHud::Draw(sf::RenderWindow& window)
 {
+	if (isUsingItem)
+		window.draw(itemTimer);
 	textScore.Draw(window);
 	if (textMultiplier.GetActive())
 		textMultiplier.Draw(window);

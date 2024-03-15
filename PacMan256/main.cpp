@@ -1,6 +1,7 @@
 #include "pch.h"
 
 int main()
+
 {
     FRAMEWORK.Init(1920, 1080, "PacMan256");
     FRAMEWORK.Do();

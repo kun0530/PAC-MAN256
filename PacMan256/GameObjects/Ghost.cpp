@@ -300,5 +300,7 @@ void Ghost::ChangeMode()
 
 void Ghost::OnDie()
 {
+	player->AddItemDuration(0.5f);
+	sceneGame->AddScore(10);
 	SetActive(false);
 }

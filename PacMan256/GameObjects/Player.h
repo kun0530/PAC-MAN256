@@ -48,6 +48,9 @@ public:
 
 	void EatItem();
 	const ItemType GetUsingItem() const { return usingItem; }
+	const float GetItemTimer() const { return itemTimer; }
+	const float GetItemDuration() const { return itemDuration; }
+	void AddItemDuration(float value) { itemDuration += value; }
 	void SetFruitItem(int value);
 	void SetUsingItem(ItemType item);
 	void EndUsingItem();
