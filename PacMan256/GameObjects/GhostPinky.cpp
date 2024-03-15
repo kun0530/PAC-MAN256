@@ -58,7 +58,8 @@ void GhostPinky::DecideDirection()
 	if (isMove)
 		return;
 
-	if (gridIndex.x == player->GetGridIndex().x)
+	if (gridIndex.x == player->GetGridIndex().x &&
+		currentTileMapId == player->GetCurrentTileMapId())
 	{
 		int minY = 0;
 		int maxY = 0;

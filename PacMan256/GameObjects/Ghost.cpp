@@ -205,7 +205,8 @@ void Ghost::ForkMove(std::vector<sf::Vector2f>& directions)
 	direction = nextDirection;
 }
 
-sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targetIndex, std::vector<sf::Vector2f>& directions)
+// 동일한 타일맵 내에서 startIndex로부터 targetIndex까지의 최단 경로 탐색
+sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targetIndex, std::vector<sf::Vector2f>& directions, int tileMapDiff)
 {
 	sf::Vector2i dirs[4] = {
 		{ 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 }
@@ -218,6 +219,9 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 	int shortestDistance = 5000;
 	int tempDistance = 0;
 
+	// bool* visited = new bool[countX * countY];
+	bool visited[3000];
+
 	for (auto dir : directions)
 	{
 		if (dir == -direction)
@@ -225,7 +229,6 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 
 		sf::Vector2i nextIndex = { startIndex.x + (int)dir.x, startIndex.y + (int)dir.y };
 
-		bool* visited = new bool[countX * countY];
 		for (int i = 0; i < countX * countY; ++i)
 		{
 			visited[i] = false;
@@ -241,7 +244,14 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 			int distance = nodes.front().second;
 			nodes.pop();
 
-			if (index == targetIndex)
+			if ((tileMapDiff == 0 && index == targetIndex) ||
+				(tileMapDiff > 0 && index.y == 0))
+			{
+				tempDistance = distance;
+				break;
+			}
+
+			if (tileMapDiff < 0 && gridIndex.y == tileMap->GetCellCount().y - 1 && !sceneGame->GetPrevTileMap()->IsBlocked(index.x, 0))
 			{
 				tempDistance = distance;
 				break;
@@ -266,13 +276,13 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 			shortestDistance = tempDistance;
 			shortestDirection = (sf::Vector2i)dir;
 		}
-
-		if (visited != nullptr)
-		{
-			delete[] visited;
-			visited = nullptr;
-		}
 	}
+
+	/*if (visited != nullptr)
+	{
+		delete[] visited;
+		visited = nullptr;
+	}*/
 
 	return shortestDirection;
 }

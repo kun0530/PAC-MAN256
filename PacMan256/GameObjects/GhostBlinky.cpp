@@ -47,29 +47,27 @@ void GhostBlinky::CornerMove(std::vector<sf::Vector2f>& directions)
 
 void GhostBlinky::ForkMove(std::vector<sf::Vector2f>& directions)
 {
-	// Ghost::ForkMove(directions);
-	direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions);
-	/*sf::Vector2f targetDir = { 0.f, 0.f };
-	
-	int mapIdDiff = currentTileMapId - player->GetCurrentTileMapId();
-	int indexDiffY = player->GetGridIndex().y - gridIndex.y;
-	int indexDiffX = player->GetGridIndex().x - gridIndex.x;
-
-	if (mapIdDiff == 0)
+	if (currentTileMapId == player->GetCurrentTileMapId())
+		direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions);
+	else if (currentTileMapId < player->GetCurrentTileMapId()) // 위를 탐색
 	{
-		if (indexDiffY != 0)
-			targetDir.y = indexDiffY / abs(indexDiffY);
+		// gridIndex.y == 0인 인덱스로 가는 최단 경로 탐색
+		direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions, 1);
 	}
-	else
-		targetDir.y = mapIdDiff / abs(mapIdDiff);
-
-	if (indexDiffX != 0)
-		targetDir.x = indexDiffX / abs(indexDiffX);
-
-	std::cout << targetDir.x << ", " << targetDir.y << std::endl;
-
-	for (auto dir : directions)
+	else if (currentTileMapId > player->GetCurrentTileMapId()) // 아래를 탐색
 	{
-		
-	}*/
+		if (gridIndex.y == tileMap->GetCellCount().y - 1 && direction != sf::Vector2f(0.f, -1.f))
+		{
+			for (auto dir : directions)
+			{
+				if (dir == sf::Vector2f(0.f, 1.f))
+				{
+					direction = { 0.f, 1.f };
+					return;
+				}
+			}
+		}
+		// gridIndex.y == tileMap->GetCellCount().y - 1 && sceneGame->CountPathNum() >= 3인 인덱스로 가는 최단 경로 탐색
+		direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions, -1);
+	}
 }

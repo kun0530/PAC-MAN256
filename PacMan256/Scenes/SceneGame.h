@@ -2,7 +2,6 @@
 
 class TileMap;
 class Player;
-class Ghost;
 
 class UiHud;
 class TextGo;
@@ -27,7 +26,7 @@ protected:
 	int currentTileMapId = 0;
 
 	Player* player = nullptr;
-	Ghost* ghost = nullptr;
+	// Ghost* ghost = nullptr;
 
 	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
 	UiHud* uiHud = nullptr;

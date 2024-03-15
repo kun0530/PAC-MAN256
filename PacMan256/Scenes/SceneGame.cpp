@@ -66,9 +66,21 @@ void SceneGame::Init()
 	player->sortLayer = 1;
 	AddGo(player);
 	
-	ghost = new GhostBlinky("Ghost");
-	ghost->sortLayer = 1;
-	AddGo(ghost);
+
+	// 고스트 테스트
+	Ghost* ghostBlinky = new GhostBlinky("Ghost");
+	ghostBlinky->sortLayer = 1;
+	AddGo(ghostBlinky);
+
+	Ghost* ghostPinky = new GhostPinky("Ghost");
+	ghostPinky->sortLayer = 1;
+	AddGo(ghostPinky);
+
+	Ghost* ghostInky = new GhostInky("Ghost");
+	ghostInky->sortLayer = 1;
+	AddGo(ghostInky);
+
+
 
 	uiHud = new UiHud("UI HUD");
 	AddGo(uiHud, Ui);

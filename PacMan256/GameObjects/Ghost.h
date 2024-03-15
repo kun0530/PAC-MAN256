@@ -40,7 +40,7 @@ public:
 	void CheckTileMapBoundary();
 	virtual void CornerMove(std::vector<sf::Vector2f>& directions);
 	virtual void ForkMove(std::vector<sf::Vector2f>& directions);
-	sf::Vector2i BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targetIndex, std::vector<sf::Vector2f>& directions);
+	sf::Vector2i BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targetIndex, std::vector<sf::Vector2f>& directions, int tileMapDiff = 0);
 
 	void ChangeMode();
 	void OnDie();
