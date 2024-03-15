@@ -90,7 +90,7 @@ void Ghost::Update(float dt)
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 		}
 	}
-	
+
 	timer += dt;
 	Translate(direction * speed * dt);
 
@@ -206,12 +206,38 @@ void Ghost::CornerMove(std::vector<sf::Vector2f>& directions)
 
 void Ghost::ForkMove(std::vector<sf::Vector2f>& directions)
 {
-	sf::Vector2f nextDirection;
+	// 랜덤 방향
+	/*sf::Vector2f nextDirection;
 	do
 	{
 		nextDirection = directions[Utils::RandomRange(0, directions.size())];
 	} while (nextDirection == -direction);
-	direction = nextDirection;
+	direction = nextDirection;*/
+
+	// 최단 경로 방향
+	if (currentTileMapId == player->GetCurrentTileMapId())
+		direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions);
+	else if (currentTileMapId < player->GetCurrentTileMapId()) // 위를 탐색
+	{
+		// gridIndex.y == 0인 인덱스로 가는 최단 경로 탐색
+		direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions, 1);
+	}
+	else if (currentTileMapId > player->GetCurrentTileMapId()) // 아래를 탐색
+	{
+		if (gridIndex.y == tileMap->GetCellCount().y - 1 && direction != sf::Vector2f(0.f, -1.f))
+		{
+			for (auto dir : directions)
+			{
+				if (dir == sf::Vector2f(0.f, 1.f))
+				{
+					direction = { 0.f, 1.f };
+					return;
+				}
+			}
+		}
+		// gridIndex.y == tileMap->GetCellCount().y - 1 && sceneGame->CountPathNum() >= 3인 인덱스로 가는 최단 경로 탐색
+		direction = (sf::Vector2f)BFS(gridIndex, player->GetGridIndex(), directions, -1);
+	}
 }
 
 // 동일한 타일맵 내에서 startIndex로부터 targetIndex까지의 최단 경로 탐색
