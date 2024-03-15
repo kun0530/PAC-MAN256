@@ -10,6 +10,7 @@
 #include "GhostPinky.h"
 #include "GhostInky.h"
 #include "GhostSpunky.h"
+#include "GhostClyde.h"
 
 #include "UiHud.h"
 #include "TextGo.h"
@@ -82,25 +83,23 @@ void SceneGame::Init()
 	ghostBlinky->sortLayer = 1;
 	AddGo(ghostBlinky);
 
-	n = FindGoAll("Ghost", ghostList, World);
-
 	Ghost* ghostPinky = new GhostPinky("Ghost");
 	ghostPinky->sortLayer = 1;
 	AddGo(ghostPinky);
-
-	n = FindGoAll("Ghost", ghostList, World);
 
 	Ghost* ghostInky = new GhostInky("Ghost");
 	ghostInky->sortLayer = 1;
 	AddGo(ghostInky);
 
-	n = FindGoAll("Ghost", ghostList, World);
-
 	Ghost* ghostSpunky = new GhostSpunky("Ghost");
 	ghostSpunky->sortLayer = 1;
 	AddGo(ghostSpunky);
 
-	n = FindGoAll("Ghost", ghostList, World);
+	Ghost* ghostClyde = new GhostClyde("Ghost");
+	ghostClyde->sortLayer = 1;
+	AddGo(ghostClyde);
+
+
 
 	uiHud = new UiHud("UI HUD");
 	AddGo(uiHud, Ui);

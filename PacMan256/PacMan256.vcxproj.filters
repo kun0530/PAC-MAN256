@@ -93,6 +93,9 @@
     <ClCompile Include="GameObjects\GhostSpunky.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GameObjects\GhostClyde.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Framework\Defines.h">
@@ -180,6 +183,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="GameObjects\GhostSpunky.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\GhostClyde.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
