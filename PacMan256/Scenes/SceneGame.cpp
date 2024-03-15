@@ -11,6 +11,7 @@
 #include "GhostInky.h"
 #include "GhostSpunky.h"
 #include "GhostClyde.h"
+#include "GhostGlitchy.h"
 
 #include "UiHud.h"
 #include "TextGo.h"
@@ -99,6 +100,9 @@ void SceneGame::Init()
 	ghostClyde->sortLayer = 1;
 	AddGo(ghostClyde);
 
+	Ghost* ghostGlitchy = new GhostGlitchy("Ghost");
+	ghostGlitchy->sortLayer = 1;
+	AddGo(ghostGlitchy);
 
 
 	uiHud = new UiHud("UI HUD");

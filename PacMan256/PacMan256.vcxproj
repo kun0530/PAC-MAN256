@@ -176,6 +176,7 @@
     <ClCompile Include="GameObjects\KillScreen.cpp" />
     <ClCompile Include="GameObjects\GhostSpunky.cpp" />
     <ClCompile Include="GameObjects\GhostClyde.cpp" />
+    <ClCompile Include="GameObjects\GhostGlitchy.cpp" />
     <ClCompile Include="main.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
@@ -216,6 +217,7 @@
     <ClInclude Include="GameObjects\KillScreen.h" />
     <ClInclude Include="GameObjects\GhostSpunky.h" />
     <ClInclude Include="GameObjects\GhostClyde.h" />
+    <ClInclude Include="GameObjects\GhostGlitchy.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="GameObjects\Player.h" />
     <ClInclude Include="Scenes\Scene.h" />
