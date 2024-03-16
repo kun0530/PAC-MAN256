@@ -25,6 +25,8 @@ protected:
 
 	std::string originTextureId;
 
+	SpriteGo eye;
+
 public:
 	Ghost(const std::string& name = "");
 	~Ghost() override = default;

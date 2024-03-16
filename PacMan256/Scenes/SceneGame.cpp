@@ -60,13 +60,13 @@ void SceneGame::Init()
 
 	// 킬 스크린
 	killScreen = new KillScreen("Kill Screen");
-	killScreen->sortLayer = 3;
+	killScreen->sortLayer = 4;
 	AddGo(killScreen);
 
 	
 	// 플레이어
 	player = new Player("Player");
-	player->sortLayer = 1;
+	player->sortLayer = 3;
 	AddGo(player);
 	
 

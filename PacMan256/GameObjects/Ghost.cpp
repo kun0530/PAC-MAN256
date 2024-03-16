@@ -15,6 +15,12 @@ void Ghost::Init()
 	SetTexture("graphics/Ghost_Red.png");
 	SetOrigin(Origins::MC);
 	SetScale({ 2.f, 2.f });
+
+	eye.SetTexture("graphics/GhostEye_Up.png");
+	eye.SetPosition(position);
+	eye.SetOrigin(origin);
+	eye.SetScale(scale);
+	eye.sortLayer = 2;
 }
 
 void Ghost::Release()
@@ -103,6 +109,17 @@ void Ghost::Update(float dt)
 		else
 			player->OnDie();
 	}
+
+	// °í½ºÆ® ´«
+	eye.SetPosition(position);
+	if (direction == sf::Vector2f(1.f, 0.f))
+		eye.SetTexture("graphics/GhostEye_Right.png");
+	else if (direction == sf::Vector2f(-1.f, 0.f))
+		eye.SetTexture("graphics/GhostEye_Left.png");
+	else if (direction == sf::Vector2f(0.f, -1.f))
+		eye.SetTexture("graphics/GhostEye_Up.png");
+	else if (direction == sf::Vector2f(0.f, 1.f))
+		eye.SetTexture("graphics/GhostEye_Down.png");
 }
 
 void Ghost::FixedUpdate(float dt)
@@ -113,6 +130,8 @@ void Ghost::FixedUpdate(float dt)
 void Ghost::Draw(sf::RenderWindow& window)
 {
 	SpriteGo::Draw(window);
+	if (eye.GetActive())
+		eye.Draw(window);
 }
 
 void Ghost::DecideDirection()
@@ -334,9 +353,15 @@ sf::Vector2i Ghost::BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targ
 void Ghost::ChangeMode()
 {
 	if (player->GetUsingItem() == ItemType::POWER_COOKIE)
-		SetTexture("graphics/Ghost_Glitch.png");
+	{
+		SetTexture("graphics/Ghost_PowerCookie.png");
+		eye.SetActive(false);
+	}
 	else
+	{
 		SetTexture(originTextureId);
+		eye.SetActive(true);
+	}
 }
 
 void Ghost::OnDie()

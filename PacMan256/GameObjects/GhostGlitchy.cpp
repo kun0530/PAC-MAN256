@@ -60,7 +60,7 @@ void GhostGlitchy::FixedUpdate(float dt)
 
 void GhostGlitchy::Draw(sf::RenderWindow& window)
 {
-	Ghost::Draw(window);
+	SpriteGo::Draw(window);
 }
 
 void GhostGlitchy::CornerMove(std::vector<sf::Vector2f>& directions)
