@@ -254,4 +254,6 @@ void Player::OnDie()
 	// Game Over!!!
 	/*FRAMEWORK.SetTimeScale(0.f);
 	SetActive(false);*/
+
+	sceneGame->GameOver();
 }

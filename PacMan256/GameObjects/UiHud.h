@@ -3,11 +3,13 @@
 #include "SpriteGo.h"
 #include "TextGo.h"
 
+class SceneGame;
 class Player;
 
 class UiHud : public GameObject
 {
 protected:
+	SceneGame* sceneGame = nullptr;
 	Player* player = nullptr;
 
 	sf::Vector2f referenceResolution = { 1920, 1080 };
@@ -19,6 +21,15 @@ protected:
 	TextGo textScore;
 	TextGo textMultiplier;
 	TextGo textHiScore;
+
+	TextGo textGame;
+	TextGo textOver;
+	float textGameOverInterval = 15.f;
+	sf::Vector2f gameOverPosition;
+	float gameOverTimer = 0.f;
+	float gameOverMoveTime = 0.f;
+	float gameOverSpeed = 1000.f;
+	bool isGameOver = false;
 
 	/*TextGo textChain;
 	float textChainTimer = 0.f;*/
@@ -42,6 +53,7 @@ public:
 	void SetMultiplier(int multiplier);
 	void SetMultiplierActive(bool active);
 	void SetHighScore(int hiScore);
+	void SetGameOver(const bool isOver);
 	// void SetChain(int chain);
 	void SetMessage(const std::string& msg);
 	void SetMessageActive(bool active);

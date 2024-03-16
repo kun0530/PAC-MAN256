@@ -73,4 +73,6 @@ public:
 	const std::list<GameObject*>& GetGhostList() const { return ghostList; }
 	void ChangeGhostMode();
 	void CreateGhost(int num);
+
+	void GameOver();
 };

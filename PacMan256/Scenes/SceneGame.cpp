@@ -168,6 +168,13 @@ void SceneGame::Update(float dt)
 	}
 	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y <= killScreenIndexY))
 		player->OnDie();
+
+
+	// Å×½ºÆ®
+	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	{
+		player->OnDie();
+	}
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -378,4 +385,9 @@ void SceneGame::CreateGhost(int num)
 			AddGo(ghost);
 		}
 	}
+}
+
+void SceneGame::GameOver()
+{
+	uiHud->SetGameOver(true);
 }
