@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TileMap.h"
+#include "SceneGame.h"
 #include "Item.h"
 #include "rapidcsv.h"
 
@@ -23,6 +24,9 @@ sf::FloatRect TileMap::GetGlobalBounds()
 
 const sf::Vector2f& TileMap::GetGridPosition(int x, int y) const
 {
+	if (y < 0)
+		return transform.transformPoint(va[x * 4].position) + sf::Vector2f(cellSize.x / 2.f, -cellSize.y / 2.f);
+
 	return transform.transformPoint(va[(y * cellCount.x + x) * 4].position) + cellSize / 2.f;
 }
 
@@ -373,6 +377,8 @@ void TileMap::Release()
 void TileMap::Reset()
 {
 	GameObject::Reset();
+
+	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 
 	if (!active)
 		return;

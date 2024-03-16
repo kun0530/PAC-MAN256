@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 class Item;
+class SceneGame;
 
 enum class MapStatus
 {
@@ -24,6 +25,8 @@ class TileMap : public GameObject
 	};
 
 protected:
+	SceneGame* sceneGame = nullptr;
+
 	std::string id;
 	MapStatus mapStatus = MapStatus::NONE;
 

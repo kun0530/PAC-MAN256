@@ -133,8 +133,6 @@ void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
 
-	worldView.setCenter({ 0.f, player->GetPosition().y });
-
 	FindGoAll("Ghost", ghostList, Layers::World);
 
 	textChain->SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
@@ -170,11 +168,12 @@ void SceneGame::Update(float dt)
 		player->OnDie();
 
 
-	// Å×½ºÆ®
-	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
-	{
-		player->OnDie();
-	}
+
+
+	if (isGhostKill)
+		ZoomCamera(dt);
+	else
+		worldView.setCenter({ 0.f, player->GetPosition().y });
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
@@ -387,7 +386,73 @@ void SceneGame::CreateGhost(int num)
 	}
 }
 
+void SceneGame::KillGhost()
+{
+	if (isGhostKill)
+	{
+		isZoomIn = true;
+		isZoomOut = false;
+		cameraZoomInTimer = 0.f;
+		cameraZoomOutTimer = 0.f;
+	}
+	else
+	{
+		isGhostKill = true;
+		isZoomIn = true;
+		isZoomOut = false;
+	}
+}
+
 void SceneGame::GameOver()
 {
 	uiHud->SetGameOver(true);
+}
+
+void SceneGame::ZoomCamera(float dt)
+{
+	sf::Vector2f windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
+	sf::Vector2f worldViewSize = worldView.getSize();
+	sf::Vector2f worldViewCenter = worldView.getCenter();
+	if (isZoomIn)
+	{
+		if (cameraZoomInTimer > cameraZoomInDuration)
+		{
+			isZoomIn = false;
+			isZoomOut = true;
+			cameraZoomInTimer = 0.f;
+
+			worldView.setSize(windowSize * zoomInSize);
+			worldView.setCenter(player->GetPosition());
+		}
+		else
+		{
+			cameraZoomInTimer += dt;
+			worldViewSize = Utils::Lerp(worldViewSize, windowSize * zoomInSize, cameraZoomInTimer / cameraZoomInDuration);
+			worldView.setSize(worldViewSize);
+
+			worldViewCenter = Utils::Lerp(worldViewCenter, player->GetPosition(), cameraZoomInTimer / cameraZoomInDuration);
+			worldView.setCenter(worldViewCenter);
+		}
+	}
+	else if (isZoomOut)
+	{
+		if (cameraZoomOutTimer > cameraZoomOutDuration)
+		{
+			isZoomOut = false;
+			isGhostKill = false;
+			cameraZoomOutTimer = 0.f;
+
+			worldView.setSize(windowSize * zoomOutSize);
+			worldView.setCenter({ 0.f, player->GetPosition().y });
+		}
+		else
+		{
+			cameraZoomOutTimer += dt;
+			worldViewSize = Utils::Lerp(worldViewSize, windowSize * zoomOutSize, cameraZoomOutTimer / cameraZoomOutDuration);
+			worldView.setSize(worldViewSize);
+
+			worldViewCenter = Utils::Lerp(worldViewCenter, { 0.f, player->GetPosition().y }, cameraZoomOutTimer / cameraZoomOutDuration);
+			worldView.setCenter(worldViewCenter);
+		}
+	}
 }

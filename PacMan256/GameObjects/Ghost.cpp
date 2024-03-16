@@ -102,7 +102,7 @@ void Ghost::Update(float dt)
 	timer += dt;
 	Translate(direction * speed * dt);
 
-	if (gridIndex == player->GetGridIndex())
+	if (currentTileMapId == player->GetCurrentTileMapId() && gridIndex == player->GetGridIndex())
 	{
 		if (player->GetUsingItem() == ItemType::POWER_COOKIE)
 			OnDie();
@@ -368,5 +368,6 @@ void Ghost::OnDie()
 {
 	player->AddItemDuration(0.5f);
 	sceneGame->AddScore(10);
+	sceneGame->KillGhost();
 	sceneGame->RemoveGo(this);
 }

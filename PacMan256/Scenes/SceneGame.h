@@ -41,6 +41,17 @@ protected:
 
 	std::list<GameObject*> ghostList;
 
+	// 테스트용 변수 - 나중에 삭제바람
+	bool isGhostKill = false;
+	const float zoomInSize = 0.5f;
+	const float zoomOutSize = 0.8f;
+	bool isZoomIn = false;
+	float cameraZoomInTimer = 0.f;
+	float cameraZoomInDuration = 1.f;
+	bool isZoomOut = false;
+	float cameraZoomOutTimer = 0.f;
+	float cameraZoomOutDuration = 1.f;
+
 public:
 	SceneGame(SceneIds id);
 	virtual ~SceneGame();
@@ -74,5 +85,7 @@ public:
 	void ChangeGhostMode();
 	void CreateGhost(int num);
 
+	void KillGhost();
 	void GameOver();
+	void ZoomCamera(float dt);
 };
