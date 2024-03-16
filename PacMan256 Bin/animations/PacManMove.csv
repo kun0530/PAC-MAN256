@@ -1,0 +1,7 @@
+ID,FPS,LOOPTYPE (0:Single 1:Loop 2:PingPong),,
+Move,10,1,,
+,,,,
+TEXTURE ID,LEFT,TOP,WIDTH,HEIGHT
+graphics/Pacman_0.png,0,0,64,64
+graphics/Pacman_1.png,0,0,61,64
+graphics/Pacman_2.png,0,0,46,64

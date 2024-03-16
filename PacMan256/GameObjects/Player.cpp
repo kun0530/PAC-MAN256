@@ -17,6 +17,8 @@ void Player::Init()
 	SetOrigin(Origins::MC);
 	// SetPosition({ 0.f, 0.f });
 	SetScale({ 0.5f, 0.5f });
+
+	animator.SetTarget(&sprite);
 }
 
 void Player::Release()
@@ -38,11 +40,14 @@ void Player::Reset()
 	SetPosition(currentPos);
 
 	timer = 0.f;
+
+	animator.Play("animations/PacManMove.csv");
 }
 
 void Player::Update(float dt)
 {
 	SpriteGo::Update(dt);
+	animator.Update(dt);
 
 	sf::Vector2i inputDirection = InputMgr::GetAxisOne();
 	if (inputDirection != sf::Vector2i(0, 0))
@@ -142,6 +147,13 @@ void Player::Update(float dt)
 			Translate(direction * speed * dt);
 		}
 	}
+
+	// 애니메이션
+	if (isArrive)
+		animator.Stop();
+	else if (!animator.IsPlaying())
+		animator.Play("animations/PacManMove.csv");
+	
 
 	// 아이템
 	if (usingItem != ItemType::NONE)

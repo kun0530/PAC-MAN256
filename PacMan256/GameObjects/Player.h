@@ -1,5 +1,6 @@
 #pragma once
 #include "SpriteGo.h"
+#include "Animator.h"
 
 class TileMap;
 class SceneGame;
@@ -26,8 +27,9 @@ protected:
 	float itemDuration = 0.f;
 	float itemTimer = 0.f;
 
-	
 	SceneGame* sceneGame = nullptr;
+
+	Animator animator;
 
 public:
 	Player(const std::string& name = "");
