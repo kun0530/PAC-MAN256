@@ -11,6 +11,8 @@ void GhostInky::Init()
 
 	originTextureId = "graphics/Ghost_Blue.png";
 	SetTexture(originTextureId);
+
+	color = sf::Color::Blue;
 }
 
 void GhostInky::Release()

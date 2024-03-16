@@ -13,6 +13,8 @@ void GhostBlinky::Init()
 
 	originTextureId = "graphics/Ghost_Red.png";
 	SetTexture(originTextureId);
+
+	color = sf::Color::Red;
 }
 
 void GhostBlinky::Release()

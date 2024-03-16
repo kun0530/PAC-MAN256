@@ -13,6 +13,8 @@ void GhostSpunky::Init()
 
 	originTextureId = "graphics/Ghost_Black.png";
 	SetTexture(originTextureId);
+
+	color = sf::Color::Color(128, 128, 128);
 }
 
 void GhostSpunky::Release()

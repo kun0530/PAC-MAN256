@@ -13,6 +13,8 @@
 #include "GhostClyde.h"
 #include "GhostGlitchy.h"
 
+#include "DeathEffectGo.h"
+
 #include "UiHud.h"
 #include "TextGo.h"
 
@@ -60,13 +62,13 @@ void SceneGame::Init()
 
 	// 킬 스크린
 	killScreen = new KillScreen("Kill Screen");
-	killScreen->sortLayer = 4;
+	killScreen->sortLayer = 5;
 	AddGo(killScreen);
 
 	
 	// 플레이어
 	player = new Player("Player");
-	player->sortLayer = 3;
+	player->sortLayer = 4;
 	AddGo(player);
 	
 
@@ -172,7 +174,7 @@ void SceneGame::Update(float dt)
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
-		KillGhost();
+		KillGhost(player->GetPosition(), sf::Color::Black);
 	}
 
 	if (isGhostKill)
@@ -391,7 +393,7 @@ void SceneGame::CreateGhost(int num)
 	}
 }
 
-void SceneGame::KillGhost()
+void SceneGame::KillGhost(sf::Vector2f pos, sf::Color color)
 {
 	if (isGhostKill)
 	{
@@ -406,11 +408,25 @@ void SceneGame::KillGhost()
 		isZoomIn = true;
 		isZoomOut = false;
 	}
+
+	MakeDeatEffect(pos, color);
+}
+
+void SceneGame::MakeDeatEffect(sf::Vector2f pos, sf::Color color)
+{
+	DeathEffectGo* deathEffect = new DeathEffectGo("Death Effect");
+	deathEffect->SetEffectColor(color);
+	deathEffect->SetInitPosition(pos);
+	deathEffect->Init();
+	deathEffect->Reset();
+	deathEffect->sortLayer = 3;
+	AddGo(deathEffect);
 }
 
 void SceneGame::GameOver()
 {
 	uiHud->SetGameOver(true);
+	MakeDeatEffect(player->GetPosition(), sf::Color::Yellow);
 }
 
 void SceneGame::ZoomCamera(float dt)

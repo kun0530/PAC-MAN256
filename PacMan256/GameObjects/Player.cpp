@@ -30,6 +30,9 @@ void Player::Reset()
 {
 	SpriteGo::Reset();
 
+	isAlive = true;
+	SetActive(true);
+
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	currentTileMap = sceneGame->GetCurrentTileMap();
 
@@ -251,9 +254,12 @@ void Player::EndUsingItem()
 
 void Player::OnDie()
 {
+	if (!isAlive)
+		return;
 	// Game Over!!!
-	/*FRAMEWORK.SetTimeScale(0.f);
-	SetActive(false);*/
-
+	// FRAMEWORK.SetTimeScale(0.f);
+	
+	isAlive = false;
+	SetActive(false);
 	sceneGame->GameOver();
 }

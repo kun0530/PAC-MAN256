@@ -27,6 +27,8 @@ protected:
 	float itemDuration = 0.f;
 	float itemTimer = 0.f;
 
+	bool isAlive = true;
+
 	SceneGame* sceneGame = nullptr;
 
 	Animator animator;

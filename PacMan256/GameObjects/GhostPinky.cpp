@@ -14,6 +14,8 @@ void GhostPinky::Init()
 	speed = 300.f;
 	originTextureId = "graphics/Ghost_Pink.png";
 	SetTexture(originTextureId);
+
+	color = sf::Color::Color(255, 51, 153);
 }
 
 void GhostPinky::Release()

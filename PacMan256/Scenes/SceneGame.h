@@ -41,7 +41,6 @@ protected:
 
 	std::list<GameObject*> ghostList;
 
-	// 테스트용 변수 - 나중에 삭제바람
 	bool isGhostKill = false;
 	const float zoomInSize = 0.5f;
 	const float zoomOutSize = 0.78125f;
@@ -85,7 +84,8 @@ public:
 	void ChangeGhostMode();
 	void CreateGhost(int num);
 
-	void KillGhost();
+	void KillGhost(sf::Vector2f pos, sf::Color color);
+	void MakeDeatEffect(sf::Vector2f pos, sf::Color color);
 	void GameOver();
 	void ZoomCamera(float dt);
 };

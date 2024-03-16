@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObjects\DeathEffectGo.cpp" />
     <ClCompile Include="Framework\Animator.cpp" />
     <ClCompile Include="DataTables\DataTableMgr.cpp" />
     <ClCompile Include="DataTables\DataTable.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Framework\SoundMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObjects\DeathEffectGo.h" />
     <ClInclude Include="Framework\Animator.h" />
     <ClInclude Include="DataTables\DataTableMgr.h" />
     <ClInclude Include="DataTables\DataTable.h" />

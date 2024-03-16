@@ -11,6 +11,8 @@ void GhostClyde::Init()
 
 	originTextureId = "graphics/Ghost_Orange.png";
 	SetTexture(originTextureId);
+
+	color = sf::Color::Color(255, 127, 0);
 }
 
 void GhostClyde::Release()

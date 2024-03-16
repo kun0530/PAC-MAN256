@@ -368,6 +368,6 @@ void Ghost::OnDie()
 {
 	player->AddItemDuration(0.5f);
 	sceneGame->AddScore(10);
-	sceneGame->KillGhost();
+	sceneGame->KillGhost(position, color);
 	sceneGame->RemoveGo(this);
 }

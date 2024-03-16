@@ -26,6 +26,7 @@ protected:
 	std::string originTextureId;
 
 	SpriteGo eye;
+	sf::Color color = sf::Color::Black;
 
 public:
 	Ghost(const std::string& name = "");
