@@ -43,12 +43,14 @@ void Ghost::Reset()
 		gridIndex.y = Utils::RandomRange(0, CountY - 1);
 	} while (tileMap->IsBlocked(gridIndex.x, gridIndex.y));
 
-
-	SetPosition(tileMap->GetGridPosition(gridIndex.x, gridIndex.y));
-	gridIndex.x += (int)direction.x;
-	gridIndex.y += (int)direction.y;
-	nextPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
-	currentPos = position;
+	direction = { 0.f, 0.f };
+	currentPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
+	SetPosition(currentPos);
+	nextPos = currentPos;
+	// gridIndex.x += (int)direction.x;
+	// gridIndex.y += (int)direction.y;
+	// nextPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
+	// currentPos = position;
 	moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 	timer = 0.f;
 }
@@ -139,7 +141,7 @@ void Ghost::CheckTileMapBoundary()
 		switch (tileMap->GetMapStatus())
 		{
 		case MapStatus::NEXT:
-			direction *= -1.f;
+			direction = { 0.f, 1.f };
 			nextPos = tileMap->GetGridPosition(gridIndex.x + (int)direction.x, gridIndex.y + (int)direction.y);
 			break;
 		case MapStatus::PREV:

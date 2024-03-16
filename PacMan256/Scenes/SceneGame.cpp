@@ -46,15 +46,6 @@ void SceneGame::Init()
 	nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
 	nextTileMap->SetMapStatus(MapStatus::NEXT);
 	nextTileMap->SetActive(true);
-	/*if (tempTileMaps.empty() == true)
-	{
-		for (int i = 0; i < 3; i++)
-		{
-			tempTileMaps.push_back(tileMaps[i]);
-		}
-	}
-	nextTileMap = tempTileMaps.front();
-	tempTileMaps.pop_front();*/
 
 	// Enter
 	startTile->SetPosition({ 0.f, 0.f });
@@ -78,31 +69,32 @@ void SceneGame::Init()
 	player->sortLayer = 1;
 	AddGo(player);
 	
-	int n;
+
+
 	// 고스트 테스트
-	Ghost* ghostBlinky = new GhostBlinky("Ghost");
-	ghostBlinky->sortLayer = 1;
-	AddGo(ghostBlinky);
+	//Ghost* ghostBlinky = new GhostBlinky("Ghost");
+	//ghostBlinky->sortLayer = 1;
+	//AddGo(ghostBlinky);
 
-	Ghost* ghostPinky = new GhostPinky("Ghost");
-	ghostPinky->sortLayer = 1;
-	AddGo(ghostPinky);
+	//Ghost* ghostPinky = new GhostPinky("Ghost");
+	//ghostPinky->sortLayer = 1;
+	//AddGo(ghostPinky);
 
-	Ghost* ghostInky = new GhostInky("Ghost");
-	ghostInky->sortLayer = 1;
-	AddGo(ghostInky);
+	//Ghost* ghostInky = new GhostInky("Ghost");
+	//ghostInky->sortLayer = 1;
+	//AddGo(ghostInky);
 
-	Ghost* ghostSpunky = new GhostSpunky("Ghost");
-	ghostSpunky->sortLayer = 1;
-	AddGo(ghostSpunky);
+	//Ghost* ghostSpunky = new GhostSpunky("Ghost");
+	//ghostSpunky->sortLayer = 1;
+	//AddGo(ghostSpunky);
 
-	Ghost* ghostClyde = new GhostClyde("Ghost");
-	ghostClyde->sortLayer = 1;
-	AddGo(ghostClyde);
+	//Ghost* ghostClyde = new GhostClyde("Ghost");
+	//ghostClyde->sortLayer = 1;
+	//AddGo(ghostClyde);
 
-	Ghost* ghostGlitchy = new GhostGlitchy("Ghost");
-	ghostGlitchy->sortLayer = 1;
-	AddGo(ghostGlitchy);
+	//Ghost* ghostGlitchy = new GhostGlitchy("Ghost");
+	//ghostGlitchy->sortLayer = 1;
+	//AddGo(ghostGlitchy);
 
 
 	uiHud = new UiHud("UI HUD");
@@ -129,24 +121,6 @@ void SceneGame::Enter()
 	textChain->Set(font, "", 20.f, sf::Color::White);
 	textChain->SetOrigin(Origins::BC);
 
-	// 각 타일의 그리드 인덱스 확인용
-	for (int i = 0; i < startTile->GetCellCount().x; i++)
-	{
-		for (int j = 0; j < startTile->GetCellCount().y; j++)
-		{
-			TextGo* text = new TextGo("Position");
-			text->Set(font, "(" + std::to_string(i) + ", " + std::to_string(j) + ")",
-				15, sf::Color::Black);
-			// text->SetOutline(sf::Color::Black, 3.f);
-			text->SetPosition(startTile->GetGridPosition(i, j));
-			text->SetOrigin(Origins::MC);
-			text->sortLayer = 2;
-			text->SetActive(false);
-			posTexts.push_back(text);
-			AddGo(text);
-		}
-	}
-
 	Scene::Enter();
 }
 
@@ -165,22 +139,6 @@ void SceneGame::Update(float dt)
 
 	textChain->SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
 
-	// 그리드 좌표 확인용
-	if (SCENE_MGR.GetDeveloperMode())
-	{
-		for (auto text : posTexts)
-		{
-			text->SetActive(true);
-		}
-	}
-	else
-	{
-		for (auto text : posTexts)
-		{
-			text->SetActive(false);
-		}
-	}
-
 	// 프루트
 	if (scoreMultiplier != 1)
 	{
@@ -196,8 +154,6 @@ void SceneGame::Update(float dt)
 		else
 			fruitTimer += dt;
 	}
-	/*uiHud->SetMessage(std::to_string(scoreMultiplier) + ", " + std::to_string(fruitTimer) + ", " + std::to_string(fruitRealDuration));
-	uiHud->SetMessageActive(true);*/
 
 	// 킬 스크린
 	int killScreenMapId = killScreen->GetTileMapId();
@@ -209,12 +165,6 @@ void SceneGame::Update(float dt)
 			continue;
 
 		RemoveGo(ghost);
-
-		/*if (ghost->GetTileMapId() < killScreen->GetTileMapId())
-			RemoveGo(ghost);
-
-		if (ghost->GetTileMapId() == killScreen->GetTileMapId() && ghost->GetGridIndex().y >= killScreen->GetGridIndexY())
-			RemoveGo(ghost);*/
 	}
 	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y <= killScreenIndexY))
 		player->OnDie();
@@ -320,20 +270,6 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			currentTileMap = nextTileMap;
 			++currentTileMapId;
 			player->SetCurrentTileMapId(currentTileMapId);
-
-
-
-			// TO-DO: 다음 타일맵 세팅
-			/*if (tempTileMaps.empty() == true)
-			{
-				std::random_shuffle(tileMaps.begin(), tileMaps.end());
-				for (int i = 0; i < 3; i++)
-				{
-					tempTileMaps.push_back(tileMaps[i]);
-				}
-			}
-			nextTileMap = tempTileMaps.front();
-			tempTileMaps.pop_front();*/
 
 			do
 			{

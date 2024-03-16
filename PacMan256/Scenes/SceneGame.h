@@ -34,7 +34,7 @@ protected:
 	Player* player = nullptr;
 	// Ghost* ghost = nullptr;
 
-	sf::Font& font = RES_MGR_FONT.Get("fonts/Arial.ttf");
+	sf::Font& font = RES_MGR_FONT.Get("fonts/editundo.ttf");
 	UiHud* uiHud = nullptr;
 	std::vector<TextGo*> posTexts;
 	TextGo* textChain = nullptr;

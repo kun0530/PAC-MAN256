@@ -62,4 +62,7 @@ void GhostInky::ForkMove(std::vector<sf::Vector2f>& directions)
 			direction = dir;
 		}
 	}
+
+	if (direction == sf::Vector2f(0.f, 0.f))
+		direction = directions[Utils::RandomRange(0, directions.size())];
 }

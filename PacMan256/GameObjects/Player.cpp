@@ -106,6 +106,8 @@ void Player::Update(float dt)
 			moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 			isArrive = false;
 			timer = 0.f;
+
+			SetRotation(Utils::Angle(direction));
 		}
 	}
 	else

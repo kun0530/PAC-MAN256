@@ -37,7 +37,7 @@ void GhostPinky::Update(float dt)
 		if (tileMap->IsBlocked(gridIndex.x + direction.x, gridIndex.y + direction.y))
 		{
 			direction = { 0.f, 0.f };
-			nextPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
+			nextPos = currentPos;
 			isMove = false;
 		}
 	}
