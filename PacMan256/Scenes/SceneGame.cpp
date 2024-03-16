@@ -348,6 +348,8 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			nextTileMap->SetActive(true);
 			nextTileMap->Reset();
 
+			CreateGhost(5);
+
 			return currentTileMap;
 		}
 		else
@@ -399,6 +401,45 @@ void SceneGame::ChangeGhostMode()
 		if (ghost != nullptr)
 		{
 			ghost->ChangeMode();
+		}
+	}
+}
+
+void SceneGame::CreateGhost(int num)
+{
+	for (int i = 0; i < num; ++i)
+	{
+		Ghost* ghost = nullptr;
+		int randNum = Utils::RandomRange(0, 6);
+		switch (randNum)
+		{
+		case 0:
+			ghost = new GhostBlinky("Ghost");
+			break;
+		case 1:
+			ghost = new GhostPinky("Ghost");
+			break;
+		case 2:
+			ghost = new GhostInky("Ghost");
+			break;
+		case 3:
+			ghost = new GhostInky("Ghost");
+			break;
+		case 4:
+			ghost = new GhostClyde("Ghost");
+			break;
+		case 5:
+			ghost = new GhostGlitchy("Ghost");
+			break;
+		default:
+			break;
+		}
+		if (ghost != nullptr)
+		{
+			ghost->sortLayer = 1;
+			ghost->Init();
+			ghost->Reset();
+			AddGo(ghost);
 		}
 	}
 }
