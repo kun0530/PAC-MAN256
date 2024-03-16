@@ -170,6 +170,11 @@ void SceneGame::Update(float dt)
 
 
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	{
+		KillGhost();
+	}
+
 	if (isGhostKill)
 		ZoomCamera(dt);
 	else
@@ -413,6 +418,8 @@ void SceneGame::ZoomCamera(float dt)
 	sf::Vector2f windowSize = (sf::Vector2f)FRAMEWORK.GetWindowSize();
 	sf::Vector2f worldViewSize = worldView.getSize();
 	sf::Vector2f worldViewCenter = worldView.getCenter();
+
+	float cameraClampX = 750.f - worldViewSize.x / 2.f;
 	if (isZoomIn)
 	{
 		if (cameraZoomInTimer > cameraZoomInDuration)
@@ -422,6 +429,7 @@ void SceneGame::ZoomCamera(float dt)
 			cameraZoomInTimer = 0.f;
 
 			worldView.setSize(windowSize * zoomInSize);
+			worldViewCenter.x = Utils::Clamp(worldViewCenter.x, -cameraClampX, cameraClampX);
 			worldView.setCenter(player->GetPosition());
 		}
 		else
@@ -431,6 +439,7 @@ void SceneGame::ZoomCamera(float dt)
 			worldView.setSize(worldViewSize);
 
 			worldViewCenter = Utils::Lerp(worldViewCenter, player->GetPosition(), cameraZoomInTimer / cameraZoomInDuration);
+			worldViewCenter.x = Utils::Clamp(worldViewCenter.x, -cameraClampX, cameraClampX);
 			worldView.setCenter(worldViewCenter);
 		}
 	}
@@ -452,6 +461,7 @@ void SceneGame::ZoomCamera(float dt)
 			worldView.setSize(worldViewSize);
 
 			worldViewCenter = Utils::Lerp(worldViewCenter, { 0.f, player->GetPosition().y }, cameraZoomOutTimer / cameraZoomOutDuration);
+			worldViewCenter.x = Utils::Clamp(worldViewCenter.x, -cameraClampX, cameraClampX);
 			worldView.setCenter(worldViewCenter);
 		}
 	}

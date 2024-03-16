@@ -44,7 +44,7 @@ protected:
 	// 테스트용 변수 - 나중에 삭제바람
 	bool isGhostKill = false;
 	const float zoomInSize = 0.5f;
-	const float zoomOutSize = 0.8f;
+	const float zoomOutSize = 0.78125f;
 	bool isZoomIn = false;
 	float cameraZoomInTimer = 0.f;
 	float cameraZoomInDuration = 1.f;
