@@ -262,8 +262,9 @@ void Player::OnDie()
 {
 	if (!isAlive)
 		return;
+
 	// Game Over!!!
-	// FRAMEWORK.SetTimeScale(0.f);
+	FRAMEWORK.SetTimeScale(0.f);
 	
 	isAlive = false;
 	sceneGame->ResetChain();

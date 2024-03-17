@@ -61,6 +61,8 @@ void DeathEffectGo::Update(float dt)
 	}
 	else
 	{
+		if (FRAMEWORK.GetTimeScale() == 0.f)
+			dt = FRAMEWORK.GetRealDT();
 		effectTimer += dt;
 
 		for (auto rect : rects)

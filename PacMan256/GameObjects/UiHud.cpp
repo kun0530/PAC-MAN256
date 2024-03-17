@@ -180,9 +180,10 @@ void UiHud::Update(float dt)
 		}
 		else
 		{
-			gameOverTimer += dt;
-			textGame.Translate(sf::Vector2f{ 1.f, 0.f } * gameOverSpeed * dt);
-			textOver.Translate(sf::Vector2f{ -1.f, 0.f } * gameOverSpeed * dt);
+			float realDT = FRAMEWORK.GetRealDT();
+			gameOverTimer += realDT;
+			textGame.Translate(sf::Vector2f{ 1.f, 0.f } * gameOverSpeed * realDT);
+			textOver.Translate(sf::Vector2f{ -1.f, 0.f } * gameOverSpeed * realDT);
 		}
 	}
 }
