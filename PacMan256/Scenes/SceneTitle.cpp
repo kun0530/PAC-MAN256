@@ -32,6 +32,18 @@ void SceneTitle::Init()
 	textMessage->SetPosition({ 0.f, 100.f });
 	AddGo(textMessage);
 
+	for (int i = 0; i < themeCount; ++i)
+	{
+		SpriteGo* theme = new SpriteGo("Theme");
+		std::string themeId = "graphics/Theme" + std::to_string(i) + ".png";
+		theme->SetTexture(themeId);
+		theme->SetOrigin(Origins::MC);
+		theme->SetPosition({ 1920.f , 0.f });
+		theme->sortLayer = -2;
+		themes.push_back(theme);
+		AddGo(theme);
+	}
+
 	Scene::Init();
 }
 
@@ -42,14 +54,23 @@ void SceneTitle::Release()
 
 void SceneTitle::Enter()
 {
+	FRAMEWORK.SetTimeScale(1.f);
+
 	SOUND_MGR.PlaySfx("sounds/GEN_LEVEL_BEGIN.wav");
+
+	isMovingImage = false;
+	imageDirection = { 0.f, 0.f };
+	for (auto theme : themes)
+	{
+		theme->SetPosition({ 1920.f , 0.f });
+		theme->sortLayer = -2;
+	}
 
 	Scene::Enter();
 }
 
 void SceneTitle::Exit()
 {
-	FRAMEWORK.SetTimeScale(1.f);
 	Scene::Exit();
 }
 
@@ -62,6 +83,49 @@ void SceneTitle::Update(float dt)
 		SCENE_MGR.ChangeScene(SceneIds::SCENE_GAME);
 		SOUND_MGR.StopAll();
 		SOUND_MGR.PlaySfx("sounds/UI_PLAY_CLICK.wav");
+	}
+
+	int themeNum = SCENE_MGR.GetThemeNum();
+	if (isMovingImage)
+	{
+		if (imageTimer > imageMoveTime)
+		{
+			imageTimer = 0.f;
+			isMovingImage = false;
+			themes[themeNum]->sortLayer = -2;
+			themes[prevThemeNum]->SetPosition({ 1920.f , 0.f });
+		}
+		else
+		{
+			imageTimer += dt;
+			themes[themeNum]->Translate(imageDirection * imageSpeed * dt);
+		}
+	}
+	else
+	{
+		if (InputMgr::GetKeyDown(sf::Keyboard::Right) && themeNum < themeCount - 1)
+		{
+			// themes[themeNum]->sortLayer = -2;
+			prevThemeNum = themeNum;
+			themes[++themeNum]->sortLayer = -1;
+			ResortGo(themes[themeNum]);
+			themes[themeNum]->SetPosition({ 1920.f , 0.f });
+			imageMoveTime = 1920.f / imageSpeed;
+			imageDirection = { -1.f, 0.f };
+			isMovingImage = true;
+		}
+		else if (InputMgr::GetKeyDown(sf::Keyboard::Left) && themeNum > 0)
+		{
+			// themes[themeNum]->sortLayer = -2;
+			prevThemeNum = themeNum;
+			themes[--themeNum]->sortLayer = -1;
+			ResortGo(themes[themeNum]);
+			themes[themeNum]->SetPosition({ -1920.f , 0.f });
+			imageMoveTime = 1920.f / imageSpeed;
+			imageDirection = { 1.f, 0.f };
+			isMovingImage = true;
+		}
+		SCENE_MGR.SetThemeNum(themeNum);
 	}
 }
 

@@ -129,10 +129,13 @@ void SceneGame::Enter()
 	startTile->SetOrigin(Origins::MC);
 	startTile->SetActive(true);
 
+	std::string tileMapTexId = "graphics/Background_Sheet" + std::to_string(SCENE_MGR.GetThemeNum()) + ".png";
+	startTile->SetSpriteSheetId(tileMapTexId);
 	for (auto tileMap : tileMaps)
 	{
 		if (tileMap != nullptr)
 		{
+			tileMap->SetSpriteSheetId(tileMapTexId);
 			tileMap->SetActive(false);
 		}
 	}
@@ -162,8 +165,8 @@ void SceneGame::Update(float dt)
 
 	if (isGameOver && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
-		SCENE_MGR.ChangeScene(SceneIds::SCENE_TITLE);
 		SOUND_MGR.StopAll();
+		SCENE_MGR.ChangeScene(SceneIds::SCENE_TITLE);
 	}
 
 	FindGoAll("Ghost", ghostList, Layers::World);

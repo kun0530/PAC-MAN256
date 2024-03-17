@@ -20,6 +20,8 @@ protected:
 
 	SceneIds nextScene = SceneIds::None;
 
+	int themeNum = 0;
+
 	bool isDeveloperMode = false;
 
 	SceneMgr() = default;
@@ -33,6 +35,9 @@ public:
 
 	Scene* GetCurrentScene() { return scenes[(int)currentScene]; }
 	bool GetDeveloperMode() { return isDeveloperMode; }
+
+	void SetThemeNum(const int num) { themeNum = num; }
+	const int GetThemeNum() const { return themeNum; }
 
 	void Update(float dt);
 	void LateUpdate(float dt);
