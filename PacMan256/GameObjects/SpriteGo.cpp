@@ -24,7 +24,6 @@ void SpriteGo::SetTexture(const std::string& textureId, bool isResize)
 
 void SpriteGo::SetPosition(const sf::Vector2f& pos)
 {
-	//GameObject::SetPosition(pos);
 	position = pos;
 	sprite.setPosition(pos);
 }

@@ -20,8 +20,8 @@ protected:
 	sf::Clock clock;
 	float timeScale = 1.f;
 
-	sf::Time realTime; // 게임 시작부터 경과 시간
-	sf::Time time; // 게임 시작부터 경과 시간 (timeScale 적용된...)
+	sf::Time realTime;
+	sf::Time time;
 
 	sf::Time realDeltaTime;
 	sf::Time deltaTime;
@@ -33,7 +33,7 @@ protected:
 	int fps = 0;
 
 public:
-	sf::RenderWindow& GetWindow() { return window; }	// !!
+	sf::RenderWindow& GetWindow() { return window; }
 	const sf::Vector2i& GetWindowSize() const { return windowSize; }
 
 	float GetRealTime() const { return realTime.asSeconds(); }

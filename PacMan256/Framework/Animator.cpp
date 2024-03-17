@@ -20,15 +20,6 @@ void Animator::ClearEvent()
 	eventList.clear();
 }
 
-//void Animator::AddClip(const AnimationClip& clip)
-//{
-//	if (clips.find(clip.id) == clips.end()) // 중복을 허용하지 않는 삽입
-//	{
-//		// clips.insert({ clip.id, clip }); 아래와 동일한 문법
-//		clips[clip.id] = clip;
-//	}
-//}
-
 void Animator::SetFrame(const AnimationFrame& frame)
 {
 	target->setTexture(frame.GetTexture());
@@ -135,7 +126,6 @@ bool AnimationClip::loadFromFile(const std::string& filePath)
 {
 	rapidcsv::Document doc(filePath);
 
-	// id = doc.GetCell<std::string>(0, 0);
 	id = filePath;
 	fps = doc.GetCell<int>(1, 0);
 	loopType = (AnimationLoopTypes)doc.GetCell<int>(2, 0);

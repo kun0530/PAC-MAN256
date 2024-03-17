@@ -71,9 +71,6 @@ void Player::Update(float dt)
 			sf::Vector2i dir = inputDirections.front();
 			inputDirections.pop();
 
-			/*int newIndexX = gridIndex.x + dir.x;
-			int newIndexY = gridIndex.y + dir.y;*/
-
 			if ((!currentTileMap->IsBlocked(gridIndex.x + dir.x, gridIndex.y + dir.y)) ||
 				((gridIndex.y + dir.y >= currentTileMap->GetCellCount().y)
 					&& (!sceneGame->GetPrevTileMap()->IsBlocked(gridIndex.x, 0))))

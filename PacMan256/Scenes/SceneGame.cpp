@@ -55,34 +55,6 @@ void SceneGame::Init()
 	player = new Player("Player");
 	player->sortLayer = 4;
 	AddGo(player);
-	
-
-
-	// 고스트 테스트
-	//Ghost* ghostBlinky = new GhostBlinky("Ghost");
-	//ghostBlinky->sortLayer = 1;
-	//AddGo(ghostBlinky);
-
-	//Ghost* ghostPinky = new GhostPinky("Ghost");
-	//ghostPinky->sortLayer = 1;
-	//AddGo(ghostPinky);
-
-	//Ghost* ghostInky = new GhostInky("Ghost");
-	//ghostInky->sortLayer = 1;
-	//AddGo(ghostInky);
-
-	//Ghost* ghostSpunky = new GhostSpunky("Ghost");
-	//ghostSpunky->sortLayer = 1;
-	//AddGo(ghostSpunky);
-
-	//Ghost* ghostClyde = new GhostClyde("Ghost");
-	//ghostClyde->sortLayer = 1;
-	//AddGo(ghostClyde);
-
-	//Ghost* ghostGlitchy = new GhostGlitchy("Ghost");
-	//ghostGlitchy->sortLayer = 1;
-	//AddGo(ghostGlitchy);
-
 
 	uiHud = new UiHud("UI HUD");
 	AddGo(uiHud, Ui);
@@ -114,10 +86,6 @@ void SceneGame::Enter()
 		{
 			highScore = std::stoi(line);
 		}
-	}
-	else
-	{
-		std::cout << "The \"High_Score.txt\" file cannot be opened." << std::endl;
 	}
 	file.close();
 
@@ -487,7 +455,18 @@ void SceneGame::MakeDeatEffect(sf::Vector2f pos, sf::Color color)
 
 void SceneGame::GameOver()
 {
-	uiHud->SetGameOver(true);
+	if (score > highScore)
+	{
+		std::ofstream file("Tables/High_Score.txt");
+		if (file.is_open())
+		{
+			file.write(std::to_string(score).c_str(), std::to_string(score).size());
+		}
+		file.close();
+	}
+
+	uiHud->SetGameOver(true, highScore, score);
+	highScore = score;
 	MakeDeatEffect(player->GetPosition(), sf::Color::Yellow);
 	isGameOver = true;
 }

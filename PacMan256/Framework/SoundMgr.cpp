@@ -21,9 +21,6 @@ void SoundMgr::Init(int totalChannels)
 
 void SoundMgr::Release()
 {
-	// StopAll();
-	// StopBgm();
-
 	for (auto sound : waiting)
 	{
 		delete sound;
@@ -52,7 +49,6 @@ void SoundMgr::Update(float dt)
 		}
 	}
 
-	// 크로스 페이드
 	if (isFading)
 	{
 		bool isEndBack = false;

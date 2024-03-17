@@ -169,20 +169,6 @@ sf::Vector2i InputMgr::GetAxisOne()
 
 bool InputMgr::GetKeyDown(sf::Keyboard::Key key)
 {
-    //std::list<sf::Keyboard::Key>::iterator it = downList.begin
-
-    //for (auto it = downList.begin(); it != downList.end(); ++it)
-    //{
-    //    if (*it == key)
-    //        return true;
-    //}
-
-    //for (auto k : downList)
-    //{
-    //    if (k == key)
-    //        return true;
-    //}
-
     return std::find(downList.begin(), downList.end(), key) != downList.end();
 }
 

@@ -37,7 +37,6 @@ public:
 	Player(const std::string& name = "");
 	~Player() override = default;
 
-	// bool IsMove(sf::Vector2i dir);
 	const sf::Vector2i& GetGridIndex() { return gridIndex; }
 
 	void Init() override;

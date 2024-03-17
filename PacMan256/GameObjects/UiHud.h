@@ -17,11 +17,17 @@ protected:
 
 	std::string formatFps = "FPS: ";
 	std::string formatMultiplier = "X";
+	std::string formatFinalScore = "Your Score: ";
+	std::string formatHighScore = "Highest Score: ";
 
 	TextGo textScore;
 	TextGo textMultiplier;
-	TextGo textHiScore;
+	TextGo textFinalScore;
+	TextGo textHighScore;
+	sf::RectangleShape scoreScreen;
+	sf::Vector2f scoreScreenSize = { 2000.f, 300.f };
 
+	bool isGameOver = false;
 	TextGo textGame;
 	TextGo textOver;
 	float textGameOverInterval = 15.f;
@@ -29,7 +35,6 @@ protected:
 	float gameOverTimer = 0.f;
 	float gameOverMoveTime = 0.f;
 	float gameOverSpeed = 1000.f;
-	bool isGameOver = false;
 
 	/*TextGo textChain;
 	float textChainTimer = 0.f;*/
@@ -52,8 +57,9 @@ public:
 	void SetScore(int score);
 	void SetMultiplier(int multiplier);
 	void SetMultiplierActive(bool active);
+	void SetFinalScore(int score);
 	void SetHighScore(int hiScore);
-	void SetGameOver(const bool isOver);
+	void SetGameOver(const bool isOver, const int highScore, const int score);
 	// void SetChain(int chain);
 	void SetMessage(const std::string& msg);
 	void SetMessageActive(bool active);

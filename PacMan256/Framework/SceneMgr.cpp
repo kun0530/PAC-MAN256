@@ -36,7 +36,6 @@ void SceneMgr::Release()
 
 void SceneMgr::ChangeScene(SceneIds id)
 {
-	// TO-DO: 모든 게임 오브젝트 업데이트 끝난 후에 씬 전환 되도록
 	nextScene = id;
 }
 

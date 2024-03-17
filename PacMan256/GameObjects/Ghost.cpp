@@ -32,9 +32,6 @@ void Ghost::Reset()
 {
 	SpriteGo::Reset();
 
-	// Test
-	// SetActive(false);
-
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	tileMap = sceneGame->GetNextTileMap();
 	player = dynamic_cast<Player*>(sceneGame->FindGo("Player"));
@@ -53,10 +50,6 @@ void Ghost::Reset()
 	currentPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
 	SetPosition(currentPos);
 	nextPos = currentPos;
-	// gridIndex.x += (int)direction.x;
-	// gridIndex.y += (int)direction.y;
-	// nextPos = tileMap->GetGridPosition(gridIndex.x, gridIndex.y);
-	// currentPos = position;
 	moveTime = Utils::Magnitude(nextPos - currentPos) / speed;
 	timer = 0.f;
 }
@@ -71,7 +64,6 @@ void Ghost::Update(float dt)
 		return;
 	}
 
-	// ´ÙÀ½ ¼¿¿¡ µµÂøÇßÀ» ¶§
 	if (timer > moveTime)
 	{
 		if (isWarp)
@@ -119,7 +111,7 @@ void Ghost::Update(float dt)
 		}
 	}
 
-	// °í½ºÆ® ´«
+	// ghost's eyes
 	eye.SetPosition(position);
 	if (direction == sf::Vector2f(1.f, 0.f))
 		eye.SetTexture("graphics/GhostEye_Right.png");
