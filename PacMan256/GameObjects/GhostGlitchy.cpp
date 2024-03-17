@@ -28,6 +28,16 @@ void GhostGlitchy::Init()
 void GhostGlitchy::Release()
 {
 	Ghost::Release();
+
+	for (auto parts : glitchParts)
+	{
+		if (parts != nullptr)
+		{
+			delete parts;
+			parts = nullptr;
+		}
+	}
+	glitchParts.clear();
 }
 
 void GhostGlitchy::Reset()

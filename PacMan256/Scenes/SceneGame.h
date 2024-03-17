@@ -22,7 +22,7 @@ protected:
 
 	TileMap* startTile = nullptr;
 	KillScreen* killScreen = nullptr;
-	bool isGlitchPlaying = false;
+	float glitchTimer = 0.f;
 
 	std::vector<TileMap*> tileMaps;
 	// std::list<TileMap*> tempTileMaps;

@@ -134,6 +134,7 @@ void SceneGame::Update(float dt)
 	if (isGameOver && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		SOUND_MGR.StopAll();
+		SOUND_MGR.StopBgm();
 		SCENE_MGR.ChangeScene(SceneIds::SCENE_TITLE);
 	}
 
@@ -176,17 +177,23 @@ void SceneGame::Update(float dt)
 			player->OnDie();
 		}
 	}
-	if (killScreen->GetPosition().y - player->GetPosition().y <= 500.f)
+	if (killScreen->GetPosition().y - player->GetPosition().y <= 350.f)
 	{
-		if (!isGlitchPlaying)
-			SOUND_MGR.PlayBgm("sounds/GEN_GLITCH_LOOP.wav", true);
-		isGlitchPlaying = true;
+		if (glitchTimer > 4.f)
+		{
+			SOUND_MGR.PlaySfx("sounds/GEN_GLITCH_LOOP.wav");
+			glitchTimer = 0.f;
+		}
+		else
+		{
+			glitchTimer += dt;
+		}
 	}
 	else
 	{
-		SOUND_MGR.StopBgm();
-		isGlitchPlaying = false;
+		glitchTimer = 5.f;
 	}
+
 
 	if (isGhostKill)
 		ZoomCamera(dt);
@@ -463,6 +470,12 @@ void SceneGame::GameOver()
 			file.write(std::to_string(score).c_str(), std::to_string(score).size());
 		}
 		file.close();
+	}
+
+	for (auto ghost : ghostList)
+	{
+		ghost->Release();
+		RemoveGo(ghost);
 	}
 
 	uiHud->SetGameOver(true, highScore, score);
