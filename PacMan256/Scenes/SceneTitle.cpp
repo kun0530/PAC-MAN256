@@ -49,6 +49,7 @@ void SceneTitle::Enter()
 
 void SceneTitle::Exit()
 {
+	FRAMEWORK.SetTimeScale(1.f);
 	Scene::Exit();
 }
 
@@ -57,7 +58,11 @@ void SceneTitle::Update(float dt)
 	Scene::Update(dt);
 
 	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
+	{
 		SCENE_MGR.ChangeScene(SceneIds::SCENE_GAME);
+		SOUND_MGR.StopAll();
+		SOUND_MGR.PlaySfx("sounds/UI_PLAY_CLICK.wav");
+	}
 }
 
 void SceneTitle::Draw(sf::RenderWindow& window)

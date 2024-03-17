@@ -339,7 +339,9 @@ void TileMap::SetActive(bool active)
 {
 	GameObject::SetActive(active);
 
-	if (!active)
+	ItemReset();
+
+	/*if (!active)
 	{
 		for (auto tile : tiles)
 		{
@@ -348,7 +350,7 @@ void TileMap::SetActive(bool active)
 				tile->item->SetActive(false);
 			}
 		}
-	}
+	}*/
 }
 
 void TileMap::Init()

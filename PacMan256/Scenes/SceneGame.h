@@ -11,6 +11,7 @@ class SceneGame : public Scene
 {
 protected:
 	int score = 0;
+	int highScore = 0;
 	int scoreMultiplier = 1;
 	float fruitTimer = 0.f;
 	float fruitRealDuration = 5.f;
@@ -21,6 +22,7 @@ protected:
 
 	TileMap* startTile = nullptr;
 	KillScreen* killScreen = nullptr;
+	bool isGlitchPlaying = false;
 
 	std::vector<TileMap*> tileMaps;
 	// std::list<TileMap*> tempTileMaps;

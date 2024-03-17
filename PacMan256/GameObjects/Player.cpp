@@ -35,8 +35,14 @@ void Player::Reset()
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 	currentTileMap = sceneGame->GetCurrentTileMap();
+	currentTileMapId = 0;
 
 	gridIndex = { 13, 16 };
+	direction = { 0.f, 0.f };
+	while (!inputDirections.empty())
+	{
+		inputDirections.pop();
+	}
 	isArrive = true;
 	isWarp = false;
 	currentPos = currentTileMap->GetGridPosition(gridIndex.x, gridIndex.y);

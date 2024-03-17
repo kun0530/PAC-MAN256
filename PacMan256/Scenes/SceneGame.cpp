@@ -45,21 +45,6 @@ void SceneGame::Init()
 		tileMaps.push_back(tileMap);
 	}
 
-	nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
-	nextTileMap->SetMapStatus(MapStatus::NEXT);
-	nextTileMap->SetActive(true);
-
-	// Enter
-	startTile->SetPosition({ 0.f, 0.f });
-	startTile->SetOrigin(Origins::MC);
-
-	sf::Vector2f pos = startTile->GetPosition();
-	pos.y -= (startTile->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;
-	nextTileMap->SetPosition(pos);
-	nextTileMap->SetOrigin(Origins::MC);
-
-
-
 	// 킬 스크린
 	killScreen = new KillScreen("Kill Screen");
 	killScreen->sortLayer = 5;
@@ -120,8 +105,39 @@ void SceneGame::Enter()
 	chain = 0;
 	currentTileMapId = 0;
 
+	std::ifstream file("Tables/High_Score.txt");
+	std::string line;
+	if (file.is_open())
+	{
+		if (getline(file, line))
+		{
+			highScore = std::stoi(line);
+		}
+	}
+	else
+	{
+		std::cout << "The \"High_Score.txt\" file cannot be opened." << std::endl;
+	}
+	file.close();
+
 	textChain->Set(font, "", 20.f, sf::Color::White);
 	textChain->SetOrigin(Origins::BC);
+
+	currentTileMap = startTile;
+	startTile->SetPosition({ 0.f, 0.f });
+	startTile->SetOrigin(Origins::MC);
+	startTile->SetActive(true);
+
+	prevTileMap = nullptr;
+
+	nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
+	nextTileMap->SetMapStatus(MapStatus::NEXT);
+	nextTileMap->SetActive(true);
+
+	sf::Vector2f pos = startTile->GetPosition();
+	pos.y -= (startTile->GetGlobalBounds().height + nextTileMap->GetGlobalBounds().height) / 2.f;
+	nextTileMap->SetPosition(pos);
+	nextTileMap->SetOrigin(Origins::MC);
 
 	Scene::Enter();
 }
@@ -135,13 +151,10 @@ void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
 	{
-		FRAMEWORK.SetTimeScale(0.f);
-	}
-	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
-	{
-		FRAMEWORK.SetTimeScale(1.f);
+		SCENE_MGR.ChangeScene(SceneIds::SCENE_TITLE);
+		SOUND_MGR.StopAll();
 	}
 
 	FindGoAll("Ghost", ghostList, Layers::World);
@@ -182,6 +195,17 @@ void SceneGame::Update(float dt)
 			SOUND_MGR.PlaySfx("sounds/PM_DEATH_GLITCH.wav");
 			player->OnDie();
 		}
+	}
+	if (killScreen->GetPosition().y - player->GetPosition().y <= 500.f)
+	{
+		if (!isGlitchPlaying)
+			SOUND_MGR.PlayBgm("sounds/GEN_GLITCH_LOOP.wav", true);
+		isGlitchPlaying = true;
+	}
+	else
+	{
+		SOUND_MGR.StopBgm();
+		isGlitchPlaying = false;
 	}
 
 	if (isGhostKill)
@@ -343,7 +367,7 @@ void SceneGame::ResetChain()
 
 void SceneGame::CompleteChain256()
 {
-	SOUND_MGR.PlaySfx("sound/GEN_SCORE_256_PACDOT.wav");
+	SOUND_MGR.PlaySfx("sounds/GEN_SCORE_256_PACDOT.wav");
 	for (auto go : ghostList)
 	{
 		float distance = Utils::Distance(player->GetPosition(), go->GetPosition());
