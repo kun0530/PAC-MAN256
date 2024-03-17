@@ -48,6 +48,9 @@ Item* TileMap::GetItem(sf::Vector2i index) const
 
 bool TileMap::IsBlocked(int x, int y) const
 {
+	if (y < 0 && (x <= 1 || x >= cellCount.x - 2))
+		return true;
+
 	if (x < 0 || y < 0 || x >= cellCount.x)
 		return false;
 
@@ -204,10 +207,11 @@ void TileMap::Set(const sf::Vector2i& count, const sf::Vector2f& size)
 			int quadIndex = i * count.x + j;
 			int texIndexX = paths[quadIndex];
 			int texIndexY = 0;
-			if (texIndexX == 0 && i > 0 && i < count.y - 1 && j > 0 && j < count.x - 1)
+			if (texIndexX == 0)
 			{
 				texIndexY = GetTileId(sf::Vector2i(j, i), CountOpenedCell(sf::Vector2i(j, i)));
 			}
+			//&& i > 0 && i < count.y - 1 && j > 0 && j < count.x - 1
 
 			sf::Vector2f quadPos(size.x * j, size.y * i);
 

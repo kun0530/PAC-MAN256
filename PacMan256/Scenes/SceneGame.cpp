@@ -135,6 +135,15 @@ void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
 
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
+	{
+		FRAMEWORK.SetTimeScale(0.f);
+	}
+	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
+	{
+		FRAMEWORK.SetTimeScale(1.f);
+	}
+
 	FindGoAll("Ghost", ghostList, Layers::World);
 
 	textChain->SetPosition(player->GetPosition() + sf::Vector2f(0.f, -30.f));
