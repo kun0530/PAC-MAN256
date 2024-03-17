@@ -184,11 +184,6 @@ void SceneGame::Update(float dt)
 		}
 	}
 
-
-
-
-
-
 	if (isGhostKill)
 		ZoomCamera(dt);
 	else
@@ -307,7 +302,7 @@ TileMap* SceneGame::ChangeTileMap(bool isGoUp)
 			nextTileMap->SetOrigin(Origins::MC);
 			nextTileMap->SetMapStatus(MapStatus::NEXT);
 			nextTileMap->SetActive(true);
-			nextTileMap->Reset();
+			nextTileMap->ItemReset();
 
 			CreateGhost(5);
 

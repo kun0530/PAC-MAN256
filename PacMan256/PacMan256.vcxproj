@@ -195,6 +195,7 @@
     <ClCompile Include="GameObjects\TextGo.cpp" />
     <ClCompile Include="GameObjects\SpriteGoEffect.cpp" />
     <ClCompile Include="Framework\SoundMgr.cpp" />
+    <ClCompile Include="Scenes\SceneTitle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameObjects\DeathEffectGo.h" />
@@ -229,6 +230,7 @@
     <ClInclude Include="GameObjects\TextGo.h" />
     <ClInclude Include="GameObjects\SpriteGoEffect.h" />
     <ClInclude Include="Framework\SoundMgr.h" />
+    <ClInclude Include="Scenes\SceneTitle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

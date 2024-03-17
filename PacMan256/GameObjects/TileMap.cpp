@@ -373,9 +373,9 @@ void TileMap::Init()
 				cookie->SetTileMap(this);
 				cookie->Init();
 				cookie->Reset();
-				SCENE_MGR.GetCurrentScene()->AddGo(cookie);
+				// SCENE_MGR.GetCurrentScene()->AddGo(cookie);
 				tile->item = cookie;
-				cookie->SetActive(false);
+				// cookie->SetActive(false);
 				// tile->itemType = ItemType::NONE;
 			}
 			tiles.push_back(tile);
@@ -394,8 +394,30 @@ void TileMap::Reset()
 
 	sceneGame = dynamic_cast<SceneGame*>(SCENE_MGR.GetCurrentScene());
 
+	for (auto tile : tiles)
+	{
+		if (tile->item != nullptr)
+		{
+			sceneGame->AddGo(tile->item);
+		}
+	}
+
+	ItemReset();
+}
+
+void TileMap::ItemReset()
+{
 	if (!active)
+	{
+		for (auto tile : tiles)
+		{
+			if (tile->item == nullptr)
+				continue;
+
+			tile->item->SetActive(false);
+		}
 		return;
+	}
 
 	for (auto tile : tiles)
 	{

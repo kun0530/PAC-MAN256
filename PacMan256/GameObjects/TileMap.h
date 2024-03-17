@@ -86,6 +86,7 @@ public:
 	void Release() override;
 
 	void Reset() override;
+	void ItemReset();
 
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window) override;
