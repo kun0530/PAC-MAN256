@@ -373,10 +373,12 @@ void Ghost::ChangeMode()
 	}
 }
 
-void Ghost::OnDie()
+void Ghost::OnDie(bool isCameraZoom)
 {
 	player->AddItemDuration(0.5f);
 	sceneGame->AddScore(10);
-	sceneGame->KillGhost(position, color);
+	if (isCameraZoom)
+		sceneGame->ZoomInOutCamera();
+	sceneGame->MakeDeatEffect(position, color);
 	sceneGame->RemoveGo(this);
 }

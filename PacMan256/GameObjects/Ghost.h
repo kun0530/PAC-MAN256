@@ -49,6 +49,6 @@ public:
 	sf::Vector2i BFS(const sf::Vector2i& startIndex, const sf::Vector2i& targetIndex, std::vector<sf::Vector2f>& directions, int tileMapDiff = 0);
 
 	void ChangeMode();
-	void OnDie();
+	void OnDie(bool isCameraZoom = true);
 };
 

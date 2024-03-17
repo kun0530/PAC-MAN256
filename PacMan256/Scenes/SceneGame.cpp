@@ -168,17 +168,17 @@ void SceneGame::Update(float dt)
 	}
 	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y <= killScreenIndexY))
 	{
-		SOUND_MGR.PlaySfx("sounds/PM_DEATH_GLITCH.wav");
-		player->OnDie();
+		if (player->IsAlive())
+		{
+			SOUND_MGR.PlaySfx("sounds/PM_DEATH_GLITCH.wav");
+			player->OnDie();
+		}
 	}
 
 
 
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
-	{
-		KillGhost(player->GetPosition(), sf::Color::Black);
-	}
+
 
 	if (isGhostKill)
 		ZoomCamera(dt);
@@ -346,7 +346,7 @@ void SceneGame::CompleteChain256()
 		if (distance <= 1000.f)
 		{
 			Ghost* ghost = dynamic_cast<Ghost*>(go);
-			ghost->OnDie();
+			ghost->OnDie(false);
 		}
 	}
 	ResetChain();
@@ -417,7 +417,7 @@ void SceneGame::CreateGhost(int num)
 	}
 }
 
-void SceneGame::KillGhost(sf::Vector2f pos, sf::Color color)
+void SceneGame::ZoomInOutCamera()
 {
 	if (isGhostKill)
 	{
@@ -432,8 +432,6 @@ void SceneGame::KillGhost(sf::Vector2f pos, sf::Color color)
 		isZoomIn = true;
 		isZoomOut = false;
 	}
-
-	MakeDeatEffect(pos, color);
 }
 
 void SceneGame::MakeDeatEffect(sf::Vector2f pos, sf::Color color)

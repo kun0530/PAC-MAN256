@@ -85,7 +85,7 @@ public:
 	void ChangeGhostMode();
 	void CreateGhost(int num);
 
-	void KillGhost(sf::Vector2f pos, sf::Color color);
+	void ZoomInOutCamera();
 	void MakeDeatEffect(sf::Vector2f pos, sf::Color color);
 	void GameOver();
 	void ZoomCamera(float dt);
