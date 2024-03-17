@@ -1,7 +1,17 @@
 #pragma once
 #include "Scene.h"
+
+class SpriteGo;
+class TextGo;
+
 class SceneTitle : public Scene
 {
+private:
+	sf::RectangleShape title;
+
+	SpriteGo* logo = nullptr;
+	TextGo* textMessage = nullptr;
+
 public:
 	SceneTitle(SceneIds id);
 	virtual ~SceneTitle();
