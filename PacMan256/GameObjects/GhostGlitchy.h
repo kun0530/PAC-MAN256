@@ -3,8 +3,19 @@
 class GhostGlitchy : public Ghost
 {
 private:
-	float warpTimer = 0.f;
-	float warpDuration = 5.f;
+	bool isMove = true;
+	float moveTimer = 0.f;
+	float moveDuration = 5.f;
+
+	bool isWarpStart = false;
+	float warpStartTimer = 0.f;
+	float warpStartDuration = 1.f;
+
+	bool isWarpEnd = false;
+	float warpEndTimer = 0.f;
+	float warpEndDuration = 1.f;
+
+	std::vector<SpriteGo*> glitchParts;
 
 public:
 	GhostGlitchy(const std::string& name = "");
@@ -19,5 +30,8 @@ public:
 
 	void CornerMove(std::vector<sf::Vector2f>& directions) override;
 	void ForkMove(std::vector<sf::Vector2f>& directions) override;
+
+	void RePosition();
+	void WarpAnimation(float dt);
 };
 
