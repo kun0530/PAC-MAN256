@@ -35,6 +35,7 @@ protected:
 
 	Player* player = nullptr;
 	// Ghost* ghost = nullptr;
+	bool isGameOver = false;
 
 	sf::Font& font = RES_MGR_FONT.Get("fonts/editundo.ttf");
 	UiHud* uiHud = nullptr;

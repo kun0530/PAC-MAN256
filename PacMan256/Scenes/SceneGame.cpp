@@ -104,6 +104,7 @@ void SceneGame::Enter()
 	score = 0;
 	chain = 0;
 	currentTileMapId = 0;
+	isGameOver = false;
 
 	std::ifstream file("Tables/High_Score.txt");
 	std::string line;
@@ -128,6 +129,14 @@ void SceneGame::Enter()
 	startTile->SetOrigin(Origins::MC);
 	startTile->SetActive(true);
 
+	for (auto tileMap : tileMaps)
+	{
+		if (tileMap != nullptr)
+		{
+			tileMap->SetActive(false);
+		}
+	}
+
 	prevTileMap = nullptr;
 
 	nextTileMap = tileMaps[Utils::RandomRange(0, tileMapNum)];
@@ -151,7 +160,7 @@ void SceneGame::Update(float dt)
 {
 	Scene::Update(dt);
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Escape))
+	if (isGameOver && InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
 		SCENE_MGR.ChangeScene(SceneIds::SCENE_TITLE);
 		SOUND_MGR.StopAll();
@@ -477,6 +486,7 @@ void SceneGame::GameOver()
 {
 	uiHud->SetGameOver(true);
 	MakeDeatEffect(player->GetPosition(), sf::Color::Yellow);
+	isGameOver = true;
 }
 
 void SceneGame::ZoomCamera(float dt)
