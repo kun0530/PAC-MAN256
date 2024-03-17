@@ -76,6 +76,7 @@ public:
 	void AddScore(const int score);
 	void AddChain();
 	void ResetChain();
+	void CompleteChain256();
 
 	const int GetScoreMultiplier() const { return scoreMultiplier; }
 	void SetScoreMultiplier(int multiplier);

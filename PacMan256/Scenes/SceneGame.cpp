@@ -167,7 +167,10 @@ void SceneGame::Update(float dt)
 		RemoveGo(ghost);
 	}
 	if (!(player->GetCurrentTileMapId() > killScreenMapId || player->GetGridIndex().y <= killScreenIndexY))
+	{
+		SOUND_MGR.PlaySfx("sounds/PM_DEATH_GLITCH.wav");
 		player->OnDie();
+	}
 
 
 
@@ -320,12 +323,33 @@ void SceneGame::AddChain()
 {
 	chain += 1;
 	textChain->SetString(std::to_string(chain));
+	if (chain >= 256)
+	{
+		CompleteChain256();
+	}
 }
 
 void SceneGame::ResetChain()
 {
+	if (chain != 0)
+		SOUND_MGR.PlaySfx("sounds/GEN_BREAK_PACDOT_CHAIN.wav");
 	chain = 0;
-	textChain->SetString(std::to_string(chain));
+	textChain->SetString("");
+}
+
+void SceneGame::CompleteChain256()
+{
+	SOUND_MGR.PlaySfx("sound/GEN_SCORE_256_PACDOT.wav");
+	for (auto go : ghostList)
+	{
+		float distance = Utils::Distance(player->GetPosition(), go->GetPosition());
+		if (distance <= 1000.f)
+		{
+			Ghost* ghost = dynamic_cast<Ghost*>(go);
+			ghost->OnDie();
+		}
+	}
+	ResetChain();
 }
 
 void SceneGame::SetScoreMultiplier(int multiplier)

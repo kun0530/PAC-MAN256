@@ -105,9 +105,18 @@ void Ghost::Update(float dt)
 	if (currentTileMapId == player->GetCurrentTileMapId() && gridIndex == player->GetGridIndex())
 	{
 		if (player->GetUsingItem() == ItemType::POWER_COOKIE)
+		{
+			SOUND_MGR.PlaySfx("sounds/PM_EAT_GHOST.wav");
 			OnDie();
+		}
 		else
-			player->OnDie();
+		{
+			if (player->IsAlive())
+			{
+				SOUND_MGR.PlaySfx("sounds/PM_DEATH_GHOST.wav");
+				player->OnDie();
+			}
+		}
 	}
 
 	// °í½ºÆ® ´«

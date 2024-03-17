@@ -58,5 +58,7 @@ public:
 	void SetFruitItem(int value);
 	void SetUsingItem(ItemType item);
 	void EndUsingItem();
+
+	const bool IsAlive() const { return isAlive; }
 	void OnDie();
 };

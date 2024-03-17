@@ -194,10 +194,12 @@ void Player::EatItem()
 		sceneGame->ResetChain();
 		return;
 	case ItemType::COOKIE:
+		SOUND_MGR.PlaySfx("sounds/PM_EAT_PACDOT_1ST.wav");
 		sceneGame->AddScore(1);
 		sceneGame->AddChain();
 		break;
 	case ItemType::FRUIT:
+		SOUND_MGR.PlaySfx("sounds/APPLE_PICKED_UP.wav");
 		sceneGame->SetScoreMultiplier(itemInfo->GetValue());
 		break;
 	case ItemType::POWER_COOKIE:
@@ -223,6 +225,8 @@ void Player::SetUsingItem(ItemType item)
 		return;
 	}
 
+	SOUND_MGR.PlaySfx("sounds/PACMEN_PICKED_UP.wav");
+
 	switch (usingItem)
 	{
 	case ItemType::POWER_COOKIE:
@@ -238,6 +242,8 @@ void Player::SetUsingItem(ItemType item)
 
 void Player::EndUsingItem()
 {
+	SOUND_MGR.PlaySfx("sounds/PU_TIMEOUT.wav");
+
 	switch (usingItem)
 	{
 	case ItemType::POWER_COOKIE:
@@ -260,6 +266,7 @@ void Player::OnDie()
 	// FRAMEWORK.SetTimeScale(0.f);
 	
 	isAlive = false;
+	sceneGame->ResetChain();
 	SetActive(false);
 	sceneGame->GameOver();
 }
